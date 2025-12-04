@@ -1,62 +1,103 @@
-[gd_scene load_steps=2 format=3 uid="uid://d6jl4a6t8i"]
+[gd_scene load_steps=1 format=3 uid="uid://d6jl4a6t8i"]
 
 [ext_resource type="Script" path="res://scripts/HUD.gd" id="1_hud12"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud12")
 
-[node name="HealthBar" type="ProgressBar" parent="."]
-anchor_left = 0.05
-anchor_top = 0.05
-anchor_right = 0.2
-anchor_bottom = 0.12
+[node name="TopLeft" type="VBoxContainer" parent="."]
+anchor_left = 0.02
+anchor_top = 0.02
+anchor_right = 0.25
+anchor_bottom = 0.35
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
+theme_override_constants/separation = 10
+
+[node name="HealthLabel" type="Label" parent="TopLeft"]
+text = "Health"
+custom_minimum_size = Vector2(0, 30)
+
+[node name="HealthBar" type="ProgressBar" parent="TopLeft"]
 min_value = 0.0
 max_value = 100.0
 value = 100.0
-custom_minimum_size = Vector2(150, 30)
+custom_minimum_size = Vector2(200, 30)
 
-[node name="BatteryBar" type="ProgressBar" parent="."]
-anchor_left = 0.05
-anchor_top = 0.2
-anchor_right = 0.2
-anchor_bottom = 0.27
+[node name="BatteryLabel" type="Label" parent="TopLeft"]
+text = "Battery"
+custom_minimum_size = Vector2(0, 30)
+
+[node name="BatteryBar" type="ProgressBar" parent="TopLeft"]
+min_value = 0.0
+max_value = 100.0
+value = 100.0
+custom_minimum_size = Vector2(200, 30)
+
+[node name="TopRight" type="VBoxContainer" parent="."]
+anchor_left = 0.75
+anchor_top = 0.02
+anchor_right = 0.98
+anchor_bottom = 0.35
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
-min_value = 0.0
-max_value = 100.0
-value = 100.0
-custom_minimum_size = Vector2(150, 30)
+alignment = 1
+theme_override_constants/separation = 10
 
-[node name="MaskTimer" type="Label" parent="."]
-anchor_left = 0.45
-anchor_top = 0.05
-anchor_right = 0.55
-anchor_bottom = 0.12
-text = "15"
-visible = false
-custom_minimum_size = Vector2(100, 30)
+[node name="AQIIndicator" type="Label" parent="TopRight"]
+text = "AQI 250 - Hazardous"
+custom_minimum_size = Vector2(200, 30)
+horizontal_alignment = 2
 
-[node name="AQIIndicator" type="Label" parent="."]
-anchor_left = 0.8
-anchor_top = 0.05
-anchor_right = 0.95
-anchor_bottom = 0.12
-text = "AQI 250"
-custom_minimum_size = Vector2(150, 30)
-
-[node name="AIRCoinCounter" type="HBoxContainer" parent="."]
-anchor_left = 0.8
-anchor_top = 0.2
-anchor_right = 0.95
-anchor_bottom = 0.27
-custom_minimum_size = Vector2(150, 30)
-
-[node name="CoinLabel" type="Label" parent="AIRCoinCounter"]
+[node name="CoinsLabel" type="Label" parent="TopRight"]
 text = "AIR: 0"
-custom_minimum_size = Vector2(140, 30)
+custom_minimum_size = Vector2(200, 30)
+horizontal_alignment = 2
+
+[node name="CenterOverlay" type="VBoxContainer" parent="."]
+anchor_left = 0.35
+anchor_top = 0.4
+anchor_right = 0.65
+anchor_bottom = 0.6
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+alignment = 1
+theme_override_constants/separation = 15
+
+[node name="MaskTimer" type="HBoxContainer" parent="CenterOverlay"]
+custom_minimum_size = Vector2(0, 40)
+alignment = 1
+visible = false
+
+[node name="MaskLabel" type="Label" parent="CenterOverlay/MaskTimer"]
+text = "Mask Active: 15s"
+custom_minimum_size = Vector2(200, 40)
+
+[node name="Controls" type="VBoxContainer" parent="."]
+anchor_left = 0.02
+anchor_top = 0.75
+anchor_right = 0.35
+anchor_bottom = 0.98
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+theme_override_constants/separation = 8
+
+[node name="MoveLabel" type="Label" parent="Controls"]
+text = "Move Lanes: ↑ ↓"
+custom_minimum_size = Vector2(0, 30)
+
+[node name="BoostLabel" type="Label" parent="Controls"]
+text = "Boost: SPACE"
+custom_minimum_size = Vector2(0, 30)
+
+[node name="DropLabel" type="Label" parent="Controls"]
+text = "Drop Item: D"
+custom_minimum_size = Vector2(0, 30)

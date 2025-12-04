@@ -1,42 +1,39 @@
-[gd_scene load_steps=12 format=3 uid="uid://bre1xmdt1w2k6"]
+[gd_scene load_steps=11 format=3 uid="uid://bre1xmdt1w2k6"]
 
-[ext_resource type="Script" path="res://scripts/Game.gd" id="1_1r2jk"]
-[ext_resource type="Script" path="res://scripts/SkyManager.gd" id="2_5k7xq"]
-[ext_resource type="Script" path="res://scripts/RoadScroll.gd" id="3_6l9m2"]
-[ext_resource type="Script" path="res://scripts/Spawner.gd" id="4_7n3o5"]
-[ext_resource type="Script" path="res://scripts/HUD.gd" id="5_8p2q6"]
-[ext_resource type="Texture2D" path="res://assets/skies/sky_bad.webp" id="6_9r4s7"]
-[ext_resource type="Texture2D" path="res://assets/skies/sky_ok.webp" id="7_0t5u8"]
-[ext_resource type="Texture2D" path="res://assets/skies/sky_clear.webp" id="8_1v6w9"]
-[ext_resource type="Texture2D" path="res://assets/road/road_tile.webp" id="9_2x7y0"]
-[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="10_3z8a1"]
-
-[sub_resource type="RectangleShape2D" id="RectShape_0"]
-size = Vector2(960, 100)
+[ext_resource type="Script" uid="uid://m4up31qjvh40" path="res://scripts/Game.gd" id="1_1r2jk"]
+[ext_resource type="Script" uid="uid://bnfxupunjcdac" path="res://scripts/SkyManager.gd" id="2_5k7xq"]
+[ext_resource type="Script" uid="uid://dxap4jwikaan7" path="res://scripts/RoadScroll.gd" id="3_6l9m2"]
+[ext_resource type="Script" uid="uid://chbh558ddgqet" path="res://scripts/Spawner.gd" id="4_7n3o5"]
+[ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="6_9r4s7"]
+[ext_resource type="Texture2D" uid="uid://bncjyu10b4a2" path="res://assets/skies/sky_ok.webp" id="7_0t5u8"]
+[ext_resource type="Texture2D" uid="uid://cnlch374hthea" path="res://assets/skies/sky_clear.webp" id="8_1v6w9"]
+[ext_resource type="Texture2D" uid="uid://bcw73rt4f1dua" path="res://assets/road/road_tile.webp" id="9_2x7y0"]
+[ext_resource type="PackedScene" uid="uid://cjtmad0wq0gf" path="res://scenes/Player.tscn" id="10_3z8a1"]
+[ext_resource type="PackedScene" uid="uid://d6jl4a6t8i" path="res://scenes/HUD.tscn" id="11_hud_scene"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_1r2jk")
 
 [node name="ParallaxBG" type="ParallaxBackground" parent="."]
-scroll_ignore_camera_zoom = true
 layer = -1
+scroll_ignore_camera_zoom = true
 
 [node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBG"]
-script = ExtResource("2_5k7xq")
 motion_scale = Vector2(0.2, 1)
+script = ExtResource("2_5k7xq")
 
 [node name="Sprite_SkyBad" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
 position = Vector2(480, 240)
 texture = ExtResource("6_9r4s7")
 
 [node name="Sprite_SkyOk" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
-position = Vector2(480, 240)
 modulate = Color(1, 1, 1, 0)
+position = Vector2(480, 240)
 texture = ExtResource("7_0t5u8")
 
 [node name="Sprite_SkyClear" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
-position = Vector2(480, 240)
 modulate = Color(1, 1, 1, 0)
+position = Vector2(480, 240)
 texture = ExtResource("8_1v6w9")
 
 [node name="MidLayer" type="ParallaxLayer" parent="ParallaxBG"]
@@ -72,82 +69,9 @@ texture = ExtResource("9_2x7y0")
 [node name="DeliveryZones" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("10_3z8a1")]
+scale = Vector2(0.59, 0.59)
 
 [node name="Spawner" type="Node2D" parent="."]
 script = ExtResource("4_7n3o5")
 
-[node name="UI" type="CanvasLayer" parent="."]
-script = ExtResource("5_8p2q6")
-
-[node name="HealthBar" type="TextureProgress" parent="UI"]
-anchor_left = 0.05
-anchor_top = 0.05
-anchor_right = 0.15
-anchor_bottom = 0.15
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-min_value = 0.0
-max_value = 100.0
-value = 100.0
-
-[node name="BatteryBar" type="TextureProgress" parent="UI"]
-anchor_left = 0.05
-anchor_top = 0.2
-anchor_right = 0.15
-anchor_bottom = 0.3
-min_value = 0.0
-max_value = 100.0
-value = 100.0
-
-[node name="MaskTimer" type="Label" parent="UI"]
-anchor_left = 0.5
-anchor_top = 0.05
-anchor_right = 0.6
-anchor_bottom = 0.15
-text = "15"
-
-[node name="AQIIndicator" type="Label" parent="UI"]
-anchor_left = 0.85
-anchor_top = 0.05
-anchor_right = 1.0
-anchor_bottom = 0.15
-text = "AQI 250"
-
-[node name="AIRCoinCounter" type="HBoxContainer" parent="UI"]
-anchor_left = 0.85
-anchor_top = 0.2
-anchor_right = 1.0
-anchor_bottom = 0.3
-
-[node name="CoinLabel" type="Label" parent="UI/AIRCoinCounter"]
-text = "AIR: 0"
-
-[node name="TouchControls" type="Control" parent="UI"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="UpButton" type="TouchScreenButton" parent="UI/TouchControls"]
-position = Vector2(50, 250)
-scale = Vector2(0.5, 1)
-normal = ExtResource("6_9r4s7")
-action = "ui_up"
-
-[node name="DownButton" type="TouchScreenButton" parent="UI/TouchControls"]
-position = Vector2(50, 400)
-scale = Vector2(0.5, 1)
-normal = ExtResource("6_9r4s7")
-action = "ui_down"
-
-[node name="BoostButton" type="TouchScreenButton" parent="UI/TouchControls"]
-position = Vector2(850, 300)
-scale = Vector2(1, 1.5)
-normal = ExtResource("6_9r4s7")
-action = "ui_accept"
-
-[node name="DropButton" type="TouchScreenButton" parent="UI/TouchControls"]
-position = Vector2(850, 500)
-scale = Vector2(0.8, 0.8)
-normal = ExtResource("6_9r4s7")
-action = "ui_select"
+[node name="HUD" parent="." instance=ExtResource("11_hud_scene")]

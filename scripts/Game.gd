@@ -6,7 +6,7 @@ extends Node2D
 @onready var world = $World
 @onready var player = $Player
 @onready var spawner = $Spawner
-@onready var hud = $UI
+@onready var hud = $HUD
 @onready var delivery_zones_node = $DeliveryZones
 
 var persistence_manager: Node
@@ -97,10 +97,10 @@ func spawn_chunk(chunk_index: int) -> void:
 	var chunk = chunks_data[chunk_index]
 	current_chunk_index = chunk_index
 
-	# Set sky type
+	# Set sky type (non-blocking call, let it animate in background)
 	if sky_manager:
 		var sky_type = chunk.get("sky_type", "bad")
-		sky_manager.set_sky_type(sky_type)
+		sky_manager.set_sky_type(sky_type)  # Don't await - allow animation to happen async
 
 	# Update base AQI for this chunk
 	base_aqi = chunk.get("base_aqi", 250)

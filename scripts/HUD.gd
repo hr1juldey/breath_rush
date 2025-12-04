@@ -1,11 +1,11 @@
 extends CanvasLayer
-# Fixed: All errors resolved
 
-@onready var health_bar = $HealthBar
-@onready var battery_bar = $BatteryBar
-@onready var mask_timer_label = $MaskTimer
-@onready var aqi_indicator = $AQIIndicator
-@onready var air_coin_counter = $AIRCoinCounter/CoinLabel
+@onready var health_bar = $TopLeft/HealthBar
+@onready var battery_bar = $TopLeft/BatteryBar
+@onready var mask_timer_container = $CenterOverlay/MaskTimer
+@onready var mask_timer_label = $CenterOverlay/MaskTimer/MaskLabel
+@onready var aqi_indicator = $TopRight/AQIIndicator
+@onready var coins_label = $TopRight/CoinsLabel
 
 var player_ref = null
 var current_coins = 0
@@ -36,19 +36,20 @@ func _on_battery_changed(new_battery: float) -> void:
 		battery_bar.value = new_battery
 
 func _on_mask_activated(_duration: float) -> void:
-	if mask_timer_label:
-		mask_timer_label.show()
+	if mask_timer_container:
+		mask_timer_container.show()
 
 func _on_mask_deactivated() -> void:
-	if mask_timer_label:
-		mask_timer_label.hide()
+	if mask_timer_container:
+		mask_timer_container.hide()
 
 func update_mask_timer() -> void:
 	if player_ref and mask_timer_label:
 		if player_ref.mask_time > 0:
-			mask_timer_label.text = str(int(player_ref.mask_time) + 1)
+			mask_timer_label.text = "Mask Active: %ds" % (int(player_ref.mask_time) + 1)
 		else:
-			mask_timer_label.hide()
+			if mask_timer_container:
+				mask_timer_container.hide()
 
 func update_aqi_display() -> void:
 	if not aqi_indicator or not player_ref:
@@ -79,8 +80,8 @@ func add_coins(amount: int) -> void:
 	update_coin_display()
 
 func update_coin_display() -> void:
-	if air_coin_counter:
-		air_coin_counter.text = "AIR: %d" % current_coins
+	if coins_label:
+		coins_label.text = "AIR: %d" % current_coins
 
 func reset_coins() -> void:
 	current_coins = 0

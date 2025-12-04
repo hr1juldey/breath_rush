@@ -23,6 +23,32 @@ func set_sky_type(target_sky: String) -> void:
 
 	transitioning = true
 
+	# In headless mode, skip animations and just set directly
+	if DisplayServer.get_name() == "headless":
+		# Fade out all skies
+		if sky_bad:
+			sky_bad.modulate.a = 0.0
+		if sky_ok:
+			sky_ok.modulate.a = 0.0
+		if sky_clear:
+			sky_clear.modulate.a = 0.0
+
+		# Fade in target sky
+		match target_sky:
+			"bad":
+				if sky_bad:
+					sky_bad.modulate.a = 1.0
+			"ok":
+				if sky_ok:
+					sky_ok.modulate.a = 1.0
+			"clear":
+				if sky_clear:
+					sky_clear.modulate.a = 1.0
+
+		current_sky_type = target_sky
+		transitioning = false
+		return
+
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_LINEAR)
 	tween.set_ease(Tween.EASE_IN_OUT)

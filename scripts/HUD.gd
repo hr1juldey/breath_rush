@@ -23,29 +23,29 @@ const CHARGE_SPRITES = [
 	"res://assets/ui/charge/charge_4_cells.webp",     # 80%
 	"res://assets/ui/charge/charge_3_cells.webp",     # 60%
 	"res://assets/ui/charge/charge_2_cells.webp",     # 40%
-	"res://assets/ui/charge/charge_1_cell.webp",      # 20%
-	"res://assets/ui/charge/charge_1_red.webp",       # Critical
-	"res://assets/ui/charge/charge_empty.webp"        # 0%
+	"res://assets/ui/charge/charge_1_cell.webp",      # 20% - 1 green cell
+	"res://assets/ui/charge/charge_0_red.webp",       # Critical - 1 red cell
+	"res://assets/ui/charge/charge_empty.webp",       # Empty
 ]
 
 # Health sprite paths (6 damage states)
 const HEALTH_DAMAGE_SPRITES = [
-	"res://assets/ui/health/health_damage_5healthy.webp",
-	"res://assets/ui/health/health_damage_4healthy_1damaged.webp",
-	"res://assets/ui/health/health_damage_3healthy_2damaged.webp",
-	"res://assets/ui/health/health_damage_2healthy_3damaged.webp",
-	"res://assets/ui/health/health_damage_1healthy_4damaged.webp",
-	"res://assets/ui/health/health_damage_all_damaged.webp"
+	"res://assets/ui/health/health_damage_0_healthy.webp",
+	"res://assets/ui/health/health_damage_1.webp",
+	"res://assets/ui/health/health_damage_2.webp",
+	"res://assets/ui/health/health_damage_3.webp",
+	"res://assets/ui/health/health_damage_4.webp",
+	"res://assets/ui/health/health_damage_5_critical.webp"
 ]
 
 # Breathing animation sprites (6 frames)
 const HEALTH_BREATHING_SPRITES = [
-	"res://assets/ui/health/health_breathing_breathing_1.webp",
-	"res://assets/ui/health/health_breathing_breathing_2.webp",
-	"res://assets/ui/health/health_breathing_breathing_3.webp",
-	"res://assets/ui/health/health_breathing_breathing_4.webp",
-	"res://assets/ui/health/health_breathing_breathing_5.webp",
-	"res://assets/ui/health/health_breathing_breathing_6.webp"
+	"res://assets/ui/health/health_breathing_0.webp",
+	"res://assets/ui/health/health_breathing_1.webp",
+	"res://assets/ui/health/health_breathing_2.webp",
+	"res://assets/ui/health/health_breathing_3.webp",
+	"res://assets/ui/health/health_breathing_4.webp",
+	"res://assets/ui/health/health_breathing_5.webp"
 ]
 
 # Breathing animation
@@ -122,20 +122,27 @@ func update_charge_display(battery: float) -> void:
 	charge_display.texture = load(CHARGE_SPRITES[index])
 
 # === LUNG/HEALTH DISPLAY ===
-func get_health_row(health_percent: float) -> int:
-	"""Map health percentage to row index in health.webp"""
-	if health_percent > 80: return 0     # Row 0: 5 healthy lungs
-	elif health_percent > 60: return 1   # Row 1: 4 healthy, 1 damaged
-	elif health_percent > 40: return 2   # Row 2: 3 healthy, 2 damaged
-	elif health_percent > 20: return 3   # Row 3: 2 healthy, 3 damaged
-	elif health_percent > 0: return 4    # Row 4: 1 healthy, 4 damaged
-	else: return 5                       # Row 5: All damaged
+func get_health_index(health_percent: float) -> int:
+	"""Map health percentage to sprite index in HEALTH_DAMAGE_SPRITES"""
+	if health_percent > 80: return 0     # 5 healthy lungs
+	elif health_percent > 60: return 1   # 4 healthy, 1 damaged
+	elif health_percent > 40: return 2   # 3 healthy, 2 damaged
+	elif health_percent > 20: return 3   # 2 healthy, 3 damaged
+	elif health_percent > 0: return 4    # 1 healthy, 4 damaged
+	else: return 5                       # All damaged
 
 func update_lung_display(health: float) -> void:
-	"""Update lung display (LEFT column - damage state)"""
-	var row = get_health_row(health)
-	# LEFT column at x=0 shows damage progression
-	lung_base_atlas.region = Rect2(0, row * HEALTH_ROW_HEIGHT, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT)
+	"""Update lung display (damage state)"""
+	var index = get_health_index(health)
+	lung_base.texture = load(HEALTH_DAMAGE_SPRITES[index])
+
+func update_lung_animation(delta: float) -> void:
+	"""Animate breathing overlay by cycling through breathing frames"""
+	breathing_timer += delta
+	if breathing_timer >= BREATHING_SPEED:
+		breathing_timer = 0.0
+		breathing_frame = (breathing_frame + 1) % HEALTH_BREATHING_SPRITES.size()
+		lung_breathing.texture = load(HEALTH_BREATHING_SPRITES[breathing_frame])
 
 # === MASK TIMER DISPLAY ===
 func update_mask_timer() -> void:

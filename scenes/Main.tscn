@@ -69,6 +69,7 @@ texture = ExtResource("9_2x7y0")
 [node name="DeliveryZones" type="Node2D" parent="."]
 
 [node name="Player" parent="." instance=ExtResource("10_3z8a1")]
+position = Vector2(458, 289.99997)
 scale = Vector2(0.59, 0.59)
 
 [node name="Spawner" type="Node2D" parent="."]

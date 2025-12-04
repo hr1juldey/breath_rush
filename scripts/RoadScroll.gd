@@ -10,14 +10,15 @@ var recycle_threshold = -960.0
 func _ready():
 	# Set initial positions for tiles
 	if road_tile_a and road_tile_b:
-		road_tile_a.position.x = 0
-		road_tile_b.position.x = texture_width
-
 		# Get actual texture width if available
 		if road_tile_a.texture:
 			texture_width = road_tile_a.texture.get_width()
-			road_tile_b.position.x = texture_width
-			recycle_threshold = -texture_width
+			# Recycle when tile center is just past left edge to maintain seamless loop
+			recycle_threshold = -(texture_width / 2.0)  # Recycle at -480 instead of -960
+
+		# Position tiles seamlessly (centered sprites, so offset by half width)
+		road_tile_a.position.x = texture_width / 2.0  # 480
+		road_tile_b.position.x = texture_width + (texture_width / 2.0)  # 1440
 
 func _process(delta):
 	if not road_tile_a or not road_tile_b:

@@ -23,6 +23,8 @@ var gameplay_config = {}
 var brand_config = {}
 
 var scroll_speed = 400.0
+var base_scroll_speed = 400.0
+var boost_multiplier = 1.35
 
 func _ready():
 	# Load configurations
@@ -31,6 +33,9 @@ func _ready():
 	# Initialize player reference
 	if player:
 		player.set_aqi(current_aqi)
+		player.health_changed.connect(_on_player_health_changed)
+		player.boost_started.connect(_on_boost_started)
+		player.boost_stopped.connect(_on_boost_stopped)
 
 	# Initialize first chunk
 	load_chunk_data()
@@ -76,7 +81,8 @@ func load_configs() -> void:
 
 	# Apply settings from config
 	if gameplay_config:
-		scroll_speed = gameplay_config.get("world", {}).get("scroll_speed", 400)
+		base_scroll_speed = gameplay_config.get("world", {}).get("scroll_speed", 400)
+		scroll_speed = base_scroll_speed
 		base_aqi = gameplay_config.get("aqi", {}).get("base_bad", 250)
 		current_aqi = base_aqi
 
@@ -186,6 +192,32 @@ func create_tree_visual(tree_data: Dictionary) -> void:
 
 	world.find_child("Trees").add_child(tree)
 
+func _on_player_health_changed(new_health: float) -> void:
+	if new_health <= 0:
+		player_died()
+
+func player_died() -> void:
+	# Stop all game processes
+	set_process(false)
+
+	# Stop player
+	if player:
+		player.set_process(false)
+		player.set_physics_process(false)
+
+	# Stop spawner
+	if spawner:
+		spawner.set_process(false)
+
+	# Show game over
+	print("GAME OVER - Player died from pollution!")
+	print("Distance traveled: %.1f meters" % run_distance)
+	print("Coins earned: %d" % int(run_coins))
+
+	# Wait 2 seconds then quit
+	await get_tree().create_timer(2.0).timeout
+	get_tree().quit()
+
 func end_run() -> void:
 	# Save run data
 	# TODO: Implement persistence system
@@ -194,9 +226,38 @@ func end_run() -> void:
 	# persistence_manager.update_coins(int(run_coins))
 
 	# Return to menu or show summary
-	pass
+	get_tree().quit()
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_ESCAPE:
 			end_run()
+
+func _on_boost_started() -> void:
+	# Increase scroll speed when boost starts
+	scroll_speed = base_scroll_speed * boost_multiplier
+	update_world_scroll_speed()
+
+func _on_boost_stopped() -> void:
+	# Reset scroll speed when boost stops
+	scroll_speed = base_scroll_speed
+	update_world_scroll_speed()
+
+func update_world_scroll_speed() -> void:
+	# Update scroll speed for all scrolling objects
+	if road:
+		road.set_scroll_speed(scroll_speed)
+
+	# Update all obstacles
+	for child in world.get_children():
+		if child.has_method("set_scroll_speed"):
+			child.set_scroll_speed(scroll_speed)
+
+	# Update spawner objects
+	if spawner:
+		for obstacle in spawner.obstacle_pool:
+			if obstacle.has_method("set_scroll_speed"):
+				obstacle.set_scroll_speed(scroll_speed)
+		for pickup in spawner.pickup_pool:
+			if pickup.has_method("set_scroll_speed"):
+				pickup.set_scroll_speed(scroll_speed)

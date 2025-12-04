@@ -21,6 +21,8 @@ var mask_duration = 15.0
 var mask_hp_restore = 10
 var mask_leak_time = 5.0
 var mask_leak_rate = 1.0
+var mask_inventory = 0  # Number of masks in inventory
+var max_mask_inventory = 5  # Maximum masks player can carry
 
 # Battery & boost
 var battery = 100.0
@@ -40,10 +42,13 @@ signal health_changed(new_health: float)
 signal battery_changed(new_battery: float)
 signal mask_activated(duration: float)
 signal mask_deactivated
+signal mask_inventory_changed(count: int)
 signal item_picked_up(item_type: String)
 signal item_dropped(item_type: String)
 signal purifier_deployed(x: float, y: float)
 signal sapling_planted(x: float, y: float)
+signal boost_started
+signal boost_stopped
 
 var aqi_current = 250.0
 
@@ -98,7 +103,7 @@ func _process(delta):
 		battery -= battery_drain_per_sec * delta
 		if battery <= 0:
 			battery = 0
-			is_boosting = false
+			stop_boost()  # Use stop_boost() to emit signal
 		battery_changed.emit(battery)
 
 	# Handle charging
@@ -138,6 +143,12 @@ func _input(event):
 				start_boost()
 			elif event.keycode == KEY_D:
 				drop_item()
+			elif event.keycode == KEY_M:
+				use_mask_manually()
+		else:
+			# Key released
+			if event.keycode == KEY_SPACE:
+				stop_boost()
 
 	if event is InputEventScreenTouch:
 		if event.pressed:
@@ -165,11 +176,14 @@ func change_lane(direction):
 	target_y = lane_positions[current_lane]
 
 func start_boost():
-	if battery > 0:
+	if battery > 0 and not is_boosting:
 		is_boosting = true
+		boost_started.emit()
 
 func stop_boost():
-	is_boosting = false
+	if is_boosting:
+		is_boosting = false
+		boost_stopped.emit()
 
 func calculate_health_drain():
 	# Drain formula: AQI / 150 = HP per second
@@ -178,6 +192,28 @@ func calculate_health_drain():
 	return max(0.1, aqi_current / 150.0)
 
 func apply_mask():
+	# If mask already active or inventory full, add to inventory
+	if mask_time > 0:
+		# Mask already active, store in inventory
+		add_mask_to_inventory()
+		return
+
+	# Check if we have masks in inventory
+	if mask_inventory > 0:
+		# Don't pick up, already have masks
+		add_mask_to_inventory()
+		return
+
+	# No mask active and inventory empty - use immediately
+	use_mask_from_inventory()
+
+func add_mask_to_inventory():
+	if mask_inventory < max_mask_inventory:
+		mask_inventory += 1
+		mask_inventory_changed.emit(mask_inventory)
+
+func use_mask_from_inventory():
+	# Use mask (either from pickup or inventory)
 	health = min(health + mask_hp_restore, max_health)
 	mask_time = mask_duration
 	mask_activated.emit(mask_duration)
@@ -186,6 +222,17 @@ func apply_mask():
 	# Show mask sprite
 	if mask_sprite:
 		mask_sprite.visible = true
+
+func use_mask_manually():
+	# Player presses M to use mask from inventory
+	if mask_time > 0:
+		# Mask already active
+		return
+
+	if mask_inventory > 0:
+		mask_inventory -= 1
+		mask_inventory_changed.emit(mask_inventory)
+		use_mask_from_inventory()
 
 func pickup_filter():
 	if carried_item == null:

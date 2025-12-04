@@ -1,6 +1,7 @@
 extends CanvasLayer
 @onready var health_bar = $TopLeft/VBox/HealthBar
 @onready var battery_bar = $TopLeft/VBox/BatteryBar
+@onready var mask_inventory_label = $TopLeft/VBox/MaskInventoryLabel
 @onready var mask_timer_container = $CenterOverlay/MaskTimer
 @onready var mask_timer_label = $CenterOverlay/MaskTimer/MaskLabel
 @onready var aqi_indicator = $TopRight/AQIIndicator
@@ -20,6 +21,10 @@ func _ready():
 		player_ref.battery_changed.connect(_on_battery_changed)
 		player_ref.mask_activated.connect(_on_mask_activated)
 		player_ref.mask_deactivated.connect(_on_mask_deactivated)
+		player_ref.mask_inventory_changed.connect(_on_mask_inventory_changed)
+
+		# Initialize mask inventory display
+		update_mask_inventory_display(player_ref.mask_inventory)
 
 func _process(_delta):
 	if player_ref:
@@ -88,3 +93,10 @@ func reset_coins() -> void:
 
 func get_coins_earned() -> int:
 	return current_coins
+
+func _on_mask_inventory_changed(count: int) -> void:
+	update_mask_inventory_display(count)
+
+func update_mask_inventory_display(count: int) -> void:
+	if mask_inventory_label:
+		mask_inventory_label.text = "Masks: %d/5" % count

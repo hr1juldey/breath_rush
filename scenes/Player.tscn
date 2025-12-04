@@ -1,25 +1,31 @@
-[gd_scene load_steps=5 format=3 uid="uid://cjtl9d0wq0gf"]
+[gd_scene load_steps=5 format=3 uid="uid://cjtmad0wq0gf"]
 
-[ext_resource type="Script" path="res://scripts/Player.gd" id="1_abc12"]
-[ext_resource type="Texture2D" path="res://assets/player/vim_base.webp" id="2_def34"]
-[ext_resource type="Texture2D" path="res://assets/pickups/mask.webp" id="3_mask"]
+[ext_resource type="Script" uid="uid://dmebib30i1lp6" path="res://scripts/Player.gd" id="1_abc12"]
+[ext_resource type="Texture2D" uid="uid://c4sp42dfpqldv" path="res://assets/player/vim_base.webp" id="2_def34"]
+[ext_resource type="Texture2D" uid="uid://bkxd0x84l3a5b" path="res://assets/pickups/mask.webp" id="3_mask"]
 
 [sub_resource type="RectangleShape2D" id="RectShape_1"]
-size = Vector2(64, 64)
+size = Vector2(252.36804, 158.4325)
 
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(180, 300)
 z_index = 5
+position = Vector2(180, 300)
 script = ExtResource("1_abc12")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_def34")
 
-[node name="MaskSprite" type="Sprite2D" parent="."]
-texture = ExtResource("3_mask")
-visible = false
-position = Vector2(0, -15)
-scale = Vector2(0.6, 0.6)
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(12.557266, -231.68362)
+scale = Vector2(1.352678, 1.2978022)
+skew = 0.097738385
 shape = SubResource("RectShape_1")
+
+[node name="MaskSprite" type="Sprite2D" parent="."]
+visible = false
+z_index = 1
+position = Vector2(20.743073, -183.37973)
+scale = Vector2(0.20290168, 0.1946703)
+skew = 0.097738385
+texture = ExtResource("3_mask")

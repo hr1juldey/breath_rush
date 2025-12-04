@@ -49,6 +49,12 @@ value = 100.0
 custom_minimum_size = Vector2(200, 25)
 show_percentage = true
 
+[node name="MaskInventoryLabel" type="Label" parent="TopLeft/VBox"]
+text = "Masks: 0/5"
+custom_minimum_size = Vector2(0, 25)
+theme_override_colors/font_color = Color(0.5, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 18
+
 [node name="TopRight" type="VBoxContainer" parent="."]
 anchor_left = 0.75
 anchor_top = 0.02
@@ -113,4 +119,8 @@ custom_minimum_size = Vector2(0, 30)
 
 [node name="DropLabel" type="Label" parent="Controls"]
 text = "Drop Item: D"
+custom_minimum_size = Vector2(0, 30)
+
+[node name="MaskLabel" type="Label" parent="Controls"]
+text = "Use Mask: M"
 custom_minimum_size = Vector2(0, 30)

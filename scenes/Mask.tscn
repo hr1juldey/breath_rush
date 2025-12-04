@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3jl4a6t8f"]
+
+[ext_resource type="Script" path="res://scripts/Pickup.gd" id="1_mask12"]
+[ext_resource type="Texture2D" path="res://assets/pickups/mask.webp" id="2_mask34"]
+
+[sub_resource type="CircleShape2D" id="CircShape_1"]
+radius = 20.0
+
+[node name="Mask" type="Area2D"]
+position = Vector2(300, 300)
+script = ExtResource("1_mask12")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_mask34")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircShape_1")

@@ -1,0 +1,62 @@
+{
+  "lanes": {
+    "top": 240,
+    "middle": 300,
+    "bottom": 360
+  },
+  "player": {
+    "x_position": 180,
+    "base_speed": 300
+  },
+  "health": {
+    "max_hp": 100,
+    "min_hp": 0,
+    "base_drain_multiplier": 0.01666,
+    "collision_damage_min": 8,
+    "collision_damage_max": 18
+  },
+  "mask": {
+    "duration": 15.0,
+    "hp_restore": 10,
+    "leak_time": 5.0,
+    "leak_rate": 1.0,
+    "cost": 5
+  },
+  "filter": {
+    "duration": 30.0,
+    "clean_rate": 8.0,
+    "coin_multiplier": 2.5,
+    "decay_duration": 10.0,
+    "cost": 50
+  },
+  "sapling": {
+    "base_clean_rate": 0.12,
+    "growth_stages": 5,
+    "clean_rate_per_stage": 0.05,
+    "cost": 75
+  },
+  "battery": {
+    "max_battery": 100,
+    "boost_speed_mult": 1.35,
+    "drain_per_sec": 8.0,
+    "charge_seconds": 2.0
+  },
+  "coins": {
+    "base_rate": 0.02,
+    "min_per_meter": 0.001,
+    "max_per_meter": 0.2,
+    "tree_density_factor": 0.02
+  },
+  "world": {
+    "chunk_width_min": 960,
+    "chunk_width_max": 1600,
+    "scroll_speed": 400,
+    "spawn_pool_obstacles": 8,
+    "spawn_pool_pickups": 6
+  },
+  "aqi": {
+    "base_bad": 250,
+    "base_ok": 120,
+    "base_clear": 50
+  }
+}

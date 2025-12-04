@@ -1,0 +1,101 @@
+{
+  "id": "chunk_001",
+  "width": 1200,
+  "sky_type": "bad",
+  "base_aqi": 250,
+  "spawn_points": [
+    {
+      "x": 200,
+      "y": 300,
+      "type": "car",
+      "delay": 0.5
+    },
+    {
+      "x": 400,
+      "y": 360,
+      "type": "bike",
+      "delay": 1.0
+    },
+    {
+      "x": 600,
+      "y": 240,
+      "type": "car",
+      "delay": 1.5
+    },
+    {
+      "x": 800,
+      "y": 300,
+      "type": "bike",
+      "delay": 2.0
+    }
+  ],
+  "pickup_points": [
+    {
+      "x": 300,
+      "y": 240,
+      "type": "mask",
+      "probability": 0.6
+    },
+    {
+      "x": 500,
+      "y": 300,
+      "type": "filter",
+      "probability": 0.3
+    },
+    {
+      "x": 700,
+      "y": 360,
+      "type": "sapling",
+      "probability": 0.4
+    },
+    {
+      "x": 900,
+      "y": 240,
+      "type": "mask",
+      "probability": 0.5
+    }
+  ],
+  "delivery_zones": [
+    {
+      "x": 450,
+      "y": 300,
+      "radius": 80,
+      "reward_coins": 50
+    },
+    {
+      "x": 950,
+      "y": 300,
+      "radius": 80,
+      "reward_coins": 50
+    }
+  ],
+  "mid_buildings": [
+    {
+      "sprite": "home_1.webp",
+      "x": 200,
+      "scale": 1.0
+    },
+    {
+      "sprite": "pharmacy.webp",
+      "x": 500,
+      "scale": 1.2
+    },
+    {
+      "sprite": "shop.webp",
+      "x": 800,
+      "scale": 1.0
+    }
+  ],
+  "decorations": [
+    {
+      "sprite": "pigeon.webp",
+      "x": 350,
+      "y": 150
+    },
+    {
+      "sprite": "pigeon.webp",
+      "x": 750,
+      "y": 180
+    }
+  ]
+}

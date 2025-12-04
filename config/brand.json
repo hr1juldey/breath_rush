@@ -1,0 +1,9 @@
+{
+  "brand": "lilypad",
+  "mask_sprite": "res://assets/pickups/mask.webp",
+  "purifier_sprite": "res://assets/pickups/filter_1.webp",
+  "billboard_sprite": "res://assets/parallax/Select_City_mall.webp",
+  "ui_tint": [0.1, 0.6, 0.9],
+  "player_sprite": "res://assets/player/vim_base.webp",
+  "logo": "res://assets/parallax/CP.webp"
+}

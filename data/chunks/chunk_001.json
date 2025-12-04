@@ -5,51 +5,51 @@
   "base_aqi": 250,
   "spawn_points": [
     {
-      "x": 200,
+      "x": 1200,
       "y": 300,
       "type": "car",
-      "delay": 0.5
+      "delay": 2.0
     },
     {
-      "x": 400,
+      "x": 1600,
       "y": 360,
       "type": "bike",
-      "delay": 1.0
+      "delay": 3.0
     },
     {
-      "x": 600,
+      "x": 2000,
       "y": 240,
       "type": "car",
-      "delay": 1.5
+      "delay": 4.0
     },
     {
-      "x": 800,
+      "x": 2400,
       "y": 300,
       "type": "bike",
-      "delay": 2.0
+      "delay": 5.0
     }
   ],
   "pickup_points": [
     {
-      "x": 300,
+      "x": 1400,
       "y": 240,
       "type": "mask",
       "probability": 0.6
     },
     {
-      "x": 500,
+      "x": 1800,
       "y": 300,
       "type": "filter",
       "probability": 0.3
     },
     {
-      "x": 700,
+      "x": 2200,
       "y": 360,
       "type": "sapling",
       "probability": 0.4
     },
     {
-      "x": 900,
+      "x": 2600,
       "y": 240,
       "type": "mask",
       "probability": 0.5

@@ -13,6 +13,7 @@
 **Error:** `ParallexBG` (typo - missing 'a') used in multiple parent references
 
 **Lines Affected:**
+
 - Line 32: `parent="ParallexBG/SkyLayer"` → Should be `ParallaxBG`
 - Line 37: `parent="ParallexBG/SkyLayer"` → Should be `ParallaxBG`
 - Line 42: `parent="ParallexBG/MidLayer"` → Should be `ParallaxBG`
@@ -20,6 +21,7 @@
 - Line 50: `parent="ParallexBG/FrontLayer"` → Should be `ParallaxBG`
 
 **Fix Applied:**
+
 ```
 ParallexBG → ParallaxBG (corrected spelling)
 ```
@@ -27,6 +29,7 @@ ParallexBG → ParallaxBG (corrected spelling)
 ### 2. **Node Hierarchy Issues**
 
 **Before:**
+
 ```
 ParallaxBG (typo name)
 ├── SkyLayer
@@ -40,6 +43,7 @@ ParallaxBG (typo name)
 ```
 
 **After (Fixed):**
+
 ```
 ParallaxBG (correct spelling)
 ├── SkyLayer
@@ -57,12 +61,14 @@ ParallaxBG (correct spelling)
 ## Impact on Script References
 
 ### Game.gd
+
 ```gdscript
 @onready var parallax_bg = $ParallaxBG  # Now works correctly
 @onready var sky_manager = $ParallaxBG/SkyLayer  # Now works correctly
 ```
 
 ### SkyManager.gd
+
 ```gdscript
 @onready var sky_bad = $Sprite_SkyBad  # Now works correctly
 @onready var sky_ok = $Sprite_SkyOk  # Now works correctly

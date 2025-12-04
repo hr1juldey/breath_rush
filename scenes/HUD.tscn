@@ -5,36 +5,49 @@
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud12")
 
-[node name="TopLeft" type="VBoxContainer" parent="."]
+[node name="TopLeft" type="Panel" parent="."]
 anchor_left = 0.02
 anchor_top = 0.02
-anchor_right = 0.25
-anchor_bottom = 0.35
+anchor_right = 0.28
+anchor_bottom = 0.25
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 0.0
 offset_bottom = 0.0
+self_modulate = Color(0, 0, 0, 0.7)
+
+[node name="VBox" type="VBoxContainer" parent="TopLeft"]
+anchor_left = 0.05
+anchor_top = 0.05
+anchor_right = 0.95
+anchor_bottom = 0.95
 theme_override_constants/separation = 10
 
-[node name="HealthLabel" type="Label" parent="TopLeft"]
+[node name="HealthLabel" type="Label" parent="TopLeft/VBox"]
 text = "Health"
-custom_minimum_size = Vector2(0, 30)
+custom_minimum_size = Vector2(0, 25)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
 
-[node name="HealthBar" type="ProgressBar" parent="TopLeft"]
+[node name="HealthBar" type="ProgressBar" parent="TopLeft/VBox"]
 min_value = 0.0
 max_value = 100.0
 value = 100.0
-custom_minimum_size = Vector2(200, 30)
+custom_minimum_size = Vector2(200, 25)
+show_percentage = true
 
-[node name="BatteryLabel" type="Label" parent="TopLeft"]
+[node name="BatteryLabel" type="Label" parent="TopLeft/VBox"]
 text = "Battery"
-custom_minimum_size = Vector2(0, 30)
+custom_minimum_size = Vector2(0, 25)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
 
-[node name="BatteryBar" type="ProgressBar" parent="TopLeft"]
+[node name="BatteryBar" type="ProgressBar" parent="TopLeft/VBox"]
 min_value = 0.0
 max_value = 100.0
 value = 100.0
-custom_minimum_size = Vector2(200, 30)
+custom_minimum_size = Vector2(200, 25)
+show_percentage = true
 
 [node name="TopRight" type="VBoxContainer" parent="."]
 anchor_left = 0.75

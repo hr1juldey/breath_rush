@@ -25,6 +25,7 @@ All blocking syntax errors have been identified and fixed. The project is now fu
 **Location:** `scripts/Obstacle.gd` line 1
 
 **Problem:**
+
 ```gdscript
 # BROKEN:
 extends CharacterBody2D
@@ -36,6 +37,7 @@ func _ready():
 **Root Cause:** `CharacterBody2D` does not have a `body_entered` signal. This signal belongs to `Area2D`. The code was attempting to use Area2D signals on a different node type.
 
 **Fix Applied:**
+
 ```gdscript
 # FIXED:
 extends Area2D
@@ -56,6 +58,7 @@ func _ready():
 
 **Problem:**
 The match statement used em-dash characters (`—`) encoded as UTF-8 multi-byte sequences:
+
 ```gdscript
 aqi_text += " — Good"  # UTF-8 em-dash causing parser confusion
 ```
@@ -64,6 +67,7 @@ The parser was misinterpreting the multi-byte UTF-8 character as syntax delimite
 
 **Fix Applied:**
 Replaced all em-dashes with ASCII hyphens:
+
 ```gdscript
 # BEFORE:
 aqi_text += " — Good"
@@ -93,6 +97,7 @@ aqi_text += " - Hazardous"
 
 **Problem:**
 In GDScript 4.x, `class_name` must be declared **before** `extends`:
+
 ```gdscript
 # BROKEN:
 extends Node
@@ -104,6 +109,7 @@ class_name Persistence  # ERROR: class_name must come first
 
 **Fix Applied:**
 Moved `class_name` to the top of the file:
+
 ```gdscript
 # FIXED:
 class_name Persistence
@@ -127,6 +133,7 @@ const SAVE_PATH = "user://game_state.json"
 
 **Problem:**
 Two signals were declared but never emitted in any function, triggering unused signal warnings:
+
 ```gdscript
 signal purifier_deployed(x: float, y: float)
 signal sapling_planted(x: float, y: float)
@@ -134,6 +141,7 @@ signal sapling_planted(x: float, y: float)
 
 **Fix Applied:**
 Added signal emissions to the `drop_item()` function to emit these signals when items are deployed:
+
 ```gdscript
 func drop_item():
     if carried_item != null:
@@ -222,6 +230,7 @@ Current LSP shows 0 errors and 0 warnings for all GDScript files ✅
 **Note:** The VSCode GDScript LSP server caches file contents. After applying fixes, the IDE may still show cached errors for HUD.gd until the LSP server is restarted.
 
 **To Clear Cache:**
+
 1. Open VSCode command palette (Ctrl+Shift+P)
 2. Run "Developer: Restart Extension Host"
 3. Or restart VSCode entirely
@@ -235,6 +244,7 @@ Current LSP shows 0 errors and 0 warnings for all GDScript files ✅
 **Ready to Test:** YES ✅
 
 When you open the project in Godot 4.5.1:
+
 1. Press F5 to run the game
 2. No compilation errors will appear
 3. Scene will load correctly
@@ -243,6 +253,7 @@ When you open the project in Godot 4.5.1:
 6. Input controls will respond
 
 **Expected Console Output:**
+
 ```
 Godot Engine v4.5.1.stable.flathub
 [Your game running successfully]
@@ -252,22 +263,26 @@ Godot Engine v4.5.1.stable.flathub
 
 ## What Each Fix Addresses
 
-### Obstacle.gd Fix Enables:
+### Obstacle.gd Fix Enables
+
 - Proper collision detection with CharacterBody2D → Area2D signal compatibility
 - Damage system will work when player collides with obstacles
 - Runtime stability for obstacle spawning system
 
-### HUD.gd Fix Enables:
+### HUD.gd Fix Enables
+
 - AQI display system with proper match statement parsing
 - Safe string handling with ASCII-compliant characters
 - Coin counter, health bar, and battery display updates
 
-### Persistence.gd Fix Enables:
+### Persistence.gd Fix Enables
+
 - Proper class definition and access
 - Game state persistence system ready for implementation
 - Tree data management functionality
 
-### Player.gd Signal Fixes Enable:
+### Player.gd Signal Fixes Enable
+
 - Item deployment tracking (filter/purifier placement)
 - Sapling planting system feedback
 - Game logic event propagation

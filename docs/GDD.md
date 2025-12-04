@@ -1,4 +1,4 @@
-## Lilypad — **Full Technical GDD** (mobile-first, Godot 4.5.1, VS Code → Godot testing workflow)
+# Lilypad — **Full Technical GDD** (mobile-first, Godot 4.5.1, VS Code → Godot testing workflow)
 
 This is a full, developer-focused Game Design Document for **Lilypad — Breath Rush**. It contains all gameplay rules, data format, exact node/tree layout, file/folder naming conventions, tiling & transition strategies for repeated sprites (skies, roads), HUD rendering rules, persistence/auto-save, AIR Coin economics, backend contract, and a recommended VS Code-first workflow so you only open Godot to test & export.
 
@@ -181,6 +181,7 @@ air_coins = Σ( coin_per_meter * meters_traveled )
   ```
   coin_per_meter = 0.02 * ((250 - 170) / 250) * 1.1 = 0.02 * (80 / 250) * 1.1 ≈ 0.020 * 0.32 * 1.1 ≈ 0.00704 coins/meter
   ```
+
 * For 1000 m → 7.04 coins
 
 **Spending & economy:**

@@ -1,0 +1,19 @@
+{
+  "log_level": 1,
+  "log_to_file": true,
+  "performance_log_interval_ms": 1000,
+  "categories": {
+    "PLAYER": true,
+    "HUD": true,
+    "SPAWNER": true,
+    "COLLISION": true,
+    "WORLD": true,
+    "SKY": true,
+    "AUDIO": false,
+    "INPUT": false,
+    "PERSISTENCE": true,
+    "PERFORMANCE": true
+  },
+  "_comment_log_level": "0=DEBUG, 1=INFO, 2=WARNING, 3=ERROR",
+  "_comment_categories": "Set to true to enable logging for that category"
+}

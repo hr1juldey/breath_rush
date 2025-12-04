@@ -1,7 +1,6 @@
 extends CanvasLayer
-
-@onready var health_bar = $TopLeft/HealthBar
-@onready var battery_bar = $TopLeft/BatteryBar
+@onready var health_bar = $TopLeft/VBox/HealthBar
+@onready var battery_bar = $TopLeft/VBox/BatteryBar
 @onready var mask_timer_container = $CenterOverlay/MaskTimer
 @onready var mask_timer_label = $CenterOverlay/MaskTimer/MaskLabel
 @onready var aqi_indicator = $TopRight/AQIIndicator

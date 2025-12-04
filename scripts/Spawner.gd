@@ -27,6 +27,10 @@ var player_ref = null
 var time_without_mask = 0.0
 var mask_spawn_threshold = 5.0  # Only spawn masks if player hasn't worn mask for 5+ seconds
 
+# Track recent spawns to avoid overlaps
+var recent_spawns = {}  # Dictionary: {x_y: time}
+var spawn_clearance_time = 2.0  # Seconds to keep spawn positions reserved
+
 func _ready():
 	# Pre-instantiate obstacle pool
 	for i in range(pool_size_obstacles):
@@ -55,6 +59,10 @@ func _process(delta):
 			time_without_mask += delta
 		else:
 			time_without_mask = 0.0
+
+	# Clean old spawn records periodically
+	if int(game_time) % 5 == 0:  # Every 5 seconds
+		clean_old_spawn_records()
 
 	if current_chunk_data:
 		process_spawns()
@@ -95,6 +103,9 @@ func spawn_obstacle(spawn_data: Dictionary) -> void:
 		obstacle.obstacle_type = obstacle_type
 		obstacle.visible = true
 
+		# Record spawn position to avoid overlaps
+		record_spawn_position(spawn_x, spawn_y)
+
 func spawn_pickup(pickup_data: Dictionary) -> void:
 	var pickup = get_pooled_pickup()
 	if pickup:
@@ -102,9 +113,21 @@ func spawn_pickup(pickup_data: Dictionary) -> void:
 		var spawn_y = pickup_data.get("y", 300)
 		var pickup_type = pickup_data.get("type", "mask")
 
+		# Check if this position is too close to recent spawns
+		if is_position_occupied(spawn_x, spawn_y):
+			# Adjust Y position to a different lane
+			var lanes = [240, 300, 360]
+			for lane_y in lanes:
+				if not is_position_occupied(spawn_x, lane_y):
+					spawn_y = lane_y
+					break
+
 		pickup.global_position = Vector2(spawn_x, spawn_y)
 		pickup.pickup_type = pickup_type
 		pickup.visible = true
+
+		# Record spawn position to avoid overlaps
+		record_spawn_position(spawn_x, spawn_y)
 
 func get_pooled_obstacle() -> Node:
 	for obstacle in obstacle_pool:
@@ -192,8 +215,12 @@ func process_pickup_spawns(delta: float) -> void:
 			if pickup_type == "mask":
 				# Only spawn mask if player hasn't worn mask for 5+ seconds
 				if time_without_mask >= mask_spawn_threshold:
-					if randf() < pickup_point.get("probability", 0.4):
+					# Higher probability (80%) to ensure masks spawn when needed
+					if randf() < pickup_point.get("probability", 0.8):
 						spawn_pickup(pickup_point)
+						var logger = get_node_or_null("/root/Logger")
+						if logger:
+							logger.info(2, "Mask spawned (time_without_mask: %.1fs)" % time_without_mask)
 			else:
 				# Spawn other pickups (filter, sapling) normally
 				if randf() < pickup_point.get("probability", 0.3):
@@ -201,3 +228,26 @@ func process_pickup_spawns(delta: float) -> void:
 
 			pickup_point["respawned"] = true
 			pickup_spawn_index += 1
+
+func is_position_occupied(x: float, y: float) -> bool:
+	# Check if position is too close to any recent spawns
+	var key = "%d_%d" % [int(x / 100), int(y / 60)]  # Grid-based checking
+	if recent_spawns.has(key):
+		var spawn_time = recent_spawns[key]
+		if game_time - spawn_time < spawn_clearance_time:
+			return true
+	return false
+
+func record_spawn_position(x: float, y: float) -> void:
+	# Record this spawn position with timestamp
+	var key = "%d_%d" % [int(x / 100), int(y / 60)]
+	recent_spawns[key] = game_time
+
+func clean_old_spawn_records() -> void:
+	# Remove old spawn records to prevent memory growth
+	var keys_to_remove = []
+	for key in recent_spawns:
+		if game_time - recent_spawns[key] > spawn_clearance_time:
+			keys_to_remove.append(key)
+	for key in keys_to_remove:
+		recent_spawns.erase(key)

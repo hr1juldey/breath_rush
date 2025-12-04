@@ -1,126 +1,296 @@
-[gd_scene load_steps=1 format=3 uid="uid://d6jl4a6t8i"]
+[gd_scene load_steps=6 format=3 uid="uid://d6jl4a6t8i"]
 
 [ext_resource type="Script" path="res://scripts/HUD.gd" id="1_hud12"]
+[ext_resource type="Texture2D" uid="uid://c1234567890a" path="res://assets/ui/ui_minidot.webp" id="2_health_dot"]
+[ext_resource type="Texture2D" uid="uid://c1234567890b" path="res://assets/ui/ui_lung_bg.webp" id="3_lung_bg"]
+[ext_resource type="Texture2D" uid="uid://c1234567890c" path="res://assets/ui/ui_lung_fill.webp" id="4_lung_fill"]
+[ext_resource type="Texture2D" uid="uid://c1234567890d" path="res://assets/pickups/mask.webp" id="5_mask"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud12")
 
-[node name="TopLeft" type="Panel" parent="."]
-anchor_left = 0.02
-anchor_top = 0.02
-anchor_right = 0.28
-anchor_bottom = 0.25
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-self_modulate = Color(0, 0, 0, 0.7)
+[node name="TopLeft" type="PanelContainer" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 220.0
+offset_bottom = 90.0
 
-[node name="VBox" type="VBoxContainer" parent="TopLeft"]
-anchor_left = 0.05
-anchor_top = 0.05
-anchor_right = 0.95
-anchor_bottom = 0.95
-theme_override_constants/separation = 10
+[node name="MarginContainer" type="MarginContainer" parent="TopLeft"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="HealthLabel" type="Label" parent="TopLeft/VBox"]
-text = "Health"
-custom_minimum_size = Vector2(0, 25)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
-
-[node name="HealthBar" type="ProgressBar" parent="TopLeft/VBox"]
-min_value = 0.0
-max_value = 100.0
-value = 100.0
-custom_minimum_size = Vector2(200, 25)
-show_percentage = true
-
-[node name="BatteryLabel" type="Label" parent="TopLeft/VBox"]
-text = "Battery"
-custom_minimum_size = Vector2(0, 25)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 18
-
-[node name="BatteryBar" type="ProgressBar" parent="TopLeft/VBox"]
-min_value = 0.0
-max_value = 100.0
-value = 100.0
-custom_minimum_size = Vector2(200, 25)
-show_percentage = true
-
-[node name="MaskInventoryLabel" type="Label" parent="TopLeft/VBox"]
-text = "Masks: 0/5"
-custom_minimum_size = Vector2(0, 25)
-theme_override_colors/font_color = Color(0.5, 0.9, 1, 1)
-theme_override_font_sizes/font_size = 18
-
-[node name="TopRight" type="VBoxContainer" parent="."]
-anchor_left = 0.75
-anchor_top = 0.02
-anchor_right = 0.98
-anchor_bottom = 0.35
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-alignment = 1
-theme_override_constants/separation = 10
-
-[node name="AQIIndicator" type="Label" parent="TopRight"]
-text = "AQI 250 - Hazardous"
-custom_minimum_size = Vector2(200, 30)
-horizontal_alignment = 2
-
-[node name="CoinsLabel" type="Label" parent="TopRight"]
-text = "AIR: 0"
-custom_minimum_size = Vector2(200, 30)
-horizontal_alignment = 2
-
-[node name="CenterOverlay" type="VBoxContainer" parent="."]
-anchor_left = 0.35
-anchor_top = 0.4
-anchor_right = 0.65
-anchor_bottom = 0.6
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-alignment = 1
-theme_override_constants/separation = 15
-
-[node name="MaskTimer" type="HBoxContainer" parent="CenterOverlay"]
-custom_minimum_size = Vector2(0, 40)
-alignment = 1
-visible = false
-
-[node name="MaskLabel" type="Label" parent="CenterOverlay/MaskTimer"]
-text = "Mask Active: 15s"
-custom_minimum_size = Vector2(200, 40)
-
-[node name="Controls" type="VBoxContainer" parent="."]
-anchor_left = 0.02
-anchor_top = 0.75
-anchor_right = 0.35
-anchor_bottom = 0.98
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
+[node name="VBox" type="VBoxContainer" parent="TopLeft/MarginContainer"]
+layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="MoveLabel" type="Label" parent="Controls"]
+[node name="HealthLabel" type="Label" parent="TopLeft/MarginContainer/VBox"]
+layout_mode = 2
+text = "Health"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+
+[node name="HealthDots" type="HBoxContainer" parent="TopLeft/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="HealthDot1" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("2_health_dot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HealthDot2" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("2_health_dot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HealthDot3" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("2_health_dot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HealthDot4" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("2_health_dot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HealthDot5" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("2_health_dot")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TopRight" type="PanelContainer" parent="."]
+offset_left = 740.0
+offset_top = 20.0
+offset_right = 940.0
+offset_bottom = 90.0
+
+[node name="MarginContainer" type="MarginContainer" parent="TopRight"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="TopRight/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LungLabel" type="Label" parent="TopRight/MarginContainer/VBox"]
+layout_mode = 2
+text = "Lung Health"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 2
+
+[node name="LungIcons" type="HBoxContainer" parent="TopRight/MarginContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="Lung1" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("3_lung_bg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_lung_fill")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Lung2" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("3_lung_bg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_lung_fill")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Lung3" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("3_lung_bg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_lung_fill")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Lung4" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("3_lung_bg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_lung_fill")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Lung5" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("3_lung_bg")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung5"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("4_lung_fill")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CenterTop" type="CenterContainer" parent="."]
+offset_left = 280.0
+offset_top = 20.0
+offset_right = 680.0
+offset_bottom = 100.0
+
+[node name="MaskTimer" type="PanelContainer" parent="CenterTop"]
+visible = false
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterTop/MaskTimer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 15
+
+[node name="HBox" type="HBoxContainer" parent="CenterTop/MaskTimer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="MaskIcon" type="TextureRect" parent="CenterTop/MaskTimer/MarginContainer/HBox"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+texture = ExtResource("5_mask")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VBox" type="VBoxContainer" parent="CenterTop/MaskTimer/MarginContainer/HBox"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="MaskLabel" type="Label" parent="CenterTop/MaskTimer/MarginContainer/HBox/VBox"]
+layout_mode = 2
+text = "N95 MASK ACTIVE"
+theme_override_colors/font_color = Color(0.2, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+
+[node name="TimeLabel" type="Label" parent="CenterTop/MaskTimer/MarginContainer/HBox/VBox"]
+layout_mode = 2
+text = "30 sec remaining..."
+theme_override_colors/font_color = Color(1, 1, 1, 0.9)
+theme_override_font_sizes/font_size = 16
+
+[node name="BottomLeft" type="VBoxContainer" parent="."]
+offset_left = 20.0
+offset_top = 500.0
+offset_right = 350.0
+offset_bottom = 580.0
+theme_override_constants/separation = 5
+
+[node name="MoveLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
 text = "Move Lanes: ↑ ↓"
-custom_minimum_size = Vector2(0, 30)
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/font_size = 14
 
-[node name="BoostLabel" type="Label" parent="Controls"]
+[node name="BoostLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
 text = "Boost: SPACE"
-custom_minimum_size = Vector2(0, 30)
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/font_size = 14
 
-[node name="DropLabel" type="Label" parent="Controls"]
+[node name="DropLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
 text = "Drop Item: D"
-custom_minimum_size = Vector2(0, 30)
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/font_size = 14
 
-[node name="MaskLabel" type="Label" parent="Controls"]
+[node name="MaskLabel" type="Label" parent="BottomLeft"]
+layout_mode = 2
 text = "Use Mask: M"
-custom_minimum_size = Vector2(0, 30)
+theme_override_colors/font_color = Color(1, 1, 1, 0.8)
+theme_override_font_sizes/font_size = 14
+
+[node name="BottomRight" type="VBoxContainer" parent="."]
+offset_left = 700.0
+offset_top = 520.0
+offset_right = 940.0
+offset_bottom = 580.0
+theme_override_constants/separation = 5
+
+[node name="AQIIndicator" type="Label" parent="BottomRight"]
+layout_mode = 2
+text = "AQI 250 - Hazardous"
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 2
+
+[node name="MaskInventoryLabel" type="Label" parent="BottomRight"]
+layout_mode = 2
+text = "Masks: 0/5"
+theme_override_colors/font_color = Color(0.5, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 2
+
+[node name="CoinsLabel" type="Label" parent="BottomRight"]
+layout_mode = 2
+text = "AIR: 0"
+theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 2

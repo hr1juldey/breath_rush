@@ -17,7 +17,7 @@ var base_drain_multiplier = 0.01666  # Health drain per second based on AQI
 
 # Mask system
 var mask_time = 0.0
-var mask_duration = 15.0
+var mask_duration = 30.0  # Increased from 15 to 30 seconds
 var mask_hp_restore = 10
 var mask_leak_time = 5.0
 var mask_leak_rate = 1.0
@@ -79,6 +79,9 @@ func _process(delta):
 		elapsed_time += delta
 		if elapsed_time >= grace_period:
 			grace_period_active = false
+			var logger = get_node_or_null("/root/Logger")
+			if logger:
+				logger.info(0, "Grace period ended at %.2f seconds" % elapsed_time)
 
 	# Periodic debug logging (every 60 frames = ~1 second at 60 FPS)
 	if Engine.get_frames_drawn() % 60 == 0:
@@ -204,20 +207,21 @@ func calculate_health_drain():
 	return max(0.1, aqi_current / 150.0)
 
 func apply_mask():
-	# If mask already active or inventory full, add to inventory
-	if mask_time > 0:
-		# Mask already active, store in inventory
+	# Always try to add to inventory first if there's space and no active mask
+	# This prevents race conditions when picking up multiple masks quickly
+	if mask_time > 0 or mask_inventory > 0:
+		# Mask active OR already have inventory - store this pickup
 		add_mask_to_inventory()
+		var logger = get_node_or_null("/root/Logger")
+		if logger:
+			logger.info(0, "Mask stored in inventory (%d/5)" % mask_inventory)
 		return
 
-	# Check if we have masks in inventory
-	if mask_inventory > 0:
-		# Don't pick up, already have masks
-		add_mask_to_inventory()
-		return
-
-	# No mask active and inventory empty - use immediately
+	# Only use immediately if NO mask active AND inventory empty
 	use_mask_from_inventory()
+	var logger = get_node_or_null("/root/Logger")
+	if logger:
+		logger.info(0, "Mask activated immediately")
 
 func add_mask_to_inventory():
 	if mask_inventory < max_mask_inventory:
@@ -275,9 +279,17 @@ func exit_charging_zone():
 	charge_time = 0
 
 func take_damage(amount):
+	# Don't take damage during grace period
+	if grace_period_active:
+		return
+
 	health -= amount
 	health = clamp(health, 0, max_health)
 	health_changed.emit(health)
+
+	var logger = get_node_or_null("/root/Logger")
+	if logger:
+		logger.info(3, "Player took %.1f damage, health now: %.1f" % [amount, health])
 
 func set_aqi(aqi_value):
 	aqi_current = aqi_value

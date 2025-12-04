@@ -1,41 +1,74 @@
 extends CanvasLayer
+# Charge display (battery)
+@onready var charge_display = $TopLeft/ChargeDisplay
 
-# Health dots
-@onready var health_dot1 = $TopLeft/MarginContainer/VBox/HealthDots/HealthDot1
-@onready var health_dot2 = $TopLeft/MarginContainer/VBox/HealthDots/HealthDot2
-@onready var health_dot3 = $TopLeft/MarginContainer/VBox/HealthDots/HealthDot3
-@onready var health_dot4 = $TopLeft/MarginContainer/VBox/HealthDots/HealthDot4
-@onready var health_dot5 = $TopLeft/MarginContainer/VBox/HealthDots/HealthDot5
+# Lung display (health) - base layer for damage state
+@onready var lung_base = $TopRight/LungBase
 
-# Lung icons
-@onready var lung1_fill = $TopRight/MarginContainer/VBox/LungIcons/Lung1/Fill
-@onready var lung2_fill = $TopRight/MarginContainer/VBox/LungIcons/Lung2/Fill
-@onready var lung3_fill = $TopRight/MarginContainer/VBox/LungIcons/Lung3/Fill
-@onready var lung4_fill = $TopRight/MarginContainer/VBox/LungIcons/Lung4/Fill
-@onready var lung5_fill = $TopRight/MarginContainer/VBox/LungIcons/Lung5/Fill
+# Lung display - breathing animation overlay
+@onready var lung_breathing = $TopRight/LungBreathing
 
 # Mask timer
 @onready var mask_timer_container = $CenterTop/MaskTimer
-@onready var mask_time_label = $CenterTop/MaskTimer/MarginContainer/HBox/VBox/TimeLabel
+@onready var mask_timer_label = $CenterTop/MaskTimer/TimerLabel
 
 # Bottom indicators
 @onready var aqi_indicator = $BottomRight/AQIIndicator
 @onready var mask_inventory_label = $BottomRight/MaskInventoryLabel
 @onready var coins_label = $BottomRight/CoinsLabel
 
+# Charge sprite paths (7 battery states)
+const CHARGE_SPRITES = [
+	"res://assets/ui/charge/charge_5_full.webp",      # 100%
+	"res://assets/ui/charge/charge_4_cells.webp",     # 80%
+	"res://assets/ui/charge/charge_3_cells.webp",     # 60%
+	"res://assets/ui/charge/charge_2_cells.webp",     # 40%
+	"res://assets/ui/charge/charge_1_cell.webp",      # 20%
+	"res://assets/ui/charge/charge_1_red.webp",       # Critical
+	"res://assets/ui/charge/charge_empty.webp"        # 0%
+]
+
+# Health sprite paths (6 damage states)
+const HEALTH_DAMAGE_SPRITES = [
+	"res://assets/ui/health/health_damage_5healthy.webp",
+	"res://assets/ui/health/health_damage_4healthy_1damaged.webp",
+	"res://assets/ui/health/health_damage_3healthy_2damaged.webp",
+	"res://assets/ui/health/health_damage_2healthy_3damaged.webp",
+	"res://assets/ui/health/health_damage_1healthy_4damaged.webp",
+	"res://assets/ui/health/health_damage_all_damaged.webp"
+]
+
+# Breathing animation sprites (6 frames)
+const HEALTH_BREATHING_SPRITES = [
+	"res://assets/ui/health/health_breathing_breathing_1.webp",
+	"res://assets/ui/health/health_breathing_breathing_2.webp",
+	"res://assets/ui/health/health_breathing_breathing_3.webp",
+	"res://assets/ui/health/health_breathing_breathing_4.webp",
+	"res://assets/ui/health/health_breathing_breathing_5.webp",
+	"res://assets/ui/health/health_breathing_breathing_6.webp"
+]
+
+# Breathing animation
+var breathing_frame = 0
+var breathing_timer = 0.0
+const BREATHING_SPEED = 0.15  # seconds per frame
+
+# Game state
 var player_ref = null
 var current_coins = 0
-var health_dots = []
-var lung_fills = []
-
-# Pulse animation
-var pulse_time = 0.0
-var pulse_speed = 2.0
 
 func _ready():
-	# Store references in arrays for easier management
-	health_dots = [health_dot1, health_dot2, health_dot3, health_dot4, health_dot5]
-	lung_fills = [lung1_fill, lung2_fill, lung3_fill, lung4_fill, lung5_fill]
+	# Setup charge display with initial state (100%)
+	charge_display.texture = load(CHARGE_SPRITES[0])
+
+	# Setup lung displays with initial state (5 healthy)
+	lung_base.texture = load(HEALTH_DAMAGE_SPRITES[0])
+	lung_breathing.texture = load(HEALTH_BREATHING_SPRITES[0])
+
+	# Setup mask timer font
+	var font = load("res://assets/fonts/PressStart2P-Regular.ttf")
+	mask_timer_label.add_theme_font_override("font", font)
+	mask_timer_label.add_theme_font_size_override("font_size", 12)
 
 	# Find player reference
 	var parent = get_parent()
@@ -49,22 +82,20 @@ func _ready():
 		player_ref.mask_deactivated.connect(_on_mask_deactivated)
 		player_ref.mask_inventory_changed.connect(_on_mask_inventory_changed)
 
-		# Initialize displays with current player values (deferred to ensure player is initialized)
+		# Initialize displays
 		call_deferred("_initialize_displays")
 
 func _process(delta):
 	if player_ref:
 		update_mask_timer()
 		update_aqi_display()
-		update_lung_pulse(delta)
+		update_lung_animation(delta)
 
 func _on_health_changed(new_health: float) -> void:
-	update_health_dots(new_health)
-	update_lung_fills(new_health)
+	update_lung_display(new_health)
 
 func _on_battery_changed(new_battery: float) -> void:
-	# Battery is no longer displayed visually in the new HUD
-	pass
+	update_charge_display(new_battery)
 
 func _on_mask_activated(_duration: float) -> void:
 	if mask_timer_container:
@@ -74,57 +105,52 @@ func _on_mask_deactivated() -> void:
 	if mask_timer_container:
 		mask_timer_container.hide()
 
-func update_health_dots(health: float) -> void:
-	# Show/hide health dots based on health percentage
-	# Each dot represents 20% health
-	var dots_to_show = int(ceil(health / 20.0))
+# === CHARGE/BATTERY DISPLAY ===
+func get_charge_index(battery_percent: float) -> int:
+	"""Map battery percentage to sprite index in CHARGE_SPRITES"""
+	if battery_percent >= 85: return 0    # 5 cells - Full
+	elif battery_percent >= 65: return 1  # 4 cells
+	elif battery_percent >= 45: return 2  # 3 cells
+	elif battery_percent >= 25: return 3  # 2 cells
+	elif battery_percent >= 10: return 4  # 1 green cell
+	elif battery_percent > 0: return 5    # 1 red cell - Critical
+	else: return 6                         # Empty
 
-	for i in range(health_dots.size()):
-		if health_dots[i]:
-			if i < dots_to_show:
-				health_dots[i].modulate = Color(0.2, 1.0, 0.3, 1.0)  # Green
-			else:
-				health_dots[i].modulate = Color(0.3, 0.3, 0.3, 0.4)  # Dimmed gray
+func update_charge_display(battery: float) -> void:
+	"""Update charge display to show correct battery level"""
+	var index = get_charge_index(battery)
+	charge_display.texture = load(CHARGE_SPRITES[index])
 
-func update_lung_fills(health: float) -> void:
-	# Update lung fill opacity based on health
-	# Each lung represents 20% health
-	var health_percent = health / 100.0
+# === LUNG/HEALTH DISPLAY ===
+func get_health_row(health_percent: float) -> int:
+	"""Map health percentage to row index in health.webp"""
+	if health_percent > 80: return 0     # Row 0: 5 healthy lungs
+	elif health_percent > 60: return 1   # Row 1: 4 healthy, 1 damaged
+	elif health_percent > 40: return 2   # Row 2: 3 healthy, 2 damaged
+	elif health_percent > 20: return 3   # Row 3: 2 healthy, 3 damaged
+	elif health_percent > 0: return 4    # Row 4: 1 healthy, 4 damaged
+	else: return 5                       # Row 5: All damaged
 
-	for i in range(lung_fills.size()):
-		if lung_fills[i]:
-			var lung_threshold = float(i) / 5.0
-			if health_percent >= lung_threshold:
-				# This lung should be visible
-				var lung_alpha = clamp((health_percent - lung_threshold) * 5.0, 0.0, 1.0)
-				lung_fills[i].modulate.a = lung_alpha
-			else:
-				lung_fills[i].modulate.a = 0.0
+func update_lung_display(health: float) -> void:
+	"""Update lung display (LEFT column - damage state)"""
+	var row = get_health_row(health)
+	# LEFT column at x=0 shows damage progression
+	lung_base_atlas.region = Rect2(0, row * HEALTH_ROW_HEIGHT, HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT)
 
-func update_lung_pulse(delta: float) -> void:
-	if not player_ref:
-		return
-
-	# Create breathing/pulsing effect for lungs
-	pulse_time += delta * pulse_speed
-	var pulse_scale = 1.0 + sin(pulse_time) * 0.1  # Pulse between 0.9 and 1.1
-
-	# Apply pulse to all visible lung fills
-	var health_percent = player_ref.health / 100.0
-	for i in range(lung_fills.size()):
-		if lung_fills[i] and lung_fills[i].modulate.a > 0.0:
-			lung_fills[i].scale = Vector2(pulse_scale, pulse_scale)
-
+# === MASK TIMER DISPLAY ===
 func update_mask_timer() -> void:
-	if player_ref and mask_time_label:
+	"""Update mask countdown timer text"""
+	if player_ref and mask_timer_label:
 		if player_ref.mask_time > 0:
-			var seconds_remaining = int(player_ref.mask_time) + 1
-			mask_time_label.text = "%d sec remaining..." % seconds_remaining
+			var seconds = int(ceil(player_ref.mask_time))
+			mask_timer_label.text = "%d" % seconds
 		else:
 			if mask_timer_container:
 				mask_timer_container.hide()
 
+# === AQI DISPLAY ===
 func update_aqi_display() -> void:
+	"""Update AQI indicator with current air quality"""
 	if not aqi_indicator or not player_ref:
 		return
 
@@ -148,29 +174,39 @@ func update_aqi_display() -> void:
 	aqi_indicator.text = aqi_text
 	aqi_indicator.modulate = color
 
+# === COINS/CURRENCY ===
 func add_coins(amount: int) -> void:
+	"""Add coins to the player's total"""
 	current_coins += amount
 	update_coin_display()
 
 func update_coin_display() -> void:
+	"""Update coin display label"""
 	if coins_label:
 		coins_label.text = "AIR: %d" % current_coins
 
 func reset_coins() -> void:
+	"""Reset coin count to zero"""
 	current_coins = 0
 	update_coin_display()
 
 func get_coins_earned() -> int:
+	"""Get total coins earned this session"""
 	return current_coins
 
+# === MASK INVENTORY ===
 func _on_mask_inventory_changed(count: int) -> void:
+	"""Handle mask inventory changes"""
 	update_mask_inventory_display(count)
 
 func update_mask_inventory_display(count: int) -> void:
+	"""Update mask inventory label"""
 	if mask_inventory_label:
 		mask_inventory_label.text = "Masks: %d/5" % count
 
+# === INITIALIZATION ===
 func _initialize_displays() -> void:
+	"""Initialize all displays with current player values"""
 	if player_ref:
 		_on_health_changed(player_ref.health)
 		_on_battery_changed(player_ref.battery)

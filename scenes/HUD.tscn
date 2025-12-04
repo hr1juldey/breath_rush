@@ -1,242 +1,84 @@
-[gd_scene load_steps=6 format=3 uid="uid://d6jl4a6t8i"]
+[gd_scene load_steps=5 format=3 uid="uid://d6jl4a6t8i"]
 
 [ext_resource type="Script" path="res://scripts/HUD.gd" id="1_hud12"]
-[ext_resource type="Texture2D" uid="uid://c1234567890a" path="res://assets/ui/ui_minidot.webp" id="2_health_dot"]
-[ext_resource type="Texture2D" uid="uid://c1234567890b" path="res://assets/ui/ui_lung_bg.webp" id="3_lung_bg"]
-[ext_resource type="Texture2D" uid="uid://c1234567890c" path="res://assets/ui/ui_lung_fill.webp" id="4_lung_fill"]
-[ext_resource type="Texture2D" uid="uid://c1234567890d" path="res://assets/pickups/mask.webp" id="5_mask"]
+[ext_resource type="Texture2D" path="res://assets/ui/charge.webp" id="charge_tex"]
+[ext_resource type="Texture2D" path="res://assets/ui/health.webp" id="health_tex"]
+[ext_resource type="Texture2D" path="res://assets/ui/mask_timer.webp" id="mask_timer_tex"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud12")
 
-[node name="TopLeft" type="PanelContainer" parent="."]
+[node name="TopLeft" type="Control" parent="."]
+layout_mode = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 220.0
-offset_bottom = 90.0
+offset_bottom = 100.0
 
-[node name="MarginContainer" type="MarginContainer" parent="TopLeft"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBox" type="VBoxContainer" parent="TopLeft/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="HealthLabel" type="Label" parent="TopLeft/MarginContainer/VBox"]
-layout_mode = 2
-text = "Health"
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 16
-
-[node name="HealthDots" type="HBoxContainer" parent="TopLeft/MarginContainer/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="HealthDot1" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("2_health_dot")
+[node name="ChargeDisplay" type="TextureRect" parent="TopLeft"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("charge_tex")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="HealthDot2" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("2_health_dot")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HealthDot3" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("2_health_dot")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HealthDot4" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("2_health_dot")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="HealthDot5" type="TextureRect" parent="TopLeft/MarginContainer/VBox/HealthDots"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("2_health_dot")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="TopRight" type="PanelContainer" parent="."]
+[node name="TopRight" type="Control" parent="."]
+layout_mode = 0
 offset_left = 740.0
 offset_top = 20.0
 offset_right = 940.0
-offset_bottom = 90.0
+offset_bottom = 100.0
 
-[node name="MarginContainer" type="MarginContainer" parent="TopRight"]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBox" type="VBoxContainer" parent="TopRight/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="LungLabel" type="Label" parent="TopRight/MarginContainer/VBox"]
-layout_mode = 2
-text = "Lung Health"
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 16
-horizontal_alignment = 2
-
-[node name="LungIcons" type="HBoxContainer" parent="TopRight/MarginContainer/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 8
-alignment = 1
-
-[node name="Lung1" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("3_lung_bg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung1"]
-layout_mode = 1
-anchors_preset = 15
+[node name="LungBase" type="TextureRect" parent="TopRight"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("4_lung_fill")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Lung2" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("3_lung_bg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung2"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_lung_fill")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Lung3" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("3_lung_bg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung3"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_lung_fill")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Lung4" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("3_lung_bg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung4"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_lung_fill")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Lung5" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons"]
-custom_minimum_size = Vector2(24, 24)
-layout_mode = 2
-texture = ExtResource("3_lung_bg")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Fill" type="TextureRect" parent="TopRight/MarginContainer/VBox/LungIcons/Lung5"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_lung_fill")
+texture = ExtResource("health_tex")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="CenterTop" type="CenterContainer" parent="."]
+layout_mode = 0
 offset_left = 280.0
 offset_top = 20.0
 offset_right = 680.0
 offset_bottom = 100.0
 
-[node name="MaskTimer" type="PanelContainer" parent="CenterTop"]
+[node name="MaskTimer" type="Control" parent="CenterTop"]
+layout_mode = 2
 visible = false
-layout_mode = 2
+custom_minimum_size = Vector2(500, 50)
 
-[node name="MarginContainer" type="MarginContainer" parent="CenterTop/MaskTimer"]
-layout_mode = 2
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 15
-
-[node name="HBox" type="HBoxContainer" parent="CenterTop/MaskTimer/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 15
-alignment = 1
-
-[node name="MaskIcon" type="TextureRect" parent="CenterTop/MaskTimer/MarginContainer/HBox"]
-custom_minimum_size = Vector2(48, 48)
-layout_mode = 2
-texture = ExtResource("5_mask")
+[node name="Background" type="TextureRect" parent="CenterTop/MaskTimer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("mask_timer_tex")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="VBox" type="VBoxContainer" parent="CenterTop/MaskTimer/MarginContainer/HBox"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="MaskLabel" type="Label" parent="CenterTop/MaskTimer/MarginContainer/HBox/VBox"]
-layout_mode = 2
-text = "N95 MASK ACTIVE"
-theme_override_colors/font_color = Color(0.2, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 18
-
-[node name="TimeLabel" type="Label" parent="CenterTop/MaskTimer/MarginContainer/HBox/VBox"]
-layout_mode = 2
-text = "30 sec remaining..."
-theme_override_colors/font_color = Color(1, 1, 1, 0.9)
+[node name="TimerLabel" type="Label" parent="CenterTop/MaskTimer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "30"
+horizontal_alignment = 1
+vertical_alignment = 1
 theme_override_font_sizes/font_size = 16
 
 [node name="BottomLeft" type="VBoxContainer" parent="."]
+layout_mode = 0
 offset_left = 20.0
 offset_top = 500.0
 offset_right = 350.0
@@ -268,6 +110,7 @@ theme_override_colors/font_color = Color(1, 1, 1, 0.8)
 theme_override_font_sizes/font_size = 14
 
 [node name="BottomRight" type="VBoxContainer" parent="."]
+layout_mode = 0
 offset_left = 700.0
 offset_top = 520.0
 offset_right = 940.0

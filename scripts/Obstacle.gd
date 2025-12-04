@@ -13,6 +13,13 @@ func _ready():
 
 	body_entered.connect(_on_body_entered)
 
+	# Set z-index for depth: Player is at z-index 5
+	# 70% of cars behind player (z-index 0-4), 30% in front (z-index 6-7)
+	if randf() < 0.7:
+		z_index = randi_range(0, 4)  # Behind player
+	else:
+		z_index = randi_range(6, 7)  # In front of player
+
 func _process(delta):
 	# Move obstacle left with scroll speed
 	position.x -= scroll_speed * delta

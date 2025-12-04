@@ -47,12 +47,18 @@ signal sapling_planted(x: float, y: float)
 
 var aqi_current = 250.0
 
+@onready var mask_sprite = $MaskSprite
+
 func _ready():
 	position.y = target_y
 	health = max_health
 	battery = max_battery
 	health_changed.emit(health)
 	battery_changed.emit(battery)
+
+	# Ensure mask sprite is hidden initially
+	if mask_sprite:
+		mask_sprite.visible = false
 
 	# Log initial state (Logger will be available after first frame)
 	call_deferred("_log_initial_state")
@@ -69,6 +75,10 @@ func _process(delta):
 			mask_time = 0
 			mask_deactivated.emit()
 			_log_mask_deactivated()
+
+			# Hide mask sprite
+			if mask_sprite:
+				mask_sprite.visible = false
 
 	# Handle health drain
 	var current_drain = calculate_health_drain()
@@ -162,13 +172,20 @@ func stop_boost():
 	is_boosting = false
 
 func calculate_health_drain():
-	return max(0.1, aqi_current / 60.0)
+	# Drain formula: AQI / 150 = HP per second
+	# At AQI 250: 250/150 = 1.67 HP/sec (100 HP lasts ~60 seconds)
+	# At AQI 500: 500/150 = 3.33 HP/sec (100 HP lasts ~30 seconds)
+	return max(0.1, aqi_current / 150.0)
 
 func apply_mask():
 	health = min(health + mask_hp_restore, max_health)
 	mask_time = mask_duration
 	mask_activated.emit(mask_duration)
 	health_changed.emit(health)
+
+	# Show mask sprite
+	if mask_sprite:
+		mask_sprite.visible = true
 
 func pickup_filter():
 	if carried_item == null:

@@ -8,25 +8,19 @@
       "x": 1200,
       "y": 300,
       "type": "car",
-      "delay": 2.0
-    },
-    {
-      "x": 1600,
-      "y": 360,
-      "type": "bike",
       "delay": 3.0
     },
     {
-      "x": 2000,
-      "y": 240,
-      "type": "car",
-      "delay": 4.0
+      "x": 1800,
+      "y": 360,
+      "type": "bike",
+      "delay": 6.0
     },
     {
       "x": 2400,
-      "y": 300,
-      "type": "bike",
-      "delay": 5.0
+      "y": 240,
+      "type": "car",
+      "delay": 9.0
     }
   ],
   "pickup_points": [

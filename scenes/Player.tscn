@@ -1,17 +1,25 @@
-[gd_scene load_steps=4 format=3 uid="uid://cjtl9d0wq0gf"]
+[gd_scene load_steps=5 format=3 uid="uid://cjtl9d0wq0gf"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_abc12"]
 [ext_resource type="Texture2D" path="res://assets/player/vim_base.webp" id="2_def34"]
+[ext_resource type="Texture2D" path="res://assets/pickups/mask.webp" id="3_mask"]
 
 [sub_resource type="RectangleShape2D" id="RectShape_1"]
 size = Vector2(64, 64)
 
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(180, 300)
+z_index = 5
 script = ExtResource("1_abc12")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_def34")
+
+[node name="MaskSprite" type="Sprite2D" parent="."]
+texture = ExtResource("3_mask")
+visible = false
+position = Vector2(0, -15)
+scale = Vector2(0.6, 0.6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectShape_1")

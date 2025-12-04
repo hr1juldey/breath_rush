@@ -33,7 +33,7 @@ func _ready():
 func _process(delta):
 	time_accumulated += delta
 
-	if current_chunk_data and spawn_index < current_chunk_data.get("spawn_points", []).size():
+	if current_chunk_data:
 		process_spawns()
 
 func process_spawns() -> void:
@@ -41,6 +41,14 @@ func process_spawns() -> void:
 		return
 
 	var spawn_points = current_chunk_data.get("spawn_points", [])
+
+	# Check if we've spawned all points, then reset to loop the chunk
+	if spawn_index >= spawn_points.size():
+		# Reset all spawn points for next loop
+		for spawn_point in spawn_points:
+			spawn_point["spawned"] = false
+		spawn_index = 0
+		time_accumulated = 0.0
 
 	for spawn_point in spawn_points:
 		var delay = spawn_point.get("delay", 0.0)

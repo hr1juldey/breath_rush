@@ -25,6 +25,7 @@ var brand_config = {}
 var scroll_speed = 400.0
 var base_scroll_speed = 400.0
 var boost_multiplier = 1.35
+var game_over = false
 
 func _ready():
 	# Load configurations
@@ -193,10 +194,15 @@ func create_tree_visual(tree_data: Dictionary) -> void:
 	world.find_child("Trees").add_child(tree)
 
 func _on_player_health_changed(new_health: float) -> void:
-	if new_health <= 0:
+	if new_health <= 0 and not game_over:
 		player_died()
 
 func player_died() -> void:
+	if game_over:
+		return
+
+	game_over = true
+
 	# Stop all game processes
 	set_process(false)
 
@@ -245,19 +251,20 @@ func _on_boost_stopped() -> void:
 
 func update_world_scroll_speed() -> void:
 	# Update scroll speed for all scrolling objects
-	if road:
+	if road and is_instance_valid(road):
 		road.set_scroll_speed(scroll_speed)
 
-	# Update all obstacles
-	for child in world.get_children():
-		if child.has_method("set_scroll_speed"):
-			child.set_scroll_speed(scroll_speed)
+	# Update all obstacles in world
+	if world and is_instance_valid(world):
+		for child in world.get_children():
+			if is_instance_valid(child) and child.has_method("set_scroll_speed"):
+				child.set_scroll_speed(scroll_speed)
 
 	# Update spawner objects
-	if spawner:
+	if spawner and is_instance_valid(spawner):
 		for obstacle in spawner.obstacle_pool:
-			if obstacle.has_method("set_scroll_speed"):
+			if is_instance_valid(obstacle) and obstacle.has_method("set_scroll_speed"):
 				obstacle.set_scroll_speed(scroll_speed)
 		for pickup in spawner.pickup_pool:
-			if pickup.has_method("set_scroll_speed"):
+			if is_instance_valid(pickup) and pickup.has_method("set_scroll_speed"):
 				pickup.set_scroll_speed(scroll_speed)

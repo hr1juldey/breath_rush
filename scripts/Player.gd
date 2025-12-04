@@ -52,6 +52,11 @@ signal boost_stopped
 
 var aqi_current = 250.0
 
+# Grace period before health decay starts
+var grace_period = 2.0  # 2 seconds
+var elapsed_time = 0.0
+var grace_period_active = true
+
 @onready var mask_sprite = $MaskSprite
 
 func _ready():
@@ -69,6 +74,12 @@ func _ready():
 	call_deferred("_log_initial_state")
 
 func _process(delta):
+	# Track elapsed time for grace period
+	if grace_period_active:
+		elapsed_time += delta
+		if elapsed_time >= grace_period:
+			grace_period_active = false
+
 	# Periodic debug logging (every 60 frames = ~1 second at 60 FPS)
 	if Engine.get_frames_drawn() % 60 == 0:
 		_log_periodic_state()
@@ -85,18 +96,19 @@ func _process(delta):
 			if mask_sprite:
 				mask_sprite.visible = false
 
-	# Handle health drain
-	var current_drain = calculate_health_drain()
+	# Handle health drain (only after grace period)
+	if not grace_period_active:
+		var current_drain = calculate_health_drain()
 
-	if mask_time > 0:
-		# During mask, no drain, but add leak in last 5 seconds
-		if mask_time < mask_leak_time:
-			health -= mask_leak_rate * delta
-	else:
-		health -= current_drain * delta
+		if mask_time > 0:
+			# During mask, no drain, but add leak in last 5 seconds
+			if mask_time < mask_leak_time:
+				health -= mask_leak_rate * delta
+		else:
+			health -= current_drain * delta
 
-	health = clamp(health, 0, max_health)
-	health_changed.emit(health)
+		health = clamp(health, 0, max_health)
+		health_changed.emit(health)
 
 	# Handle battery drain while boosting
 	if is_boosting:

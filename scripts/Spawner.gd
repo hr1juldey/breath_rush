@@ -131,9 +131,26 @@ func set_current_chunk(chunk_data: Dictionary) -> void:
 	# Spawn initial pickups only once at game start
 	if not initial_pickups_spawned:
 		var pickup_points = chunk_data.get("pickup_points", [])
+		var mask_spawned = false
+
 		for pickup_point in pickup_points:
-			if randf() < pickup_point.get("probability", 0.5):
-				spawn_pickup(pickup_point)
+			var pickup_type = pickup_point.get("type", "mask")
+
+			if pickup_type == "mask":
+				# For initial game start, guarantee at least one mask spawns
+				if not mask_spawned:
+					# First mask always spawns
+					spawn_pickup(pickup_point)
+					mask_spawned = true
+				else:
+					# Additional masks use probability
+					if randf() < pickup_point.get("probability", 0.5):
+						spawn_pickup(pickup_point)
+			else:
+				# Other pickups use normal probability
+				if randf() < pickup_point.get("probability", 0.5):
+					spawn_pickup(pickup_point)
+
 		initial_pickups_spawned = true
 
 func clear_spawned_objects() -> void:

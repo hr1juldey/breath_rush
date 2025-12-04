@@ -176,8 +176,8 @@ func log_message(category: int, level: LogLevel, message: String) -> void:
 	# Format timestamp
 	var elapsed_ms = Time.get_ticks_msec() - session_start_time
 	var timestamp = "[%02d:%02d.%03d]" % [
-		int(elapsed_ms / 60000) % 60,
-		int(elapsed_ms / 1000) % 60,
+		int(elapsed_ms / 60000.0) % 60,
+		int(elapsed_ms / 1000.0) % 60,
 		elapsed_ms % 1000
 	]
 
@@ -262,7 +262,7 @@ func log_object_state(category: int, node: Node, label: String = "") -> void:
 	if not enabled_categories.get(category, true):
 		return
 
-	var obj_label = label if label != "" else node.name
+	var obj_label: String = label if label != "" else str(node.name)
 
 	# Get position and z-index if Node2D
 	var pos = Vector2.ZERO

@@ -5,11 +5,13 @@
 [ext_resource type="Texture2D" uid="uid://bkxd0x84l3a5b" path="res://assets/pickups/mask.webp" id="3_mask"]
 
 [sub_resource type="RectangleShape2D" id="RectShape_1"]
-size = Vector2(252.36804, 158.4325)
+size = Vector2(522.8918, 673.57874)
 
 [node name="Player" type="CharacterBody2D"]
 z_index = 5
 position = Vector2(180, 300)
+collision_layer = 1
+collision_mask = 7
 script = ExtResource("1_abc12")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -17,7 +19,7 @@ texture = ExtResource("2_def34")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
-position = Vector2(12.557266, -231.68362)
+position = Vector2(147.99997, -15.9999695)
 scale = Vector2(1.352678, 1.2978022)
 skew = 0.097738385
 shape = SubResource("RectShape_1")

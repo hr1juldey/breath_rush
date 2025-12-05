@@ -52,7 +52,12 @@ func _on_body_entered(body):
 
 func handle_pickup() -> void:
 	# Defensive checks: prevent double-processing
-	if not player_ref or not visible:
+	if not player_ref:
+		print("[Pickup] BLOCKED - player_ref is null")
+		return
+
+	if not visible:
+		print("[Pickup] BLOCKED - mask is invisible (visible=false)")
 		return
 
 	# Check cooldown (prevents immediate re-pickup after rejection)
@@ -90,7 +95,7 @@ func handle_pickup() -> void:
 
 func return_to_pool():
 	if spawner_ref and is_instance_valid(spawner_ref):
-		spawner_ref.return_to_pool(self, false)
+		spawner_ref.return_to_pool(self)
 	else:
 		visible = false
 

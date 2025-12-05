@@ -34,8 +34,8 @@
     {
       "x": 1800,
       "y": 300,
-      "type": "filter",
-      "probability": 0.3,
+      "type": "mask",
+      "probability": 0.9,
       "delay": 6.0
     },
     {
@@ -48,8 +48,8 @@
     {
       "x": 2600,
       "y": 240,
-      "type": "sapling",
-      "probability": 0.3,
+      "type": "mask",
+      "probability": 0.9,
       "delay": 12.0
     },
     {

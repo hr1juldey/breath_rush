@@ -83,28 +83,30 @@ func setup_player_reference(player: Node) -> void:
 		player_ref.health_changed.connect(_on_health_changed)
 		print("[HealthBreathingUI] ✓ Connected to player health_changed signal")
 
-		# Initialize with current health
-		if player_ref.has_method("get") or "health" in player_ref:
-			var current_health = player_ref.health
-			print("[HealthBreathingUI] Initializing with current health: ", current_health, "%")
-			_on_health_changed(current_health)
+		# Initialize with current health from health component
+		if player_ref.health:
+			var current_health = player_ref.health.health
+			var health_percent = (current_health / player_ref.health.max_health) * 100.0
+			print("[HealthBreathingUI] Initializing with current health: ", health_percent, "%")
+			_on_health_changed(health_percent)
 	else:
 		push_warning("[HealthBreathingUI] WARNING: setup_player_reference called with null player")
 
 func _on_health_changed(new_health: float) -> void:
 	"""Called when player health changes"""
-	print("[HealthBreathingUI] ━━━ Health changed: ", new_health, "% ━━━")
+	# TEMP: Silenced for mask pickup debugging
+	#print("[HealthBreathingUI] ━━━ Health changed: ", new_health, "% ━━━")
 
 	# Map health percentage (0-100) to damage level (0-5)
 	var health_level = _get_health_level(new_health)
-	print("[HealthBreathingUI] Mapped to level: ", health_level, " (", max(0, 5 - health_level), " healthy lungs)")
+	#print("[HealthBreathingUI] Mapped to level: ", health_level, " (", max(0, 5 - health_level), " healthy lungs)")
 
 	if health_level != current_health_level:
 		print("[HealthBreathingUI] Level changed: ", current_health_level, " → ", health_level)
 		current_health_level = health_level
 		_update_health_display(health_level)
-	else:
-		print("[HealthBreathingUI] Level unchanged (still level ", health_level, ")")
+	#else:
+		#print("[HealthBreathingUI] Level unchanged (still level ", health_level, ")")
 
 func _get_health_level(health_percent: float) -> int:
 	"""

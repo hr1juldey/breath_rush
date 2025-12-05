@@ -87,30 +87,32 @@ func setup_player_reference(player: Node) -> void:
 		player_ref.battery_changed.connect(_on_battery_changed)
 		print("[BatteryTransitionUI] ✓ Connected to player battery_changed signal")
 
-		# Initialize with current battery
-		if "battery" in player_ref:
-			var current_battery = player_ref.battery
-			print("[BatteryTransitionUI] Initializing with current battery: ", current_battery, "%")
-			_on_battery_changed(current_battery)
+		# Initialize with current battery from battery component
+		if player_ref.battery:
+			var current_battery = player_ref.battery.battery
+			var battery_percent = (current_battery / player_ref.battery.max_battery) * 100.0
+			print("[BatteryTransitionUI] Initializing with current battery: ", battery_percent, "%")
+			_on_battery_changed(battery_percent)
 	else:
 		push_warning("[BatteryTransitionUI] WARNING: setup_player_reference called with null player")
 
 func _on_battery_changed(new_battery: float) -> void:
 	"""Called when player battery changes"""
-	print("[BatteryTransitionUI] ━━━ Battery changed: ", new_battery, "% ━━━")
+	# TEMP: Silenced for mask pickup debugging
+	#print("[BatteryTransitionUI] ━━━ Battery changed: ", new_battery, "% ━━━")
 
 	# Map battery percentage to charge level (0-6)
 	var new_level = _get_charge_level(new_battery)
 	var level_names = ["5 full", "4 cells", "3 cells", "2 cells", "1 cell", "0 red", "empty"]
-	print("[BatteryTransitionUI] Mapped to level: ", new_level, " (", level_names[new_level], ")")
+	#print("[BatteryTransitionUI] Mapped to level: ", new_level, " (", level_names[new_level], ")")
 
 	if new_level != current_charge_level:
 		var direction = "DISCHARGE" if new_level > current_charge_level else "CHARGE"
 		print("[BatteryTransitionUI] Level changed: ", current_charge_level, " → ", new_level, " (", direction, ")")
 
 		_start_transition(current_charge_level, new_level, direction)
-	else:
-		print("[BatteryTransitionUI] Level unchanged (still level ", new_level, ")")
+	#else:
+		#print("[BatteryTransitionUI] Level unchanged (still level ", new_level, ")")
 
 func _get_charge_level(battery_percent: float) -> int:
 	"""Map battery percentage to charge level (array index 0-6)"""

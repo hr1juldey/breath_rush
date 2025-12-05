@@ -93,6 +93,9 @@ func return_to_pool(pickup: Node) -> void:
 	if pickup and is_instance_valid(pickup):
 		pickup.visible = false
 		pickup.global_position = Vector2(0, 0)
+		# BUGFIX: Reset pickup state to prevent stale references
+		pickup.player_ref = null
+		pickup.pickup_cooldown = 0.0
 
 func set_scroll_speed(speed: float) -> void:
 	"""Update scroll speed for all pickups"""

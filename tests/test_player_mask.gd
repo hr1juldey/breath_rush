@@ -89,40 +89,42 @@ func test_apply_mask_wearing_and_inventory_full():
 
 func test_multiple_pickups_sequential():
 	"""
-	Test picking up multiple masks sequentially - EXPOSES BUG!
+	Test picking up multiple masks sequentially - VERIFIES FIX!
 
-	Scenario:
-	1. Pick up mask 1 → activate
-	2. Pick up mask 2 → inventory (1/5)
-	3. Pick up mask 3 → inventory (2/5)
-	4. Pick up mask 4 → inventory (3/5)
-	5. Pick up mask 5 → inventory (4/5)
-	6. Pick up mask 6 → inventory (5/5)
-	7. Pick up mask 7 → REJECT
+	Scenario (FIXED BEHAVIOR):
+	1. Pick up mask 1 → activate (total = 1)
+	2. Pick up mask 2 → inventory (total = 2)
+	3. Pick up mask 3 → inventory (total = 3)
+	4. Pick up mask 4 → inventory (total = 4)
+	5. Pick up mask 5 → inventory (total = 5) ✅ AT MAX
+	6. Pick up mask 6 → REJECT (would exceed max)
+	7. Pick up mask 7 → REJECT (would exceed max)
 	"""
 	var results = []
 
-	# Pickup 1-6 should succeed
-	for i in range(6):
+	# Pickup 1-7
+	for i in range(7):
 		results.append(mask.apply_mask())
-		gut.p("After pickup %d: inventory=%d, time=%.1f, result=%s" %
-			[i+1, mask.mask_inventory, mask.mask_time, results[-1]])
+		var total = mask.mask_inventory + (1 if mask.is_wearing_mask() else 0)
+		gut.p("After pickup %d: inventory=%d, wearing=%s, total=%d, result=%s" %
+			[i+1, mask.mask_inventory, mask.is_wearing_mask(), total, results[-1]])
 
-	# Pickup 7 should fail
-	results.append(mask.apply_mask())
-	gut.p("After pickup 7: inventory=%d, time=%.1f, result=%s" %
-		[mask.mask_inventory, mask.mask_time, results[-1]])
+	# Verify results (CORRECT BEHAVIOR)
+	assert_true(results[0], "Pickup 1 should succeed (activate, total=1)")
+	assert_true(results[1], "Pickup 2 should succeed (inventory, total=2)")
+	assert_true(results[2], "Pickup 3 should succeed (inventory, total=3)")
+	assert_true(results[3], "Pickup 4 should succeed (inventory, total=4)")
+	assert_true(results[4], "Pickup 5 should succeed (inventory, total=5)")
+	assert_false(results[5], "Pickup 6 should FAIL (would exceed max 5)")
+	assert_false(results[6], "Pickup 7 should FAIL (would exceed max 5)")
 
-	# Verify results
-	assert_true(results[0], "Pickup 1 should succeed (activate)")
-	assert_true(results[1], "Pickup 2 should succeed (inventory 1/5)")
-	assert_true(results[2], "Pickup 3 should succeed (inventory 2/5)")
-	assert_true(results[3], "Pickup 4 should succeed (inventory 3/5)")
-	assert_true(results[4], "Pickup 5 should succeed (inventory 4/5)")
-	assert_true(results[5], "Pickup 6 should succeed (inventory 5/5)")
-	assert_false(results[6], "Pickup 7 should FAIL (inventory full)")
+	# Verify final state
+	assert_eq(mask.mask_inventory, 4, "Should have 4 masks in inventory")
+	assert_true(mask.is_wearing_mask(), "Should be wearing 1 mask")
 
-	assert_eq(mask.mask_inventory, 5, "Should have 5 masks in inventory")
+	# Verify total = 5
+	var total = mask.mask_inventory + (1 if mask.is_wearing_mask() else 0)
+	assert_eq(total, 5, "Total masks should be exactly 5")
 
 # === Manual Use Tests ===
 
@@ -209,32 +211,32 @@ func test_boundary_inventory_5_reject():
 
 func test_wearing_mask_with_4_inventory():
 	"""
-	CRITICAL BUG TEST: Wearing mask + 4 inventory = 5 total
-	Should this accept or reject?
+	CRITICAL FIX VERIFICATION: Wearing mask + 4 inventory = 5 total
+	Picking up another should be REJECTED!
 
-	Current logic: checks inventory >= 5, so should ACCEPT
-	But total masks = 1 (wearing) + 4 (inventory) + 1 (pickup) = 6!
+	Fixed logic: checks (wearing + inventory) >= 5
+	Total masks = 1 (wearing) + 4 (inventory) = 5 (at max!)
+	Picking up another would = 6 (REJECT!)
 	"""
 	mask.mask_time = 15.0  # Wearing mask
 	mask.mask_inventory = 4  # 4 in inventory
 
 	# Total masks = 1 + 4 = 5 (at max!)
-	# Picking up another = 6 total!
+	# Picking up another = 6 total (should REJECT!)
 
 	var result = mask.apply_mask()
 
-	gut.p("CRITICAL: wearing=%.1f, inventory=%d, result=%s" %
+	gut.p("VERIFICATION: wearing=%.1f, inventory=%d, result=%s" %
 		[mask.mask_time, mask.mask_inventory, result])
 
-	# What SHOULD happen?
-	# Option A: Accept (only checks inventory < 5)
-	# Option B: Reject (total masks would exceed 5)
+	# CORRECT behavior: REJECT (total would exceed 5)
+	assert_false(result, "Fixed logic: REJECTS (total would be 6)")
+	assert_eq(mask.mask_inventory, 4, "Inventory stays at 4")
 
-	assert_true(result, "Current logic: accepts (only checks inventory)")
-	assert_eq(mask.mask_inventory, 5, "Inventory reaches 5")
-
-	# But now total masks = 1 (wearing) + 5 (inventory) = 6!
-	gut.p("WARNING: Total masks in system = 6 (1 wearing + 5 inventory)")
+	# Verify total = 5 (not 6!)
+	var total = mask.mask_inventory + (1 if mask.is_wearing_mask() else 0)
+	assert_eq(total, 5, "Total masks = 5 (CORRECT!)")
+	gut.p("✅ VERIFIED: Total masks = 5 (fix working!)")
 
 func test_wearing_mask_with_5_inventory():
 	"""

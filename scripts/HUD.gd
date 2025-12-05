@@ -16,7 +16,7 @@ var mask_timer_ui: Node
 
 # Mask timer (still needed for reference)
 @onready var mask_timer_container = $CenterTop/MaskTimer
-@onready var mask_timer_label = $CenterTop/MaskTimer/TimerLabel
+# Note: TimerLabel now managed by MaskTimerUI component
 
 # Bottom indicators
 @onready var aqi_indicator = $BottomRight/AQIIndicator

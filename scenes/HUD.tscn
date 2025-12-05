@@ -32,27 +32,10 @@ offset_top = 20.0
 offset_right = 940.0
 offset_bottom = 100.0
 
-[node name="LungBase" type="TextureRect" parent="TopRight"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="LungBase" type="Sprite2D" parent="TopRight"]
+position = Vector2(240, 40)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("health_tex")
-expand_mode = 1
-stretch_mode = 5
-
-[node name="LungBreathing" type="TextureRect" parent="TopRight"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("health_tex")
-expand_mode = 1
-stretch_mode = 5
-blend_mode = 1
-modulate = Color(1, 1, 1, 0.6)
 
 [node name="CenterTop" type="CenterContainer" parent="."]
 layout_mode = 0

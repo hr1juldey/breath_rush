@@ -2,11 +2,11 @@ extends CanvasLayer
 # Charge display (battery)
 @onready var charge_display = $TopLeft/ChargeDisplay
 
-# Lung display (health) - base layer for damage state
+# Lung display (health) - shader-based breathing animation
 @onready var lung_base = $TopRight/LungBase
 
-# Lung display - breathing animation overlay
-@onready var lung_breathing = $TopRight/LungBreathing
+# Health breathing animation manager (shader-based)
+var health_breathing_ui: Node
 
 # Mask timer
 @onready var mask_timer_container = $CenterTop/MaskTimer
@@ -28,71 +28,64 @@ const CHARGE_SPRITES = [
 	"res://assets/ui/charge/charge_empty.webp",       # Empty
 ]
 
-# Health sprite paths (6 damage states)
-const HEALTH_DAMAGE_SPRITES = [
-	"res://assets/ui/health/health_damage_0_healthy.webp",
-	"res://assets/ui/health/health_damage_1.webp",
-	"res://assets/ui/health/health_damage_2.webp",
-	"res://assets/ui/health/health_damage_3.webp",
-	"res://assets/ui/health/health_damage_4.webp",
-	"res://assets/ui/health/health_damage_5_critical.webp"
-]
-
-# Breathing animation sprites (6 frames)
-const HEALTH_BREATHING_SPRITES = [
-	"res://assets/ui/health/health_breathing_0.webp",
-	"res://assets/ui/health/health_breathing_1.webp",
-	"res://assets/ui/health/health_breathing_2.webp",
-	"res://assets/ui/health/health_breathing_3.webp",
-	"res://assets/ui/health/health_breathing_4.webp",
-	"res://assets/ui/health/health_breathing_5.webp"
-]
-
-# Breathing animation
-var breathing_frame = 0
-var breathing_timer = 0.0
-const BREATHING_SPEED = 0.15  # seconds per frame
+# Note: Health animation is now handled by shader in HealthBreathingUI
+# No need to manually manage breathing frames
 
 # Game state
 var player_ref = null
 var current_coins = 0
 
 func _ready():
+	print("[HUD] Initializing HUD...")
+
 	# Setup charge display with initial state (100%)
 	charge_display.texture = load(CHARGE_SPRITES[0])
-
-	# Setup lung displays with initial state (5 healthy)
-	lung_base.texture = load(HEALTH_DAMAGE_SPRITES[0])
-	lung_breathing.texture = load(HEALTH_BREATHING_SPRITES[0])
+	print("[HUD] Charge display initialized")
 
 	# Setup mask timer font
 	var font = load("res://assets/fonts/PressStart2P-Regular.ttf")
 	mask_timer_label.add_theme_font_override("font", font)
 	mask_timer_label.add_theme_font_size_override("font_size", 12)
+	print("[HUD] Mask timer font configured")
 
 	# Find player reference
 	var parent = get_parent()
+	print("[HUD] Parent scene: ", parent.name if parent else "null")
 	if parent:
 		player_ref = parent.find_child("Player")
+		print("[HUD] Player reference found: ", player_ref != null)
+		if player_ref:
+			print("[HUD] Player node: ", player_ref.name)
+
+	# Create and add health breathing UI (shader-based)
+	health_breathing_ui = load("res://scripts/HealthBreathingUI.gd").new()
+	add_child(health_breathing_ui)
+	print("[HUD] HealthBreathingUI created and added as child")
+
+	# Setup player reference for health breathing UI
+	if player_ref:
+		print("[HUD] Passing player reference to HealthBreathingUI...")
+		health_breathing_ui.setup_player_reference(player_ref)
+	else:
+		push_warning("[HUD] WARNING: No player reference found!")
 
 	if player_ref:
-		player_ref.health_changed.connect(_on_health_changed)
 		player_ref.battery_changed.connect(_on_battery_changed)
 		player_ref.mask_activated.connect(_on_mask_activated)
 		player_ref.mask_deactivated.connect(_on_mask_deactivated)
 		player_ref.mask_inventory_changed.connect(_on_mask_inventory_changed)
+		print("[HUD] Connected to player signals (battery, mask)")
 
 		# Initialize displays
 		call_deferred("_initialize_displays")
+
+	print("[HUD] ✓ Initialization complete")
 
 func _process(delta):
 	if player_ref:
 		update_mask_timer()
 		update_aqi_display()
-		update_lung_animation(delta)
-
-func _on_health_changed(new_health: float) -> void:
-	update_lung_display(new_health)
+		# Lung animation now handled by shader in HealthBreathingUI
 
 func _on_battery_changed(new_battery: float) -> void:
 	update_charge_display(new_battery)
@@ -122,27 +115,8 @@ func update_charge_display(battery: float) -> void:
 	charge_display.texture = load(CHARGE_SPRITES[index])
 
 # === LUNG/HEALTH DISPLAY ===
-func get_health_index(health_percent: float) -> int:
-	"""Map health percentage to sprite index in HEALTH_DAMAGE_SPRITES"""
-	if health_percent > 80: return 0     # 5 healthy lungs
-	elif health_percent > 60: return 1   # 4 healthy, 1 damaged
-	elif health_percent > 40: return 2   # 3 healthy, 2 damaged
-	elif health_percent > 20: return 3   # 2 healthy, 3 damaged
-	elif health_percent > 0: return 4    # 1 healthy, 4 damaged
-	else: return 5                       # All damaged
-
-func update_lung_display(health: float) -> void:
-	"""Update lung display (damage state)"""
-	var index = get_health_index(health)
-	lung_base.texture = load(HEALTH_DAMAGE_SPRITES[index])
-
-func update_lung_animation(delta: float) -> void:
-	"""Animate breathing overlay by cycling through breathing frames"""
-	breathing_timer += delta
-	if breathing_timer >= BREATHING_SPEED:
-		breathing_timer = 0.0
-		breathing_frame = (breathing_frame + 1) % HEALTH_BREATHING_SPRITES.size()
-		lung_breathing.texture = load(HEALTH_BREATHING_SPRITES[breathing_frame])
+# Note: Health display is now handled by HealthBreathingUI with shader-based breathing animation
+# No manual animation code needed - the shader handles sinusoidal breathing using TIME
 
 # === MASK TIMER DISPLAY ===
 func update_mask_timer() -> void:
@@ -215,6 +189,5 @@ func update_mask_inventory_display(count: int) -> void:
 func _initialize_displays() -> void:
 	"""Initialize all displays with current player values"""
 	if player_ref:
-		_on_health_changed(player_ref.health)
 		_on_battery_changed(player_ref.battery)
 		update_mask_inventory_display(player_ref.mask_inventory)

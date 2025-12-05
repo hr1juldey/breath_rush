@@ -31,6 +31,10 @@ var mask_spawn_threshold = 5.0  # Only spawn masks if player hasn't worn mask fo
 var recent_spawns = {}  # Dictionary: {x_y: time}
 var spawn_clearance_time = 2.0  # Seconds to keep spawn positions reserved
 
+# Minimum separation distances
+const MIN_SEPARATION_HORIZONTAL = 250.0  # Minimum X distance between cars and masks
+const MIN_SEPARATION_VERTICAL = 80.0     # Minimum Y distance (more than 1 lane)
+
 func _ready():
 	# Pre-instantiate obstacle pool
 	for i in range(pool_size_obstacles):
@@ -99,6 +103,11 @@ func spawn_obstacle(spawn_data: Dictionary) -> void:
 		var spawn_y = spawn_data.get("y", 300)
 		var obstacle_type = spawn_data.get("type", "car")
 
+		# Check if any visible pickup is too close
+		if is_too_close_to_pickups(spawn_x, spawn_y):
+			print("[Spawner] BLOCKED obstacle spawn at (%.0f, %.0f) - too close to pickup" % [spawn_x, spawn_y])
+			return  # Don't spawn obstacle - too close to pickup
+
 		obstacle.global_position = Vector2(spawn_x, spawn_y)
 		obstacle.obstacle_type = obstacle_type
 		obstacle.visible = true
@@ -113,14 +122,21 @@ func spawn_pickup(pickup_data: Dictionary) -> void:
 		var spawn_y = pickup_data.get("y", 300)
 		var pickup_type = pickup_data.get("type", "mask")
 
-		# Check if this position is too close to recent spawns
-		if is_position_occupied(spawn_x, spawn_y):
-			# Adjust Y position to a different lane
+		# Check if any visible obstacle is too close
+		if is_too_close_to_obstacles(spawn_x, spawn_y):
+			# Try alternative lanes before giving up
 			var lanes = [240, 300, 360]
+			var found_safe_lane = false
 			for lane_y in lanes:
-				if not is_position_occupied(spawn_x, lane_y):
+				if not is_too_close_to_obstacles(spawn_x, lane_y):
 					spawn_y = lane_y
+					found_safe_lane = true
+					print("[Spawner] Adjusted pickup to lane %.0f to avoid obstacle" % lane_y)
 					break
+
+			if not found_safe_lane:
+				print("[Spawner] BLOCKED pickup spawn at (%.0f, %.0f) - all lanes too close to obstacles" % [spawn_x, spawn_y])
+				return  # Don't spawn pickup - all lanes are blocked
 
 		pickup.global_position = Vector2(spawn_x, spawn_y)
 		pickup.pickup_type = pickup_type
@@ -251,3 +267,29 @@ func clean_old_spawn_records() -> void:
 			keys_to_remove.append(key)
 	for key in keys_to_remove:
 		recent_spawns.erase(key)
+
+func is_too_close_to_obstacles(pickup_x: float, pickup_y: float) -> bool:
+	"""Check if pickup position is too close to any visible obstacle"""
+	for obstacle in obstacle_pool:
+		if obstacle.visible:
+			var obstacle_pos = obstacle.global_position
+			var dx = abs(pickup_x - obstacle_pos.x)
+			var dy = abs(pickup_y - obstacle_pos.y)
+
+			# Check both horizontal and vertical separation
+			if dx < MIN_SEPARATION_HORIZONTAL and dy < MIN_SEPARATION_VERTICAL:
+				return true  # Too close!
+	return false
+
+func is_too_close_to_pickups(obstacle_x: float, obstacle_y: float) -> bool:
+	"""Check if obstacle position is too close to any visible pickup"""
+	for pickup in pickup_pool:
+		if pickup.visible:
+			var pickup_pos = pickup.global_position
+			var dx = abs(obstacle_x - pickup_pos.x)
+			var dy = abs(pickup_y - pickup_pos.y)
+
+			# Check both horizontal and vertical separation
+			if dx < MIN_SEPARATION_HORIZONTAL and dy < MIN_SEPARATION_VERTICAL:
+				return true  # Too close!
+	return false

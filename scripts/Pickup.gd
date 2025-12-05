@@ -23,6 +23,15 @@ func _process(delta):
 	if pickup_cooldown > 0:
 		pickup_cooldown -= delta
 
+	# Manual overlap check (fallback for signal failures)
+	if not player_ref and pickup_cooldown <= 0:
+		var overlapping = get_overlapping_bodies()
+		for body in overlapping:
+			if body.is_in_group("player"):
+				player_ref = body
+				handle_pickup()
+				break
+
 	# Move pickup left with scroll speed
 	position.x -= scroll_speed * delta
 

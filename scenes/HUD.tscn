@@ -1,32 +1,29 @@
 [gd_scene load_steps=5 format=3 uid="uid://d6jl4a6t8i"]
 
-[ext_resource type="Script" path="res://scripts/HUD.gd" id="1_hud12"]
-[ext_resource type="Texture2D" path="res://assets/ui/charge.webp" id="charge_tex"]
-[ext_resource type="Texture2D" path="res://assets/ui/health.webp" id="health_tex"]
-[ext_resource type="Texture2D" path="res://assets/ui/mask_timer.webp" id="mask_timer_tex"]
+[ext_resource type="Script" uid="uid://dbeq6g4pq77eq" path="res://scripts/HUD.gd" id="1_hud12"]
+[ext_resource type="Texture2D" uid="uid://dkhu3itlbokia" path="res://assets/ui/charge/charge_5_full.webp" id="2_charge"]
+[ext_resource type="Texture2D" uid="uid://cokxfvin405gv" path="res://assets/ui/health.webp" id="health_tex"]
+[ext_resource type="Texture2D" uid="uid://co8wi8ara14tr" path="res://assets/ui/mask_timer.webp" id="mask_timer_tex"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud12")
 
 [node name="TopLeft" type="Control" parent="."]
-layout_mode = 0
+layout_mode = 3
+anchors_preset = 0
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 220.0
 offset_bottom = 100.0
 
-[node name="ChargeDisplay" type="TextureRect" parent="TopLeft"]
-layout_mode = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("charge_tex")
-expand_mode = 1
-stretch_mode = 5
+[node name="ChargeDisplay" type="Sprite2D" parent="TopLeft"]
+position = Vector2(120, 40)
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_charge")
 
 [node name="TopRight" type="Control" parent="."]
-layout_mode = 0
+layout_mode = 3
+anchors_preset = 0
 offset_left = 740.0
 offset_top = 20.0
 offset_right = 940.0
@@ -38,16 +35,15 @@ scale = Vector2(0.4, 0.4)
 texture = ExtResource("health_tex")
 
 [node name="CenterTop" type="CenterContainer" parent="."]
-layout_mode = 0
 offset_left = 280.0
 offset_top = 20.0
 offset_right = 680.0
 offset_bottom = 100.0
 
 [node name="MaskTimer" type="Control" parent="CenterTop"]
-layout_mode = 2
 visible = false
 custom_minimum_size = Vector2(500, 50)
+layout_mode = 2
 
 [node name="Background" type="TextureRect" parent="CenterTop/MaskTimer"]
 layout_mode = 1
@@ -67,13 +63,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_font_sizes/font_size = 16
 text = "30"
 horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_font_sizes/font_size = 16
 
 [node name="BottomLeft" type="VBoxContainer" parent="."]
-layout_mode = 0
 offset_left = 20.0
 offset_top = 500.0
 offset_right = 350.0
@@ -82,30 +77,29 @@ theme_override_constants/separation = 5
 
 [node name="MoveLabel" type="Label" parent="BottomLeft"]
 layout_mode = 2
-text = "Move Lanes: ↑ ↓"
 theme_override_colors/font_color = Color(1, 1, 1, 0.8)
 theme_override_font_sizes/font_size = 14
+text = "Move Lanes: ↑ ↓"
 
 [node name="BoostLabel" type="Label" parent="BottomLeft"]
 layout_mode = 2
-text = "Boost: SPACE"
 theme_override_colors/font_color = Color(1, 1, 1, 0.8)
 theme_override_font_sizes/font_size = 14
+text = "Boost: SPACE"
 
 [node name="DropLabel" type="Label" parent="BottomLeft"]
 layout_mode = 2
-text = "Drop Item: D"
 theme_override_colors/font_color = Color(1, 1, 1, 0.8)
 theme_override_font_sizes/font_size = 14
+text = "Drop Item: D"
 
 [node name="MaskLabel" type="Label" parent="BottomLeft"]
 layout_mode = 2
-text = "Use Mask: M"
 theme_override_colors/font_color = Color(1, 1, 1, 0.8)
 theme_override_font_sizes/font_size = 14
+text = "Use Mask: M"
 
 [node name="BottomRight" type="VBoxContainer" parent="."]
-layout_mode = 0
 offset_left = 700.0
 offset_top = 520.0
 offset_right = 940.0
@@ -114,21 +108,21 @@ theme_override_constants/separation = 5
 
 [node name="AQIIndicator" type="Label" parent="BottomRight"]
 layout_mode = 2
-text = "AQI 250 - Hazardous"
 theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
 theme_override_font_sizes/font_size = 16
+text = "AQI 250 - Hazardous"
 horizontal_alignment = 2
 
 [node name="MaskInventoryLabel" type="Label" parent="BottomRight"]
 layout_mode = 2
-text = "Masks: 0/5"
 theme_override_colors/font_color = Color(0.5, 0.9, 1, 1)
 theme_override_font_sizes/font_size = 16
+text = "Masks: 0/5"
 horizontal_alignment = 2
 
 [node name="CoinsLabel" type="Label" parent="BottomRight"]
 layout_mode = 2
-text = "AIR: 0"
 theme_override_colors/font_color = Color(1, 0.9, 0.4, 1)
 theme_override_font_sizes/font_size = 16
+text = "AIR: 0"
 horizontal_alignment = 2

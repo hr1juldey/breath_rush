@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkuifhxyxwiyd"
-valid=false
+uid="uid://c3lrjskgqpk5x"
+path="res://.godot/imported/charge_1_cell.webp-c8019601ce79675156035378d03c7cc1.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/ui/charge/charge_1_cell.webp"
+dest_files=["res://.godot/imported/charge_1_cell.webp-c8019601ce79675156035378d03c7cc1.ctex"]
 
 [params]
 

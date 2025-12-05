@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://byum2efu06btt"
-valid=false
+uid="uid://dkhu3itlbokia"
+path="res://.godot/imported/charge_5_full.webp-bd07894944f36f70126fa66e11987b15.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://assets/ui/charge/charge_5_full.webp"
+dest_files=["res://.godot/imported/charge_5_full.webp-bd07894944f36f70126fa66e11987b15.ctex"]
 
 [params]
 

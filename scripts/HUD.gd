@@ -8,6 +8,9 @@ extends CanvasLayer
 # Health breathing animation manager (shader-based)
 var health_breathing_ui: Node
 
+# Battery transition animation manager (shader-based)
+var battery_transition_ui: Node
+
 # Mask timer
 @onready var mask_timer_container = $CenterTop/MaskTimer
 @onready var mask_timer_label = $CenterTop/MaskTimer/TimerLabel
@@ -17,19 +20,8 @@ var health_breathing_ui: Node
 @onready var mask_inventory_label = $BottomRight/MaskInventoryLabel
 @onready var coins_label = $BottomRight/CoinsLabel
 
-# Charge sprite paths (7 battery states)
-const CHARGE_SPRITES = [
-	"res://assets/ui/charge/charge_5_full.webp",      # 100%
-	"res://assets/ui/charge/charge_4_cells.webp",     # 80%
-	"res://assets/ui/charge/charge_3_cells.webp",     # 60%
-	"res://assets/ui/charge/charge_2_cells.webp",     # 40%
-	"res://assets/ui/charge/charge_1_cell.webp",      # 20% - 1 green cell
-	"res://assets/ui/charge/charge_0_red.webp",       # Critical - 1 red cell
-	"res://assets/ui/charge/charge_empty.webp",       # Empty
-]
-
-# Note: Health animation is now handled by shader in HealthBreathingUI
-# No need to manually manage breathing frames
+# Note: Health animation handled by HealthBreathingUI (shader-based)
+# Note: Battery animation handled by BatteryTransitionUI (shader-based)
 
 # Game state
 var player_ref = null
@@ -37,10 +29,6 @@ var current_coins = 0
 
 func _ready():
 	print("[HUD] Initializing HUD...")
-
-	# Setup charge display with initial state (100%)
-	charge_display.texture = load(CHARGE_SPRITES[0])
-	print("[HUD] Charge display initialized")
 
 	# Setup mask timer font
 	var font = load("res://assets/fonts/PressStart2P-Regular.ttf")
@@ -69,8 +57,17 @@ func _ready():
 	else:
 		push_warning("[HUD] WARNING: No player reference found!")
 
+	# Create and add battery transition UI (shader-based)
+	battery_transition_ui = load("res://scripts/BatteryTransitionUI.gd").new()
+	add_child(battery_transition_ui)
+	print("[HUD] BatteryTransitionUI created and added as child")
+
+	# Setup player reference for battery transition UI
 	if player_ref:
-		player_ref.battery_changed.connect(_on_battery_changed)
+		print("[HUD] Passing player reference to BatteryTransitionUI...")
+		battery_transition_ui.setup_player_reference(player_ref)
+
+	if player_ref:
 		player_ref.mask_activated.connect(_on_mask_activated)
 		player_ref.mask_deactivated.connect(_on_mask_deactivated)
 		player_ref.mask_inventory_changed.connect(_on_mask_inventory_changed)
@@ -87,8 +84,7 @@ func _process(delta):
 		update_aqi_display()
 		# Lung animation now handled by shader in HealthBreathingUI
 
-func _on_battery_changed(new_battery: float) -> void:
-	update_charge_display(new_battery)
+# Battery display now handled by BatteryTransitionUI
 
 func _on_mask_activated(_duration: float) -> void:
 	if mask_timer_container:
@@ -99,20 +95,8 @@ func _on_mask_deactivated() -> void:
 		mask_timer_container.hide()
 
 # === CHARGE/BATTERY DISPLAY ===
-func get_charge_index(battery_percent: float) -> int:
-	"""Map battery percentage to sprite index in CHARGE_SPRITES"""
-	if battery_percent >= 85: return 0    # 5 cells - Full
-	elif battery_percent >= 65: return 1  # 4 cells
-	elif battery_percent >= 45: return 2  # 3 cells
-	elif battery_percent >= 25: return 3  # 2 cells
-	elif battery_percent >= 10: return 4  # 1 green cell
-	elif battery_percent > 0: return 5    # 1 red cell - Critical
-	else: return 6                         # Empty
-
-func update_charge_display(battery: float) -> void:
-	"""Update charge display to show correct battery level"""
-	var index = get_charge_index(battery)
-	charge_display.texture = load(CHARGE_SPRITES[index])
+# Battery display now handled by BatteryTransitionUI with shader-based crossfade animation
+# No manual charge update code needed
 
 # === LUNG/HEALTH DISPLAY ===
 # Note: Health display is now handled by HealthBreathingUI with shader-based breathing animation
@@ -189,5 +173,4 @@ func update_mask_inventory_display(count: int) -> void:
 func _initialize_displays() -> void:
 	"""Initialize all displays with current player values"""
 	if player_ref:
-		_on_battery_changed(player_ref.battery)
 		update_mask_inventory_display(player_ref.mask_inventory)

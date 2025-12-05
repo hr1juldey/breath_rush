@@ -53,11 +53,10 @@ func _transition_to_state(new_state: int):
 		0.0, 1.0, transition_duration
 	)
 
-	if Engine.is_debug_build():
-		var state_names = ["bad", "ok", "clear"]
-		print_debug("Sky transitioning to: %s" % state_names[current_state])
+	var state_names = ["bad", "ok", "clear"]
+	print_debug("Sky transitioning to: %s" % state_names[current_state])
 
-func _update_shader_uniform(param_name: str, value):
+func _update_shader_uniform(param_name: String, value):
 	"""Update shader parameter safely"""
 	if shader_material:
 		shader_material.set_shader_parameter(param_name, value)

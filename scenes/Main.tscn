@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://bre1xmdt1w2k6"]
+[gd_scene load_steps=24 format=3 uid="uid://bre1xmdt1w2k6"]
 
 [ext_resource type="Script" uid="uid://m4up31qjvh40" path="res://scripts/Game.gd" id="1_1r2jk"]
 [ext_resource type="Script" uid="uid://dxap4jwikaan7" path="res://scripts/RoadScroll.gd" id="3_6l9m2"]
@@ -15,6 +15,15 @@
 [ext_resource type="PackedScene" uid="uid://d6jl4a6t8i" path="res://scenes/HUD.tscn" id="11_hud_scene"]
 [ext_resource type="Shader" path="res://shaders/sky_shader.gdshader" id="12_sky_shader"]
 [ext_resource type="Shader" path="res://shaders/smog_shader.gdshader" id="13_smog_shader"]
+
+[sub_resource type="Image" id="WhiteImage"]
+width = 1
+height = 1
+format = "RGB8"
+data = PackedByteArray(255, 255, 255)
+
+[sub_resource type="ImageTexture" id="WhiteTexture"]
+image = SubResource("WhiteImage")
 
 [sub_resource type="ShaderMaterial" id="SkyShaderMaterial"]
 shader = ExtResource("12_sky_shader")
@@ -54,7 +63,6 @@ script = ExtResource("1_1r2jk")
 [node name="ParallaxBG" type="ParallaxBackground" parent="."]
 layer = -1
 scroll_ignore_camera_zoom = true
-script = ExtResource("4_parallax")
 
 [node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.1, 0)
@@ -62,6 +70,7 @@ motion_scale = Vector2(0.1, 0)
 [node name="SkyShaderSprite" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
+texture = SubResource("WhiteTexture")
 material = SubResource("SkyShaderMaterial")
 script = ExtResource("5_sky_ctrl")
 
@@ -71,9 +80,10 @@ motion_scale = Vector2(0.15, 0)
 [node name="SmogShaderSprite_1" type="Sprite2D" parent="ParallaxBG/SmogLayer_1"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
+texture = SubResource("WhiteTexture")
 material = SubResource("SmogShaderMaterial_1")
 
-[node name="FarLayer" type="ParallexLayer" parent="ParallaxBG"]
+[node name="FarLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.3, 0)
 
 [node name="FarNode" type="Node2D" parent="ParallaxBG/FarLayer"]
@@ -84,22 +94,24 @@ motion_scale = Vector2(0.45, 0)
 [node name="SmogShaderSprite_2" type="Sprite2D" parent="ParallaxBG/SmogLayer_2"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
+texture = SubResource("WhiteTexture")
 material = SubResource("SmogShaderMaterial_2")
 
-[node name="MidLayer" type="ParallexLayer" parent="ParallaxBG"]
+[node name="MidLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.6, 0)
 
-[node name="MidNode" type="Node2D" parent="ParallexBG/MidLayer"]
+[node name="MidNode" type="Node2D" parent="ParallaxBG/MidLayer"]
 
-[node name="SmogLayer_3" type="ParallexLayer" parent="ParallaxBG"]
+[node name="SmogLayer_3" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.75, 0)
 
-[node name="SmogShaderSprite_3" type="Sprite2D" parent="ParallexBG/SmogLayer_3"]
+[node name="SmogShaderSprite_3" type="Sprite2D" parent="ParallaxBG/SmogLayer_3"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
+texture = SubResource("WhiteTexture")
 material = SubResource("SmogShaderMaterial_3")
 
-[node name="FrontLayer" type="ParallexLayer" parent="ParallaxBG"]
+[node name="FrontLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.9, 0)
 
 [node name="FrontNode" type="Node2D" parent="ParallaxBG/FrontLayer"]

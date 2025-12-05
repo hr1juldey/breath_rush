@@ -9,16 +9,16 @@ uniform int sky_state : hint_range(0, 2) = 2;
 uniform float transition_progress : hint_range(0.0, 1.0) = 1.0;
 
 // Bad AQI colors (dark, tan/brown)
-uniform vec3 bad_sky_top : hint_color = vec3(0.75, 0.65, 0.50);
-uniform vec3 bad_sky_bottom : hint_color = vec3(0.55, 0.45, 0.35);
+uniform vec3 bad_sky_top = vec3(0.75, 0.65, 0.50);
+uniform vec3 bad_sky_bottom = vec3(0.55, 0.45, 0.35);
 
 // OK AQI colors (light tan)
-uniform vec3 ok_sky_top : hint_color = vec3(0.82, 0.78, 0.70);
-uniform vec3 ok_sky_bottom : hint_color = vec3(0.68, 0.62, 0.52);
+uniform vec3 ok_sky_top = vec3(0.82, 0.78, 0.70);
+uniform vec3 ok_sky_bottom = vec3(0.68, 0.62, 0.52);
 
 // Clear AQI colors (blue sky)
-uniform vec3 clear_sky_top : hint_color = vec3(0.45, 0.75, 1.0);
-uniform vec3 clear_sky_bottom : hint_color = vec3(0.30, 0.55, 0.85);
+uniform vec3 clear_sky_top = vec3(0.45, 0.75, 1.0);
+uniform vec3 clear_sky_bottom = vec3(0.30, 0.55, 0.85);
 
 void fragment() {
 	// Get current state colors

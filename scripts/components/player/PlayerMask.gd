@@ -66,16 +66,20 @@ func apply_mask() -> bool:
 	"""
 	var logger = get_node_or_null("/root/Logger")
 
-	# Debug: Log current state
-	print("[PlayerMask] apply_mask() called - mask_time: %.1f, inventory: %d/%d" %
-		[mask_time, mask_inventory, max_mask_inventory])
+	# Calculate total masks (wearing + inventory)
+	var total_masks = mask_inventory
+	if is_wearing_mask():
+		total_masks += 1
 
-	# Check if inventory is full - reject pickup
-	if mask_inventory >= max_mask_inventory:
-		print("[PlayerMask] REJECTED - inventory full!")
+	# Debug: Log current state with total count
+	print("[PlayerMask] apply_mask() called - wearing=%s, inventory=%d/%d, total=%d" %
+		[is_wearing_mask(), mask_inventory, max_mask_inventory, total_masks])
+
+	# Check if TOTAL masks would exceed max - reject pickup
+	if total_masks >= max_mask_inventory:
+		print("[PlayerMask] REJECTED - at max capacity (%d total)" % total_masks)
 		if logger:
-			logger.warning(0, "Mask pickup REJECTED - inventory full (%d/%d)" %
-				[mask_inventory, max_mask_inventory])
+			logger.warning(0, "Mask pickup REJECTED - at max capacity (%d total)" % total_masks)
 		return false  # Reject - don't consume mask
 
 	# If wearing mask OR have inventory - add to inventory

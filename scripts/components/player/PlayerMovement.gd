@@ -12,7 +12,7 @@ This component is extracted from Player.gd to isolate movement system.
 """
 
 # Lane system
-var lane_positions = [240, 300, 360]
+var lane_positions = [240.0, 300.0, 360.0]
 var current_lane = 1  # Middle lane by default
 var target_y = 300.0
 

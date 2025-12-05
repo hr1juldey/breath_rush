@@ -4,6 +4,8 @@ var pickup_type = "mask"  # "mask", "filter", "sapling"
 var scroll_speed = 400.0
 var player_ref = null
 var spawner_ref = null
+var pickup_cooldown = 0.0  # Prevent immediate re-pickup after rejection
+const COOLDOWN_TIME = 1.0  # 1 second cooldown after rejection
 
 func _ready():
 	body_entered.connect(_on_body_entered)
@@ -17,6 +19,10 @@ func _process(delta):
 	if not visible:
 		return
 
+	# Handle pickup cooldown
+	if pickup_cooldown > 0:
+		pickup_cooldown -= delta
+
 	# Move pickup left with scroll speed
 	position.x -= scroll_speed * delta
 
@@ -25,24 +31,53 @@ func _process(delta):
 		return_to_pool()
 
 func _on_body_entered(body):
-	if body.name == "Player" or body.is_in_group("player"):
-		player_ref = body
-		handle_pickup()
+	# Defensive checks: ensure body is valid and is the player
+	if not is_instance_valid(body):
+		return
+
+	if not body.is_in_group("player"):
+		return
+
+	player_ref = body
+	handle_pickup()
 
 func handle_pickup() -> void:
+	# Defensive checks: prevent double-processing
 	if not player_ref or not visible:
 		return
 
+	# Check cooldown (prevents immediate re-pickup after rejection)
+	if pickup_cooldown > 0:
+		print("[Pickup] Cooldown active (%.1fs remaining), skipping pickup" % pickup_cooldown)
+		return
+
+	# Validate player reference is still valid
+	if not is_instance_valid(player_ref):
+		print("[Pickup] Player reference invalid!")
+		return
+
+	print("[Pickup] Processing %s pickup..." % pickup_type)
+	var pickup_success = false
+
 	match pickup_type:
 		"mask":
-			player_ref.apply_mask()
+			pickup_success = player_ref.apply_mask()  # Returns true if consumed
+			print("[Pickup] Mask pickup result: %s" % ("SUCCESS" if pickup_success else "REJECTED"))
 		"filter":
 			player_ref.pickup_filter()
+			pickup_success = true
 		"sapling":
 			player_ref.pickup_sapling()
+			pickup_success = true
 
-	# Return to pool instead of destroying
-	return_to_pool()
+	# Only consume pickup if it was successfully processed
+	if pickup_success:
+		print("[Pickup] Pickup successful, returning to pool")
+		return_to_pool()
+	else:
+		# Pickup rejected (e.g., inventory full) - set cooldown
+		pickup_cooldown = COOLDOWN_TIME
+		print("[Pickup] Pickup rejected, cooldown set for %.1fs" % COOLDOWN_TIME)
 
 func return_to_pool():
 	if spawner_ref and is_instance_valid(spawner_ref):

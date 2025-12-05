@@ -206,22 +206,39 @@ func calculate_health_drain():
 	# At AQI 500: 500/150 = 3.33 HP/sec (100 HP lasts ~30 seconds)
 	return max(0.1, aqi_current / 150.0)
 
-func apply_mask():
-	# Always try to add to inventory first if there's space and no active mask
-	# This prevents race conditions when picking up multiple masks quickly
+func apply_mask() -> bool:
+	"""
+	Attempt to apply/store a mask pickup.
+	Returns true if mask was consumed (added to inventory or activated).
+	Returns false if mask was rejected (inventory full).
+	"""
+	var logger = get_node_or_null("/root/Logger")
+
+	# Debug: Log current state
+	print("[Player] apply_mask() called - mask_time: %.1f, inventory: %d/5" % [mask_time, mask_inventory])
+
+	# Check if inventory is full - reject pickup
+	if mask_inventory >= max_mask_inventory:
+		print("[Player] REJECTED - inventory full!")
+		if logger:
+			logger.warning(0, "Mask pickup REJECTED - inventory full (%d/5)" % mask_inventory)
+		return false  # Reject - don't consume mask
+
+	# If wearing mask OR have inventory - add to inventory
 	if mask_time > 0 or mask_inventory > 0:
-		# Mask active OR already have inventory - store this pickup
+		print("[Player] Adding to inventory (wearing mask OR have inventory)")
 		add_mask_to_inventory()
-		var logger = get_node_or_null("/root/Logger")
+		print("[Player] After add - inventory: %d/5" % mask_inventory)
 		if logger:
 			logger.info(0, "Mask stored in inventory (%d/5)" % mask_inventory)
-		return
+		return true  # Success
 
-	# Only use immediately if NO mask active AND inventory empty
+	# No active mask AND inventory empty - use immediately
+	print("[Player] Activating immediately (no mask, empty inventory)")
 	use_mask_from_inventory()
-	var logger = get_node_or_null("/root/Logger")
 	if logger:
 		logger.info(0, "Mask activated immediately")
+	return true  # Success
 
 func add_mask_to_inventory():
 	if mask_inventory < max_mask_inventory:

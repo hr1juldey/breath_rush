@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id="RectShape_1"]
 size = Vector2(522.8918, 673.57874)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 z_index = 5
 position = Vector2(180, 300)
 collision_layer = 1

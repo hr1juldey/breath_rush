@@ -1,9 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://bre1xmdt1w2k6"]
+[gd_scene load_steps=15 format=3 uid="uid://bre1xmdt1w2k6"]
 
 [ext_resource type="Script" uid="uid://m4up31qjvh40" path="res://scripts/Game.gd" id="1_1r2jk"]
 [ext_resource type="Script" uid="uid://bnfxupunjcdac" path="res://scripts/SkyManager.gd" id="2_5k7xq"]
 [ext_resource type="Script" uid="uid://dxap4jwikaan7" path="res://scripts/RoadScroll.gd" id="3_6l9m2"]
 [ext_resource type="Script" uid="uid://chbh558ddgqet" path="res://scripts/Spawner.gd" id="4_7n3o5"]
+[ext_resource type="Script" path="res://scripts/components/spawner/ObstacleSpawner.gd" id="5_obstacle"]
+[ext_resource type="Script" path="res://scripts/components/spawner/PickupSpawner.gd" id="6_pickup"]
+[ext_resource type="Script" path="res://scripts/components/spawner/SpawnCoordinator.gd" id="7_coordinator"]
+[ext_resource type="Script" path="res://scripts/components/spawner/ChunkManager.gd" id="8_chunk"]
 [ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="6_9r4s7"]
 [ext_resource type="Texture2D" uid="uid://bncjyu10b4a2" path="res://assets/skies/sky_ok.webp" id="7_0t5u8"]
 [ext_resource type="Texture2D" uid="uid://cnlch374hthea" path="res://assets/skies/sky_clear.webp" id="8_1v6w9"]
@@ -76,5 +80,17 @@ scale = Vector2(0.4, 0.4)
 
 [node name="Spawner" type="Node2D" parent="."]
 script = ExtResource("4_7n3o5")
+
+[node name="ObstacleSpawner" type="Node" parent="Spawner"]
+script = ExtResource("5_obstacle")
+
+[node name="PickupSpawner" type="Node" parent="Spawner"]
+script = ExtResource("6_pickup")
+
+[node name="SpawnCoordinator" type="Node" parent="Spawner"]
+script = ExtResource("7_coordinator")
+
+[node name="ChunkManager" type="Node" parent="Spawner"]
+script = ExtResource("8_chunk")
 
 [node name="HUD" parent="." instance=ExtResource("11_hud_scene")]

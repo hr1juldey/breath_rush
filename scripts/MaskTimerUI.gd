@@ -43,8 +43,13 @@ func _process(delta):
 
 func update_mask_timer_display() -> void:
 	"""Update mask timer text - only show the number (asset has 'sec remaining..' text)"""
-	if player_ref.mask_time > 0:
-		var seconds = int(ceil(player_ref.mask_time))
+	# Get mask time from component
+	var mask_time = 0.0
+	if player_ref and player_ref.mask_component:
+		mask_time = player_ref.mask_component.get_mask_time()
+
+	if mask_time > 0:
+		var seconds = int(ceil(mask_time))
 		# Only show number - background image has "sec remaining.." text
 		mask_timer_label.text = "%02d" % seconds
 
@@ -57,7 +62,10 @@ func update_mask_timer_display() -> void:
 func _physics_process(delta):
 	"""Handle pulsing animation when time is critical"""
 	if player_ref and mask_timer_container:
-		var time_remaining = player_ref.mask_time
+		# Get mask time from component
+		var time_remaining = 0.0
+		if player_ref.mask_component:
+			time_remaining = player_ref.mask_component.get_mask_time()
 
 		if time_remaining > 0 and time_remaining <= CRITICAL_THRESHOLD:
 			# Pulse when critical (fade in/out effect)

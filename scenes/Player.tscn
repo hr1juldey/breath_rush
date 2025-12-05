@@ -1,8 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://cjtmad0wq0gf"]
+[gd_scene load_steps=11 format=3 uid="uid://cjtmad0wq0gf"]
 
 [ext_resource type="Script" uid="uid://dmebib30i1lp6" path="res://scripts/Player.gd" id="1_abc12"]
 [ext_resource type="Texture2D" uid="uid://c4sp42dfpqldv" path="res://assets/player/vim_base.webp" id="2_def34"]
 [ext_resource type="Texture2D" uid="uid://bkxd0x84l3a5b" path="res://assets/pickups/mask.webp" id="3_mask"]
+[ext_resource type="Script" path="res://scripts/components/player/PlayerMovement.gd" id="4_movement"]
+[ext_resource type="Script" path="res://scripts/components/player/PlayerHealth.gd" id="5_health"]
+[ext_resource type="Script" path="res://scripts/components/player/PlayerBattery.gd" id="6_battery"]
+[ext_resource type="Script" path="res://scripts/components/player/PlayerMask.gd" id="7_mask"]
+[ext_resource type="Script" path="res://scripts/components/player/PlayerInventory.gd" id="8_inventory"]
+[ext_resource type="Script" path="res://scripts/components/player/PlayerInput.gd" id="9_input"]
 
 [sub_resource type="RectangleShape2D" id="RectShape_1"]
 size = Vector2(522.8918, 673.57874)
@@ -31,3 +37,21 @@ position = Vector2(20.743073, -183.37973)
 scale = Vector2(0.20290168, 0.1946703)
 skew = 0.097738385
 texture = ExtResource("3_mask")
+
+[node name="PlayerMovement" type="Node" parent="."]
+script = ExtResource("4_movement")
+
+[node name="PlayerHealth" type="Node" parent="."]
+script = ExtResource("5_health")
+
+[node name="PlayerBattery" type="Node" parent="."]
+script = ExtResource("6_battery")
+
+[node name="PlayerMask" type="Node" parent="."]
+script = ExtResource("7_mask")
+
+[node name="PlayerInventory" type="Node" parent="."]
+script = ExtResource("8_inventory")
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("9_input")

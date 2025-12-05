@@ -170,5 +170,5 @@ func update_mask_inventory_display(count: int) -> void:
 # === INITIALIZATION ===
 func _initialize_displays() -> void:
 	"""Initialize all displays with current player values"""
-	if player_ref:
-		update_mask_inventory_display(player_ref.mask_inventory)
+	if player_ref and player_ref.mask_component:
+		update_mask_inventory_display(player_ref.mask_component.get_inventory_count())

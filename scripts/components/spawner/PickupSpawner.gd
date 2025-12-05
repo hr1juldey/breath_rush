@@ -30,6 +30,7 @@ func _ready():
 	for i in range(pool_size):
 		var pickup = mask_scene.instantiate()
 		pickup.visible = false
+		pickup.monitoring = false  # BUGFIX: Disable collision detection in pool
 		add_child(pickup)
 		pickup_pool.append(pickup)
 
@@ -73,6 +74,10 @@ func _spawn_at(x: float, y: float, pickup_type: String) -> bool:
 	pickup.global_position = Vector2(x, y)
 	pickup.pickup_type = pickup_type
 	pickup.set_scroll_speed(spawn_speed)
+
+	# BUGFIX: Re-enable collision detection when spawning
+	pickup.monitoring = true
+
 	pickup.visible = true
 
 	# Notify coordinator of spawn
@@ -93,6 +98,10 @@ func return_to_pool(pickup: Node) -> void:
 	if pickup and is_instance_valid(pickup):
 		pickup.visible = false
 		pickup.global_position = Vector2(0, 0)
+
+		# BUGFIX: Disable collision detection when returning to pool (deferred to avoid signal conflicts)
+		pickup.set_deferred("monitoring", false)
+
 		# BUGFIX: Reset pickup state to prevent stale references
 		pickup.player_ref = null
 		pickup.pickup_cooldown = 0.0

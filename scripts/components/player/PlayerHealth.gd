@@ -17,12 +17,12 @@ signal health_changed(value: float)
 signal player_died()
 
 # Health
-var health = 500.0  # TEMP: Increased for testing mask pickup bug
-var max_health = 500.0  # TEMP: Increased for testing mask pickup bug
+var health = 100.0
+var max_health = 100.0
 var base_drain_multiplier = 0.01666  # Base drain multiplier
 
 # Grace period (initial invulnerability)
-var grace_period = 5.0  # TEMP: Increased to 5 seconds for testing
+var grace_period = 2.0
 var elapsed_time = 0.0
 var grace_period_active = true
 

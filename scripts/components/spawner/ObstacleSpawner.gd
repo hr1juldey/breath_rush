@@ -27,6 +27,8 @@ func _ready():
 	for i in range(pool_size):
 		var obstacle = obstacle_scene.instantiate()
 		obstacle.visible = false
+		obstacle.monitoring = false  # BUGFIX: Disable collision detection
+		obstacle.set_process(false)  # BUGFIX: Disable movement
 		add_child(obstacle)
 		obstacle_pool.append(obstacle)
 
@@ -57,6 +59,11 @@ func spawn_obstacle(x: float, y: float, obstacle_type: String) -> bool:
 	obstacle.global_position = Vector2(x, y)
 	obstacle.obstacle_type = obstacle_type
 	obstacle.set_scroll_speed(spawn_speed)
+
+	# BUGFIX: Re-enable collision and movement when spawning
+	obstacle.monitoring = true
+	obstacle.set_process(true)
+
 	obstacle.visible = true
 
 	# Notify coordinator of spawn
@@ -76,6 +83,10 @@ func return_to_pool(obstacle: Node) -> void:
 	"""Return an obstacle to the pool"""
 	if obstacle and is_instance_valid(obstacle):
 		obstacle.visible = false
+
+		# BUGFIX: Disable collision and movement when returning to pool
+		obstacle.monitoring = false
+		obstacle.set_process(false)
 
 func set_scroll_speed(speed: float) -> void:
 	"""Update scroll speed for all obstacles"""

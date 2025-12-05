@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://d6jl4a6t8i"]
+[gd_scene load_steps=6 format=3 uid="uid://d6jl4a6t8i"]
 
 [ext_resource type="Script" uid="uid://dbeq6g4pq77eq" path="res://scripts/HUD.gd" id="1_hud12"]
 [ext_resource type="Texture2D" uid="uid://dkhu3itlbokia" path="res://assets/ui/charge/charge_5_full.webp" id="2_charge"]
+[ext_resource type="FontFile" uid="uid://bmiti160rfmhw" path="res://assets/fonts/PressStart2P-Regular.ttf" id="5_nysna"]
 [ext_resource type="Texture2D" uid="uid://cokxfvin405gv" path="res://assets/ui/health.webp" id="health_tex"]
 [ext_resource type="Texture2D" uid="uid://co8wi8ara14tr" path="res://assets/ui/mask_timer.webp" id="mask_timer_tex"]
 
@@ -35,35 +36,29 @@ scale = Vector2(0.4, 0.4)
 texture = ExtResource("health_tex")
 
 [node name="CenterTop" type="CenterContainer" parent="."]
-offset_left = 280.0
-offset_top = 20.0
-offset_right = 680.0
-offset_bottom = 100.0
+offset_left = 350.0
+offset_top = 30.0
+offset_right = 850.0
+offset_bottom = 110.0
+scale = Vector2(0.7, 0.7)
 
 [node name="MaskTimer" type="Control" parent="CenterTop"]
-visible = false
 custom_minimum_size = Vector2(500, 50)
 layout_mode = 2
 
-[node name="Background" type="TextureRect" parent="CenterTop/MaskTimer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="Background" type="Sprite2D" parent="CenterTop/MaskTimer"]
+position = Vector2(250, 25)
 texture = ExtResource("mask_timer_tex")
-expand_mode = 1
-stretch_mode = 5
 
-[node name="TimerLabel" type="Label" parent="CenterTop/MaskTimer"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 16
+[node name="TimerLabel" type="Label" parent="CenterTop/MaskTimer/Background"]
+offset_left = -130.00003
+offset_top = -10.0
+offset_right = -90.00003
+offset_bottom = 15.0
+theme_override_colors/font_color = Color(0.019607844, 0.30980393, 0.3137255, 1)
+theme_override_colors/font_shadow_color = Color(0.3019608, 0.62352943, 0.59607846, 0.8117647)
+theme_override_fonts/font = ExtResource("5_nysna")
+theme_override_font_sizes/font_size = 20
 text = "30"
 horizontal_alignment = 1
 vertical_alignment = 1

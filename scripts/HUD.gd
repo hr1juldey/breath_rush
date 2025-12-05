@@ -11,7 +11,10 @@ var health_breathing_ui: Node
 # Battery transition animation manager (shader-based)
 var battery_transition_ui: Node
 
-# Mask timer
+# Mask timer UI manager (shader-based)
+var mask_timer_ui: Node
+
+# Mask timer (still needed for reference)
 @onready var mask_timer_container = $CenterTop/MaskTimer
 @onready var mask_timer_label = $CenterTop/MaskTimer/TimerLabel
 
@@ -29,12 +32,6 @@ var current_coins = 0
 
 func _ready():
 	print("[HUD] Initializing HUD...")
-
-	# Setup mask timer font
-	var font = load("res://assets/fonts/PressStart2P-Regular.ttf")
-	mask_timer_label.add_theme_font_override("font", font)
-	mask_timer_label.add_theme_font_size_override("font_size", 12)
-	print("[HUD] Mask timer font configured")
 
 	# Find player reference
 	var parent = get_parent()
@@ -67,6 +64,16 @@ func _ready():
 		print("[HUD] Passing player reference to BatteryTransitionUI...")
 		battery_transition_ui.setup_player_reference(player_ref)
 
+	# Create and add mask timer UI (shader-based)
+	mask_timer_ui = load("res://scripts/MaskTimerUI.gd").new()
+	add_child(mask_timer_ui)
+	print("[HUD] MaskTimerUI created and added as child")
+
+	# Setup player reference for mask timer UI
+	if player_ref:
+		print("[HUD] Passing player reference to MaskTimerUI...")
+		mask_timer_ui.setup_player_reference(player_ref)
+
 	if player_ref:
 		player_ref.mask_activated.connect(_on_mask_activated)
 		player_ref.mask_deactivated.connect(_on_mask_deactivated)
@@ -80,11 +87,10 @@ func _ready():
 
 func _process(delta):
 	if player_ref:
-		update_mask_timer()
 		update_aqi_display()
 		# Lung animation now handled by shader in HealthBreathingUI
-
-# Battery display now handled by BatteryTransitionUI
+		# Mask timer now handled by MaskTimerUI
+		# Battery display now handled by BatteryTransitionUI
 
 func _on_mask_activated(_duration: float) -> void:
 	if mask_timer_container:
@@ -103,15 +109,7 @@ func _on_mask_deactivated() -> void:
 # No manual animation code needed - the shader handles sinusoidal breathing using TIME
 
 # === MASK TIMER DISPLAY ===
-func update_mask_timer() -> void:
-	"""Update mask countdown timer text"""
-	if player_ref and mask_timer_label:
-		if player_ref.mask_time > 0:
-			var seconds = int(ceil(player_ref.mask_time))
-			mask_timer_label.text = "%d" % seconds
-		else:
-			if mask_timer_container:
-				mask_timer_container.hide()
+# Mask timer display now handled by MaskTimerUI with shader-based urgency effects
 
 # === AQI DISPLAY ===
 func update_aqi_display() -> void:

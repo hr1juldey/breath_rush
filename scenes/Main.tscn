@@ -1,19 +1,52 @@
-[gd_scene load_steps=15 format=3 uid="uid://bre1xmdt1w2k6"]
+[gd_scene load_steps=23 format=3 uid="uid://bre1xmdt1w2k6"]
 
 [ext_resource type="Script" uid="uid://m4up31qjvh40" path="res://scripts/Game.gd" id="1_1r2jk"]
-[ext_resource type="Script" uid="uid://bnfxupunjcdac" path="res://scripts/SkyManager.gd" id="2_5k7xq"]
 [ext_resource type="Script" uid="uid://dxap4jwikaan7" path="res://scripts/RoadScroll.gd" id="3_6l9m2"]
 [ext_resource type="Script" uid="uid://chbh558ddgqet" path="res://scripts/Spawner.gd" id="4_7n3o5"]
+[ext_resource type="Script" path="res://scripts/ParallaxController.gd" id="4_parallax"]
+[ext_resource type="Script" path="res://scripts/SkyController.gd" id="5_sky_ctrl"]
+[ext_resource type="Script" path="res://scripts/SmogController.gd" id="6_smog_ctrl"]
 [ext_resource type="Script" path="res://scripts/components/spawner/ObstacleSpawner.gd" id="5_obstacle"]
 [ext_resource type="Script" path="res://scripts/components/spawner/PickupSpawner.gd" id="6_pickup"]
 [ext_resource type="Script" path="res://scripts/components/spawner/SpawnCoordinator.gd" id="7_coordinator"]
 [ext_resource type="Script" path="res://scripts/components/spawner/ChunkManager.gd" id="8_chunk"]
-[ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="6_9r4s7"]
-[ext_resource type="Texture2D" uid="uid://bncjyu10b4a2" path="res://assets/skies/sky_ok.webp" id="7_0t5u8"]
-[ext_resource type="Texture2D" uid="uid://cnlch374hthea" path="res://assets/skies/sky_clear.webp" id="8_1v6w9"]
 [ext_resource type="Texture2D" uid="uid://bcw73rt4f1dua" path="res://assets/road/road_tile.webp" id="9_2x7y0"]
 [ext_resource type="PackedScene" uid="uid://cjtmad0wq0gf" path="res://scenes/Player.tscn" id="10_3z8a1"]
 [ext_resource type="PackedScene" uid="uid://d6jl4a6t8i" path="res://scenes/HUD.tscn" id="11_hud_scene"]
+[ext_resource type="Shader" path="res://shaders/sky_shader.gdshader" id="12_sky_shader"]
+[ext_resource type="Shader" path="res://shaders/smog_shader.gdshader" id="13_smog_shader"]
+
+[sub_resource type="ShaderMaterial" id="SkyShaderMaterial"]
+shader = ExtResource("12_sky_shader")
+shader_parameter/sky_state = 2
+shader_parameter/transition_progress = 1.0
+shader_parameter/bad_sky_top = Color(0.75, 0.65, 0.5, 1)
+shader_parameter/bad_sky_bottom = Color(0.55, 0.45, 0.35, 1)
+shader_parameter/ok_sky_top = Color(0.82, 0.78, 0.7, 1)
+shader_parameter/ok_sky_bottom = Color(0.68, 0.62, 0.52, 1)
+shader_parameter/clear_sky_top = Color(0.45, 0.75, 1, 1)
+shader_parameter/clear_sky_bottom = Color(0.3, 0.55, 0.85, 1)
+
+[sub_resource type="ShaderMaterial" id="SmogShaderMaterial_1"]
+shader = ExtResource("13_smog_shader")
+shader_parameter/noise_time = 0.0
+shader_parameter/noise_speed = 2.0
+shader_parameter/noise_scale = 3.0
+shader_parameter/opacity = 0.2
+
+[sub_resource type="ShaderMaterial" id="SmogShaderMaterial_2"]
+shader = ExtResource("13_smog_shader")
+shader_parameter/noise_time = 0.0
+shader_parameter/noise_speed = 2.0
+shader_parameter/noise_scale = 3.0
+shader_parameter/opacity = 0.3
+
+[sub_resource type="ShaderMaterial" id="SmogShaderMaterial_3"]
+shader = ExtResource("13_smog_shader")
+shader_parameter/noise_time = 0.0
+shader_parameter/noise_speed = 2.0
+shader_parameter/noise_scale = 3.0
+shader_parameter/opacity = 0.4
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_1r2jk")
@@ -21,36 +54,58 @@ script = ExtResource("1_1r2jk")
 [node name="ParallaxBG" type="ParallaxBackground" parent="."]
 layer = -1
 scroll_ignore_camera_zoom = true
+script = ExtResource("4_parallax")
 
 [node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.2, 1)
-script = ExtResource("2_5k7xq")
+motion_scale = Vector2(0.1, 0)
 
-[node name="Sprite_SkyBad" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
+[node name="SkyShaderSprite" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
 position = Vector2(480, 240)
-texture = ExtResource("6_9r4s7")
+scale = Vector2(10, 10)
+material = SubResource("SkyShaderMaterial")
+script = ExtResource("5_sky_ctrl")
 
-[node name="Sprite_SkyOk" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
-visible = false
-modulate = Color(1, 1, 1, 0)
+[node name="SmogLayer_1" type="ParallaxLayer" parent="ParallaxBG"]
+motion_scale = Vector2(0.15, 0)
+
+[node name="SmogShaderSprite_1" type="Sprite2D" parent="ParallaxBG/SmogLayer_1"]
 position = Vector2(480, 240)
-texture = ExtResource("7_0t5u8")
+scale = Vector2(10, 10)
+material = SubResource("SmogShaderMaterial_1")
 
-[node name="Sprite_SkyClear" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
-visible = false
-modulate = Color(1, 1, 1, 0)
+[node name="FarLayer" type="ParallexLayer" parent="ParallaxBG"]
+motion_scale = Vector2(0.3, 0)
+
+[node name="FarNode" type="Node2D" parent="ParallaxBG/FarLayer"]
+
+[node name="SmogLayer_2" type="ParallaxLayer" parent="ParallaxBG"]
+motion_scale = Vector2(0.45, 0)
+
+[node name="SmogShaderSprite_2" type="Sprite2D" parent="ParallaxBG/SmogLayer_2"]
 position = Vector2(480, 240)
-texture = ExtResource("8_1v6w9")
+scale = Vector2(10, 10)
+material = SubResource("SmogShaderMaterial_2")
 
-[node name="MidLayer" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.5, 1)
+[node name="MidLayer" type="ParallexLayer" parent="ParallaxBG"]
+motion_scale = Vector2(0.6, 0)
 
-[node name="MidNode" type="Node2D" parent="ParallaxBG/MidLayer"]
+[node name="MidNode" type="Node2D" parent="ParallexBG/MidLayer"]
 
-[node name="FrontLayer" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.8, 1)
+[node name="SmogLayer_3" type="ParallexLayer" parent="ParallaxBG"]
+motion_scale = Vector2(0.75, 0)
+
+[node name="SmogShaderSprite_3" type="Sprite2D" parent="ParallexBG/SmogLayer_3"]
+position = Vector2(480, 240)
+scale = Vector2(10, 10)
+material = SubResource("SmogShaderMaterial_3")
+
+[node name="FrontLayer" type="ParallexLayer" parent="ParallaxBG"]
+motion_scale = Vector2(0.9, 0)
 
 [node name="FrontNode" type="Node2D" parent="ParallaxBG/FrontLayer"]
+
+[node name="SmogManager" type="Node" parent="ParallaxBG"]
+script = ExtResource("6_smog_ctrl")
 
 [node name="Road" type="Node2D" parent="."]
 position = Vector2(0, 420)

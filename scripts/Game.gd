@@ -8,6 +8,8 @@ extends Node2D
 @onready var spawner = $Spawner
 @onready var hud = $HUD
 @onready var delivery_zones_node = $DeliveryZones
+@onready var sky_controller = $ParallaxBG/SkyLayer/SkyShaderSprite
+@onready var smog_controller = $ParallaxBG/SmogManager
 
 var persistence_manager: Node
 var current_chunk_index = 0
@@ -38,6 +40,12 @@ func _ready():
 		player.boost_started.connect(_on_boost_started)
 		player.boost_stopped.connect(_on_boost_stopped)
 
+	# Initialize parallax controllers
+	if sky_controller and sky_controller.has_method("set_aqi"):
+		sky_controller.set_aqi(current_aqi)
+	if smog_controller and smog_controller.has_method("set_aqi"):
+		smog_controller.set_aqi(current_aqi)
+
 	# Initialize first chunk
 	load_chunk_data()
 	if chunks_data.size() > 0:
@@ -56,6 +64,12 @@ func _process(delta):
 	# Update player AQI awareness
 	if player:
 		player.set_aqi(current_aqi)
+
+	# Update parallax visuals based on AQI
+	if sky_controller and sky_controller.has_method("set_aqi"):
+		sky_controller.set_aqi(current_aqi)
+	if smog_controller and smog_controller.has_method("set_aqi"):
+		smog_controller.set_aqi(current_aqi)
 
 	# Update coin accumulation
 	update_coins(delta)

@@ -1,0 +1,92 @@
+{
+  "far": {
+    "LotusPark": {
+      "x": 128.0,
+      "y": 216.0,
+      "width": 1608.0,
+      "height": 584.0
+    },
+    "LaalKila": {
+      "x": 0.0,
+      "y": 256.0,
+      "width": 1920.0,
+      "height": 592.0
+    },
+    "Hauskhas": {
+      "x": 0.0,
+      "y": 56.0,
+      "width": 1920.0,
+      "height": 968.0
+    },
+    "Hanuman": {
+      "x": 608.0,
+      "y": 48.0,
+      "width": 696.0,
+      "height": 1000.0
+    }
+  },
+  "mid": {
+    "BuildingGeneric": {
+      "x": 128.0,
+      "y": 360.0,
+      "width": 944.0,
+      "height": 592.0
+    },
+    "TwoStoreyBuilding": {
+      "x": 520.0,
+      "y": 104.0,
+      "width": 796.0,
+      "height": 872.0
+    },
+    "Restaurant": {
+      "x": 64.0,
+      "y": 200.0,
+      "width": 1744.0,
+      "height": 688.0
+    },
+    "Shop": {
+      "x": 480.0,
+      "y": 96.0,
+      "width": 960.0,
+      "height": 888.0
+    },
+    "Pharmacy": {
+      "x": 552.0,
+      "y": 64.0,
+      "width": 816.0,
+      "height": 928.0
+    }
+  },
+  "front": {
+    "Tree1": {
+      "x": 224.0,
+      "y": 80.0,
+      "width": 744.0,
+      "height": 1008.0
+    },
+    "Tree2": {
+      "x": 232.0,
+      "y": 144.0,
+      "width": 712.0,
+      "height": 888.0
+    },
+    "Tree3": {
+      "x": 0.0,
+      "y": 0.0,
+      "width": 1200.0,
+      "height": 1077.0
+    },
+    "FruitStall": {
+      "x": 0.0,
+      "y": 40.0,
+      "width": 1200.0,
+      "height": 1120.0
+    },
+    "Billboard": {
+      "x": 240.0,
+      "y": 112.0,
+      "width": 712.0,
+      "height": 960.0
+    }
+  }
+}

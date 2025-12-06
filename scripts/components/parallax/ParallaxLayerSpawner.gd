@@ -7,7 +7,10 @@ class_name ParallaxLayerSpawner
 signal object_spawned(obj: Node2D)
 signal object_despawned(obj: Node2D)
 
-@export var textures: Array[Texture2D] = []
+# Texture configuration - child classes should populate this
+# Each entry: {"texture": Texture2D, "region": Rect2 or null, "scale": float}
+var texture_configs: Array[Dictionary] = []
+
 @export var pool_size: int = 5
 @export var spawn_interval_min: float = 2.0
 @export var spawn_interval_max: float = 5.0
@@ -17,11 +20,22 @@ signal object_despawned(obj: Node2D)
 @export var despawn_x: float = -200.0
 @export var spawn_x: float = 1400.0
 
-# Parallax positioning constants (from mathematical analysis)
+# Parallax positioning constants (from mathematical analysis - recalculated)
 var horizon_y: float = 200.0
-var quad_a: float = 410.0
-var quad_b: float = -400.0
-var quad_c: float = 90.0
+var quad_a: float = 428.08
+var quad_b: float = -469.51
+var quad_c: float = 128.64
+
+# Camera Y position - needed to convert world coords to screen coords
+var camera_y: float = 180.415
+
+# Layer-specific offset - override in child classes for per-layer adjustment
+# Positive = move DOWN, Negative = move UP
+var layer_y_offset: float = 0.0
+
+# Global vertical offset - ADJUST THIS to move all layers up/down together
+# Positive = move DOWN (closer to road), Negative = move UP (away from road)
+@export var global_y_offset: float = 0.0
 
 var object_pool: Array[Sprite2D] = []
 var active_objects: Array[Sprite2D] = []
@@ -58,24 +72,44 @@ func _physics_process(delta):
 			_despawn_object(obj)
 
 func _spawn_object():
-	if object_pool.is_empty() or textures.is_empty():
+	if object_pool.is_empty() or texture_configs.is_empty():
 		return
 
 	var sprite = object_pool.pop_back()
-	sprite.texture = textures[randi() % textures.size()]
+	var config = texture_configs[randi() % texture_configs.size()]
 
-	# Set bottom-center pivot so sprites sit on horizon
-	if sprite.texture:
-		sprite.offset = Vector2(-sprite.texture.get_width() / 2.0, -sprite.texture.get_height())
+	sprite.texture = config["texture"]
+
+	# Apply region if specified
+	if config.has("region") and config["region"] != null:
+		sprite.region_enabled = true
+		sprite.region_rect = config["region"]
+		# Set bottom-center pivot based on region size
+		var region: Rect2 = config["region"]
+		sprite.offset = Vector2(-region.size.x / 2.0, -region.size.y)
+	else:
+		sprite.region_enabled = false
+		# Set bottom-center pivot so sprites sit on horizon
+		if sprite.texture:
+			sprite.offset = Vector2(-sprite.texture.get_width() / 2.0, -sprite.texture.get_height())
 
 	sprite.position.x = spawn_x
 
-	# Calculate scale with variance
-	var scale_val = base_scale + randf_range(-scale_variance, scale_variance)
+	# Get scale from config (per-asset) or use base_scale with variance (fallback)
+	var scale_val: float
+	if config.has("scale") and config["scale"] > 0:
+		scale_val = config["scale"]
+	else:
+		scale_val = base_scale + randf_range(-scale_variance, scale_variance)
 
-	# Calculate y-position using quadratic formula: y = 410 - 400*scale + 90*scale²
-	var calculated_y = quad_a + quad_b * scale_val + quad_c * scale_val * scale_val
-	sprite.position.y = calculated_y + randf_range(-y_variance, y_variance)
+	# Calculate y-position using quadratic formula (gives world coordinates)
+	var world_y = quad_a + quad_b * scale_val + quad_c * scale_val * scale_val
+
+	# Convert from world space to screen space (ParallaxLayer uses camera-relative coords)
+	var screen_y = world_y - camera_y
+
+	# Apply layer offset, global offset and variance
+	sprite.position.y = screen_y + layer_y_offset + global_y_offset + randf_range(-y_variance, y_variance)
 
 	sprite.scale = Vector2(scale_val, scale_val)
 	sprite.visible = true

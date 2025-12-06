@@ -15,15 +15,40 @@ func _ready():
 	despawn_x = -300.0
 	spawn_x = 1400.0
 	motion_scale = 0.6
+	layer_y_offset = 0.0  # Fine-tuning offset for mid layer
 
-	# Load textures from assets/parallax/
-	textures = [
-		preload("res://assets/parallax/restaurant.webp"),
-		preload("res://assets/parallax/pharmacy.webp"),
-		preload("res://assets/parallax/shop.webp"),
-		preload("res://assets/parallax/home_1.webp"),
-		preload("res://assets/parallax/building_generic.webp"),
-		preload("res://assets/parallax/two_storey_building.webp"),
+	# Load textures with region and scale data from ParallaxScalingEditor
+	texture_configs = [
+		{
+			"texture": preload("res://assets/parallax/restaurant.webp"),
+			"region": Rect2(64, 200, 1744, 688),
+			"scale": 0.2981
+		},
+		{
+			"texture": preload("res://assets/parallax/pharmacy.webp"),
+			"region": Rect2(552, 64, 816, 928),
+			"scale": 0.2218
+		},
+		{
+			"texture": preload("res://assets/parallax/shop.webp"),
+			"region": Rect2(480, 96, 960, 888),
+			"scale": 0.2454
+		},
+		{
+			"texture": preload("res://assets/parallax/home_1.webp"),
+			"region": null,
+			"scale": 0.3  # Fallback scale
+		},
+		{
+			"texture": preload("res://assets/parallax/building_generic.webp"),
+			"region": Rect2(128, 360, 944, 592),
+			"scale": 0.7500
+		},
+		{
+			"texture": preload("res://assets/parallax/two_storey_building.webp"),
+			"region": Rect2(520, 104, 796, 872),
+			"scale": 0.4398
+		},
 	]
 
 	super._ready()

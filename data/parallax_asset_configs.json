@@ -1,0 +1,73 @@
+{
+  "far": {
+    "LaalKila": {
+      "scale": 1.5865741500000001,
+      "y": 5.0,
+      "region": null
+    },
+    "Hauskhas": {
+      "scale": 0.740349115,
+      "y": 109.225,
+      "region": null
+    },
+    "Hanuman": {
+      "scale": 0.403,
+      "y": 234.485,
+      "region": null
+    }
+  },
+  "mid": {
+    "BuildingGeneric": {
+      "scale": 0.7500001,
+      "y": 207.0,
+      "region": null
+    },
+    "TwoStoreyBuilding": {
+      "scale": 0.43981484,
+      "y": 231.0,
+      "region": null
+    },
+    "Restaurant": {
+      "scale": 0.29814816,
+      "y": 320.0,
+      "region": null
+    },
+    "Shop": {
+      "scale": 0.24537032,
+      "y": 311.0,
+      "region": null
+    },
+    "Pharmacy": {
+      "scale": 0.22175928,
+      "y": 318.75,
+      "region": null
+    }
+  },
+  "front": {
+    "Tree1": {
+      "scale": 0.18885428,
+      "y": 337.0354,
+      "region": null
+    },
+    "Tree2": {
+      "scale": 0.24833338,
+      "y": 309.99997,
+      "region": null
+    },
+    "Tree3": {
+      "scale": 0.34281245,
+      "y": 289.00003,
+      "region": null
+    },
+    "FruitStall": {
+      "scale": 0.11333334,
+      "y": 353.00003,
+      "region": null
+    },
+    "Billboard": {
+      "scale": 0.088750035,
+      "y": 378.0,
+      "region": null
+    }
+  }
+}

@@ -15,15 +15,40 @@ func _ready():
 	despawn_x = -400.0
 	spawn_x = 1400.0
 	motion_scale = 0.3
+	layer_y_offset = 0.0  # Fine-tuning offset for far layer
 
-	# Load textures from assets/parallax/
-	textures = [
-		preload("res://assets/parallax/Laal_kila.webp"),
-		preload("res://assets/parallax/Hauskhas.webp"),
-		preload("res://assets/parallax/CP.webp"),
-		preload("res://assets/parallax/Lotus_park.webp"),
-		preload("res://assets/parallax/Hanuman.webp"),
-		preload("res://assets/parallax/Select_City_mall.webp"),
+	# Load textures with region and scale data from ParallaxScalingEditor
+	texture_configs = [
+		{
+			"texture": preload("res://assets/parallax/Laal_kila.webp"),
+			"region": Rect2(0, 256, 1920, 592),
+			"scale": 1.5866
+		},
+		{
+			"texture": preload("res://assets/parallax/Hauskhas.webp"),
+			"region": Rect2(0, 56, 1920, 968),
+			"scale": 0.7403
+		},
+		{
+			"texture": preload("res://assets/parallax/CP.webp"),
+			"region": null,
+			"scale": 0.5  # Fallback scale
+		},
+		{
+			"texture": preload("res://assets/parallax/Lotus_park.webp"),
+			"region": Rect2(128, 216, 1608, 584),
+			"scale": 1.729
+		},
+		{
+			"texture": preload("res://assets/parallax/Hanuman.webp"),
+			"region": Rect2(608, 48, 696, 1000),
+			"scale": 0.4030
+		},
+		{
+			"texture": preload("res://assets/parallax/Select_City_mall.webp"),
+			"region": null,
+			"scale": 0.5  # Fallback scale
+		},
 	]
 
 	super._ready()

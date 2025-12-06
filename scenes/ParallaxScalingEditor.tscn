@@ -64,48 +64,64 @@ position = Vector2(668, 337.0354)
 scale = Vector2(0.18885428, 0.18885428)
 texture = ExtResource("2_wrwkm")
 offset = Vector2(0, 1.84)
+region_enabled = true
+region_rect = Rect2(224, 80, 744, 1008)
 
 [node name="Tree2" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(488.00018, 309.99997)
 scale = Vector2(0.24833338, 0.24833338)
 texture = ExtResource("3_gnfoy")
+region_enabled = true
+region_rect = Rect2(232, 144, 712, 888)
 
 [node name="Shop" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(317.00003, 311)
 scale = Vector2(0.24537031, 0.24537033)
 texture = ExtResource("4_2oqe0")
+region_enabled = true
+region_rect = Rect2(480, 96, 960, 888)
 
 [node name="Tree3" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(938.0001, 289.00003)
 scale = Vector2(0.34281245, 0.34281245)
 texture = ExtResource("5_xifk8")
+region_enabled = true
+region_rect = Rect2(0, 0, 1200, 1077)
 
 [node name="Restaurant" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(1388, 320)
 scale = Vector2(0.29814816, 0.29814816)
 texture = ExtResource("6_ahut5")
+region_enabled = true
+region_rect = Rect2(64, 200, 1744, 688)
 
 [node name="Pharmacy" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(1853, 318.75)
 scale = Vector2(0.22175929, 0.22175927)
 texture = ExtResource("7_sf24n")
+region_enabled = true
+region_rect = Rect2(552, 64, 816, 928)
 
 [node name="LotusPark" type="Sprite2D" parent="."]
 z_index = 2
 position = Vector2(3207.92, -4)
 scale = Vector2(1.7298611, 1.729861)
 texture = ExtResource("8_nu1jf")
+region_enabled = true
+region_rect = Rect2(128, 216, 1608, 584)
 
 [node name="LaalKila" type="Sprite2D" parent="."]
 z_index = 2
 position = Vector2(6062, 5)
 scale = Vector2(1.5865742, 1.5865741)
 texture = ExtResource("9_26pj4")
+region_enabled = true
+region_rect = Rect2(0, 256, 1920, 592)
 
 [node name="Hauskhas" type="Sprite2D" parent="."]
 z_index = 2
@@ -113,42 +129,56 @@ position = Vector2(8243.001, 109.225)
 rotation = 0.00058449956
 scale = Vector2(0.7457974, 0.73490083)
 texture = ExtResource("10_y4lmq")
+region_enabled = true
+region_rect = Rect2(0, 56, 1920, 968)
 
 [node name="Hanuman" type="Sprite2D" parent="."]
 z_index = 2
 position = Vector2(9262, 234.485)
 scale = Vector2(0.403, 0.403)
 texture = ExtResource("11_6lq26")
+region_enabled = true
+region_rect = Rect2(608, 48, 696, 1000)
 
 [node name="FruitStall" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(96, 353.00003)
 scale = Vector2(0.11333334, 0.11333334)
 texture = ExtResource("12_sw7y7")
+region_enabled = true
+region_rect = Rect2(0, 40, 1200, 1120)
 
 [node name="BuildingGeneric" type="Sprite2D" parent="."]
 z_index = 3
-position = Vector2(2270, 178)
+position = Vector2(2358, 207)
 scale = Vector2(0.7500001, 0.7500001)
 texture = ExtResource("13_q11bs")
+region_enabled = true
+region_rect = Rect2(128, 360, 944, 592)
 
 [node name="Billboard" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(566, 378)
 scale = Vector2(0.088750035, 0.088750035)
 texture = ExtResource("14_1qmdf")
+region_enabled = true
+region_rect = Rect2(240, 112, 712, 960)
 
 [node name="TwoStoreyBuilding" type="Sprite2D" parent="."]
 z_index = 4
 position = Vector2(1899.9999, 231)
 scale = Vector2(0.43981484, 0.43981484)
 texture = ExtResource("15_jw6v3")
+region_enabled = true
+region_rect = Rect2(520, 104, 796, 872)
 
 [node name="EvCharger" type="Sprite2D" parent="."]
 z_index = 5
 position = Vector2(785.00006, 363)
 scale = Vector2(0.11002229, 0.12916665)
 texture = ExtResource("16_nnjhk")
+region_enabled = true
+region_rect = Rect2(536, 88, 824, 880)
 
 [node name="VimBase" type="Sprite2D" parent="."]
 z_index = 7
@@ -158,153 +188,171 @@ texture = ExtResource("17_6pt1t")
 
 [node name="RoadTile" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(308.11108, 458)
+position = Vector2(237.311, 458)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
-
-[node name="RoadTile4" type="Sprite2D" parent="."]
-z_index = 6
-position = Vector2(-163, 459.00003)
-scale = Vector2(0.24537037, 0.24537037)
-texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile2" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(779.00006, 459.00003)
+position = Vector2(709.255, 458)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile3" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(1250, 459.00003)
+position = Vector2(1180.5555, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
+
+[node name="RoadTile4" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(1652.4995, 457.98148)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile5" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(1721.5555, 457.5)
+position = Vector2(2123.5557, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile6" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(2192.5554, 457.5)
+position = Vector2(2595.4995, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile7" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(2660.5557, 457.5)
+position = Vector2(3066.5557, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile8" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(3131.5554, 457.5)
+position = Vector2(3538.4995, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile9" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(2660.5557, 457.5)
+position = Vector2(4009.5557, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile10" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(3131.5554, 457.5)
+position = Vector2(4481.4995, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile11" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(3601.5557, 457.5)
+position = Vector2(4952.5557, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile12" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(4069.5557, 457.5)
+position = Vector2(5424.4995, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile13" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(4540.5557, 457.5)
+position = Vector2(5895.5557, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile14" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(5009.5557, 458.5)
+position = Vector2(6367.4995, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile15" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(5477.5557, 458.5)
+position = Vector2(6838.5557, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile16" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(5948.5557, 458.5)
+position = Vector2(7310.4995, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile17" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(6417.5557, 457.5)
+position = Vector2(7781.5557, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile18" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(6885.5557, 457.5)
+position = Vector2(8253.5, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile19" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(7356.5557, 457.5)
+position = Vector2(8724.556, 457.98148)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile20" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(7823.5557, 458.5)
+position = Vector2(9195.001, 459.00003)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="RoadTile21" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(8291.556, 458.5)
+position = Vector2(9666.001, 458.00003)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
-
-[node name="RoadTile22" type="Sprite2D" parent="."]
-z_index = 6
-position = Vector2(8762.556, 458.5)
-scale = Vector2(0.24537037, 0.24537037)
-texture = ExtResource("18_nago0")
-
-[node name="RoadTile23" type="Sprite2D" parent="."]
-z_index = 6
-position = Vector2(9235.556, 459.5)
-scale = Vector2(0.24537037, 0.24537037)
-texture = ExtResource("18_nago0")
-
-[node name="RoadTile24" type="Sprite2D" parent="."]
-z_index = 6
-position = Vector2(9703.556, 459.5)
-scale = Vector2(0.24537037, 0.24537037)
-texture = ExtResource("18_nago0")
-
-[node name="RoadTile25" type="Sprite2D" parent="."]
-z_index = 6
-position = Vector2(10174.556, 459.5)
-scale = Vector2(0.24537037, 0.24537037)
-texture = ExtResource("18_nago0")
+region_enabled = true
+region_rect = Rect2(0, 328, 1920, 440)
 
 [node name="SkyOk" type="Sprite2D" parent="."]
 z_index = 1

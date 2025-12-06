@@ -15,14 +15,35 @@ func _ready():
 	despawn_x = -250.0
 	spawn_x = 1400.0
 	motion_scale = 0.9
+	layer_y_offset = 0.0  # Fine-tuning offset for front layer
 
-	# Load textures from assets/parallax/
-	textures = [
-		preload("res://assets/parallax/tree_1.webp"),
-		preload("res://assets/parallax/tree_2.webp"),
-		preload("res://assets/parallax/tree_3.webp"),
-		preload("res://assets/parallax/fruit_stall.webp"),
-		preload("res://assets/parallax/billboard.webp"),
+	# Load textures with region and scale data from ParallaxScalingEditor
+	texture_configs = [
+		{
+			"texture": preload("res://assets/parallax/tree_1.webp"),
+			"region": Rect2(224, 80, 744, 1008),
+			"scale": 0.1889
+		},
+		{
+			"texture": preload("res://assets/parallax/tree_2.webp"),
+			"region": Rect2(232, 144, 712, 888),
+			"scale": 0.2483
+		},
+		{
+			"texture": preload("res://assets/parallax/tree_3.webp"),
+			"region": Rect2(0, 0, 1200, 1077),
+			"scale": 0.3428
+		},
+		{
+			"texture": preload("res://assets/parallax/fruit_stall.webp"),
+			"region": Rect2(0, 40, 1200, 1120),
+			"scale": 0.1133
+		},
+		{
+			"texture": preload("res://assets/parallax/billboard.webp"),
+			"region": Rect2(240, 112, 712, 960),
+			"scale": 0.0888
+		},
 	]
 
 	super._ready()

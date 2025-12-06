@@ -56,16 +56,30 @@ func _create_pool():
 		object_pool.append(sprite)
 
 func _physics_process(delta):
-	spawn_timer += delta
+	# Get game reference for dynamic scroll speed
+	# ParallaxBG > FarLayer > FarLayerSpawner, so get_parent 3 times to reach Main/Game
+	var game = get_parent().get_parent().get_parent()
 
-	# Check spawn
-	if spawn_timer >= next_spawn_time and not object_pool.is_empty():
+	# Get current world scroll speed (0 when charging, normal otherwise)
+	var world_scroll = scroll_speed
+	if game and "scroll_speed" in game:
+		world_scroll = game.scroll_speed
+
+	# Check if world is paused (for spawn timing)
+	var is_paused = game and "world_paused" in game and game.world_paused
+
+	# Only accumulate spawn timer when not paused
+	if not is_paused:
+		spawn_timer += delta
+
+	# Check spawn (only when not paused)
+	if not is_paused and spawn_timer >= next_spawn_time and not object_pool.is_empty():
 		_spawn_object()
 		spawn_timer = 0.0
 		next_spawn_time = randf_range(spawn_interval_min, spawn_interval_max)
 
-	# Move and check despawn
-	var effective_speed = scroll_speed * motion_scale * delta
+	# Move and check despawn (use world_scroll for smooth transitions)
+	var effective_speed = world_scroll * motion_scale * delta
 	for obj in active_objects.duplicate():
 		obj.position.x -= effective_speed
 		if obj.position.x < despawn_x:

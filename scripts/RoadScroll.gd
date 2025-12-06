@@ -26,10 +26,17 @@ func _process(delta):
 	if not road_tile_a or not road_tile_b or not road_tile_c:
 		return
 
-	# Move all three tiles left
-	road_tile_a.position.x -= scroll_speed * delta
-	road_tile_b.position.x -= scroll_speed * delta
-	road_tile_c.position.x -= scroll_speed * delta
+	# Get current world scroll speed from Game (supports smooth transitions)
+	# Road > get_parent() = Main/Game
+	var game = get_parent()
+	var current_speed = scroll_speed
+	if game and "scroll_speed" in game:
+		current_speed = game.scroll_speed
+
+	# Move all three tiles left at current speed
+	road_tile_a.position.x -= current_speed * delta
+	road_tile_b.position.x -= current_speed * delta
+	road_tile_c.position.x -= current_speed * delta
 
 	# Recycle tiles that go off-screen (3-tile loop)
 	if road_tile_a.position.x < recycle_threshold:

@@ -66,7 +66,7 @@ func _process(_delta: float) -> void:
 
 	# Check if EV charger should spawn (low battery)
 	if pickup_spawner and pickup_spawner.should_spawn_ev_charger():
-		pickup_spawner.spawn_ev_charger(1100.0, 420.0)  # Spawn ahead on road
+		pickup_spawner.spawn_ev_charger()  # EVCharger uses front layer positioning
 
 	# Get next obstacle spawn from chunk manager
 	var obstacle_spawn = chunk_manager.get_next_obstacle_spawn()

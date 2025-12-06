@@ -30,6 +30,12 @@ var boost_speed_mult = 1.35
 var charge_time = 0.0
 var charge_seconds = 2.0
 
+# Gradual charging (for EV charger animation)
+var is_gradual_charging = false
+var gradual_charge_duration = 5.0  # 5 seconds total
+var gradual_charge_elapsed = 0.0
+var gradual_charge_start_value = 0.0
+
 func _ready():
 	battery = max_battery
 	print("[PlayerBattery] Component initialized - Battery: %.1f/%.1f" % [battery, max_battery])
@@ -44,7 +50,7 @@ func _process(delta: float) -> void:
 			stop_boost()
 		battery_changed.emit(battery)
 
-	# Handle charging
+	# Handle instant charging (old system)
 	if charge_time > 0:
 		charge_time -= delta
 		if charge_time <= 0:
@@ -52,6 +58,19 @@ func _process(delta: float) -> void:
 			charge_time = 0
 			battery_changed.emit(battery)
 			print("[PlayerBattery] Fully charged!")
+
+	# Handle gradual charging (EV charger - animates battery UI)
+	if is_gradual_charging:
+		gradual_charge_elapsed += delta
+		var progress = min(gradual_charge_elapsed / gradual_charge_duration, 1.0)
+		var target_charge = max_battery - gradual_charge_start_value
+		battery = gradual_charge_start_value + (target_charge * progress)
+		battery_changed.emit(battery)
+
+		if progress >= 1.0:
+			battery = max_battery
+			is_gradual_charging = false
+			print("[PlayerBattery] Gradual charge complete! Battery: %.1f" % battery)
 
 func start_boost() -> void:
 	"""Start boost if battery available"""
@@ -71,6 +90,14 @@ func enter_charging_zone() -> void:
 	"""Enter a charging zone - start charging timer"""
 	charge_time = charge_seconds
 	print("[PlayerBattery] Entered charging zone - charging for %.1fs" % charge_seconds)
+
+func start_gradual_charge(duration: float = 5.0) -> void:
+	"""Start gradual charging over specified duration (for EV charger animation)"""
+	is_gradual_charging = true
+	gradual_charge_duration = duration
+	gradual_charge_elapsed = 0.0
+	gradual_charge_start_value = battery
+	print("[PlayerBattery] Starting gradual charge: %.1f → %.1f over %.1fs" % [battery, max_battery, duration])
 
 func exit_charging_zone() -> void:
 	"""Exit charging zone - cancel charging"""

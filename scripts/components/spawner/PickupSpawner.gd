@@ -167,13 +167,12 @@ func should_spawn_ev_charger() -> bool:
 
 	return battery_component.battery <= battery_low_threshold
 
-func spawn_ev_charger(x: float, y: float = 300.0) -> void:
-	"""Spawn EV charger at position (middle lane by default)"""
+func spawn_ev_charger() -> void:
+	"""Spawn EV charger at front layer visual position"""
 	if ev_charger_active and is_instance_valid(ev_charger_active):
 		return  # Already spawned
 
 	var charger = ev_charger_scene.instantiate()
-	charger.global_position = Vector2(x, y)
 	charger.set_scroll_speed(spawn_speed)
 
 	# Connect signals to pause world
@@ -183,16 +182,26 @@ func spawn_ev_charger(x: float, y: float = 300.0) -> void:
 	add_child(charger)
 	ev_charger_active = charger
 
-	print("[PickupSpawner] EV Charger spawned at (%.0f, %.0f)" % [x, y])
+	print("[PickupSpawner] EV Charger spawned at front layer position")
 
 func _on_charger_start():
 	"""EV charger started - notify game to pause world"""
-	if coordinator_ref and coordinator_ref.get_parent().has_method("pause_world_scroll"):
-		coordinator_ref.get_parent().pause_world_scroll()
+	# PickupSpawner > Spawner > Main/Game
+	var game = get_parent().get_parent()
+	if game and game.has_method("pause_world_scroll"):
+		game.pause_world_scroll()
+		print("[PickupSpawner] Called pause_world_scroll on Game")
+	else:
+		push_error("[PickupSpawner] Could not find Game.pause_world_scroll! Parent chain: %s" % get_parent().get_parent())
 
 func _on_charger_complete():
 	"""EV charger complete - notify game to resume world"""
-	if coordinator_ref and coordinator_ref.get_parent().has_method("resume_world_scroll"):
-		coordinator_ref.get_parent().resume_world_scroll()
+	# PickupSpawner > Spawner > Main/Game
+	var game = get_parent().get_parent()
+	if game and game.has_method("resume_world_scroll"):
+		game.resume_world_scroll()
+		print("[PickupSpawner] Called resume_world_scroll on Game")
+	else:
+		push_error("[PickupSpawner] Could not find Game.resume_world_scroll!")
 
 	ev_charger_active = null

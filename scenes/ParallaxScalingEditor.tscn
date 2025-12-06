@@ -1,0 +1,337 @@
+[gd_scene load_steps=22 format=3 uid="uid://cs8x043lqbuly"]
+
+[ext_resource type="Script" uid="uid://cg0mog12asmjf" path="res://scripts/ParallaxScalingEditor.gd" id="1_editor"]
+[ext_resource type="Texture2D" uid="uid://ckj6y0cqibm5b" path="res://assets/parallax/tree_1.webp" id="2_wrwkm"]
+[ext_resource type="Texture2D" uid="uid://c3vqha01x2b36" path="res://assets/parallax/tree_2.webp" id="3_gnfoy"]
+[ext_resource type="Texture2D" uid="uid://52vmp6lxayla" path="res://assets/parallax/shop.webp" id="4_2oqe0"]
+[ext_resource type="Texture2D" uid="uid://r8xawkihhwbc" path="res://assets/parallax/tree_3.webp" id="5_xifk8"]
+[ext_resource type="Texture2D" uid="uid://stb656ylhw1u" path="res://assets/parallax/restaurant.webp" id="6_ahut5"]
+[ext_resource type="Texture2D" uid="uid://bheos0hqhncbi" path="res://assets/parallax/pharmacy.webp" id="7_sf24n"]
+[ext_resource type="Texture2D" uid="uid://vx87xorxkeee" path="res://assets/parallax/Lotus_park.webp" id="8_nu1jf"]
+[ext_resource type="Texture2D" uid="uid://dtf6532q3p20w" path="res://assets/parallax/Laal_kila.webp" id="9_26pj4"]
+[ext_resource type="Texture2D" uid="uid://c6r8j4xvgg6an" path="res://assets/parallax/Hauskhas.webp" id="10_y4lmq"]
+[ext_resource type="Texture2D" uid="uid://dxyhnw6ocs40m" path="res://assets/parallax/Hanuman.webp" id="11_6lq26"]
+[ext_resource type="Texture2D" uid="uid://bpam46h5intxk" path="res://assets/parallax/fruit_stall.webp" id="12_sw7y7"]
+[ext_resource type="Texture2D" uid="uid://ba3femfietpsb" path="res://assets/parallax/building_generic.webp" id="13_q11bs"]
+[ext_resource type="Texture2D" uid="uid://ba0cvqqds8gtd" path="res://assets/parallax/billboard.webp" id="14_1qmdf"]
+[ext_resource type="Texture2D" uid="uid://ecsbc368jh1" path="res://assets/parallax/two_storey_building.webp" id="15_jw6v3"]
+[ext_resource type="Texture2D" uid="uid://bnc6w0avygg8n" path="res://assets/pickups/ev_charger.webp" id="16_nnjhk"]
+[ext_resource type="Texture2D" uid="uid://c4sp42dfpqldv" path="res://assets/player/vim_base.webp" id="17_6pt1t"]
+[ext_resource type="Texture2D" uid="uid://bcw73rt4f1dua" path="res://assets/road/road_tile.webp" id="18_nago0"]
+[ext_resource type="Texture2D" uid="uid://bncjyu10b4a2" path="res://assets/skies/sky_ok.webp" id="19_vd0ov"]
+[ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="20_jvtwq"]
+[ext_resource type="Texture2D" uid="uid://cnlch374hthea" path="res://assets/skies/sky_clear.webp" id="21_6lq26"]
+
+[node name="ParallaxScalingEditor" type="Node2D"]
+script = ExtResource("1_editor")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(480, 180.415)
+position_smoothing_enabled = true
+
+[node name="GroundReference" type="Line2D" parent="."]
+points = PackedVector2Array(0, 420, 1920, 420)
+width = 2.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="HorizonReference" type="Line2D" parent="."]
+points = PackedVector2Array(0, 200, 1920, 200)
+width = 2.0
+default_color = Color(0, 1, 0, 1)
+
+[node name="Instructions" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 500.0
+offset_bottom = 120.0
+text = "PARALLAX ASSET SCALING EDITOR
+Red Line = Ground (y=420)
+Green Line = Horizon (y=200)
+Adjust scales so assets sit properly on ground
+Press E to export scales to JSON"
+metadata/_edit_use_anchors_ = true
+
+[node name="FarAssets" type="Node2D" parent="."]
+
+[node name="MidAssets" type="Node2D" parent="."]
+
+[node name="FrontAssets" type="Node2D" parent="."]
+
+[node name="Tree1" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(668, 337.0354)
+scale = Vector2(0.18885428, 0.18885428)
+texture = ExtResource("2_wrwkm")
+offset = Vector2(0, 1.84)
+
+[node name="Tree2" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(488.00018, 309.99997)
+scale = Vector2(0.24833338, 0.24833338)
+texture = ExtResource("3_gnfoy")
+
+[node name="Shop" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(317.00003, 311)
+scale = Vector2(0.24537031, 0.24537033)
+texture = ExtResource("4_2oqe0")
+
+[node name="Tree3" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(938.0001, 289.00003)
+scale = Vector2(0.34281245, 0.34281245)
+texture = ExtResource("5_xifk8")
+
+[node name="Restaurant" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(1388, 320)
+scale = Vector2(0.29814816, 0.29814816)
+texture = ExtResource("6_ahut5")
+
+[node name="Pharmacy" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(1853, 318.75)
+scale = Vector2(0.22175929, 0.22175927)
+texture = ExtResource("7_sf24n")
+
+[node name="LotusPark" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(3207.92, -4)
+scale = Vector2(1.7298611, 1.729861)
+texture = ExtResource("8_nu1jf")
+
+[node name="LaalKila" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(6062, 5)
+scale = Vector2(1.5865742, 1.5865741)
+texture = ExtResource("9_26pj4")
+
+[node name="Hauskhas" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(8243.001, 109.225)
+rotation = 0.00058449956
+scale = Vector2(0.7457974, 0.73490083)
+texture = ExtResource("10_y4lmq")
+
+[node name="Hanuman" type="Sprite2D" parent="."]
+z_index = 2
+position = Vector2(9262, 234.485)
+scale = Vector2(0.403, 0.403)
+texture = ExtResource("11_6lq26")
+
+[node name="FruitStall" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(96, 353.00003)
+scale = Vector2(0.11333334, 0.11333334)
+texture = ExtResource("12_sw7y7")
+
+[node name="BuildingGeneric" type="Sprite2D" parent="."]
+z_index = 3
+position = Vector2(2270, 178)
+scale = Vector2(0.7500001, 0.7500001)
+texture = ExtResource("13_q11bs")
+
+[node name="Billboard" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(566, 378)
+scale = Vector2(0.088750035, 0.088750035)
+texture = ExtResource("14_1qmdf")
+
+[node name="TwoStoreyBuilding" type="Sprite2D" parent="."]
+z_index = 4
+position = Vector2(1899.9999, 231)
+scale = Vector2(0.43981484, 0.43981484)
+texture = ExtResource("15_jw6v3")
+
+[node name="EvCharger" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(785.00006, 363)
+scale = Vector2(0.11002229, 0.12916665)
+texture = ExtResource("16_nnjhk")
+
+[node name="VimBase" type="Sprite2D" parent="."]
+z_index = 7
+position = Vector2(181, 427.72)
+scale = Vector2(0.15416665, 0.15416665)
+texture = ExtResource("17_6pt1t")
+
+[node name="RoadTile" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(308.11108, 458)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile4" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(-163, 459.00003)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile2" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(779.00006, 459.00003)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile3" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(1250, 459.00003)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile5" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(1721.5555, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile6" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(2192.5554, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile7" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(2660.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile8" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(3131.5554, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile9" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(2660.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile10" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(3131.5554, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile11" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(3601.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile12" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(4069.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile13" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(4540.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile14" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(5009.5557, 458.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile15" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(5477.5557, 458.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile16" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(5948.5557, 458.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile17" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(6417.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile18" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(6885.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile19" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(7356.5557, 457.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile20" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(7823.5557, 458.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile21" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(8291.556, 458.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile22" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(8762.556, 458.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile23" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(9235.556, 459.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile24" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(9703.556, 459.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="RoadTile25" type="Sprite2D" parent="."]
+z_index = 6
+position = Vector2(10174.556, 459.5)
+scale = Vector2(0.24537037, 0.24537037)
+texture = ExtResource("18_nago0")
+
+[node name="SkyOk" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(720, -91)
+texture = ExtResource("19_vd0ov")
+
+[node name="SkyBad" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(2340, -93)
+texture = ExtResource("20_jvtwq")
+
+[node name="SkyOk2" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(3966, -101)
+texture = ExtResource("19_vd0ov")
+
+[node name="SkyClear" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(5586, -109)
+texture = ExtResource("21_6lq26")
+
+[node name="SkyOk3" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(7206, -108)
+texture = ExtResource("19_vd0ov")
+
+[node name="SkyClear2" type="Sprite2D" parent="."]
+z_index = 1
+position = Vector2(8825, -108)
+texture = ExtResource("21_6lq26")

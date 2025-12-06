@@ -11,12 +11,17 @@ signal object_despawned(obj: Node2D)
 @export var pool_size: int = 5
 @export var spawn_interval_min: float = 2.0
 @export var spawn_interval_max: float = 5.0
-@export var y_position: float = 300.0
-@export var y_variance: float = 20.0
 @export var base_scale: float = 0.5
 @export var scale_variance: float = 0.1
+@export var y_variance: float = 20.0
 @export var despawn_x: float = -200.0
-@export var spawn_x: float = 1200.0
+@export var spawn_x: float = 1400.0
+
+# Parallax positioning constants (from mathematical analysis)
+var horizon_y: float = 200.0
+var quad_a: float = 410.0
+var quad_b: float = -400.0
+var quad_c: float = 90.0
 
 var object_pool: Array[Sprite2D] = []
 var active_objects: Array[Sprite2D] = []
@@ -64,9 +69,14 @@ func _spawn_object():
 		sprite.offset = Vector2(-sprite.texture.get_width() / 2.0, -sprite.texture.get_height())
 
 	sprite.position.x = spawn_x
-	sprite.position.y = y_position + randf_range(-y_variance, y_variance)
 
+	# Calculate scale with variance
 	var scale_val = base_scale + randf_range(-scale_variance, scale_variance)
+
+	# Calculate y-position using quadratic formula: y = 410 - 400*scale + 90*scale²
+	var calculated_y = quad_a + quad_b * scale_val + quad_c * scale_val * scale_val
+	sprite.position.y = calculated_y + randf_range(-y_variance, y_variance)
+
 	sprite.scale = Vector2(scale_val, scale_val)
 	sprite.visible = true
 

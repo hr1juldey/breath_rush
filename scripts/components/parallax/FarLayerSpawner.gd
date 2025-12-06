@@ -1,4 +1,4 @@
-extends ParallaxLayerSpawner
+extends "res://scripts/components/parallax/ParallaxLayerSpawner.gd"
 class_name FarLayerSpawner
 
 ## Spawns distant landmarks: Laal Kila, Hauskhas, CP, etc.
@@ -9,12 +9,11 @@ func _ready():
 	pool_size = 1  # Only 1 monument at a time
 	spawn_interval_min = 8.0  # Long interval between monuments
 	spawn_interval_max = 12.0
-	y_position = 530.0  # Horizon line from SS/6.png
 	y_variance = 5.0
-	base_scale = 0.4
+	base_scale = 0.35
 	scale_variance = 0.05
 	despawn_x = -400.0
-	spawn_x = 1300.0
+	spawn_x = 1400.0
 	motion_scale = 0.3
 
 	# Load textures from assets/parallax/

@@ -1,4 +1,4 @@
-extends ParallaxLayerSpawner
+extends "res://scripts/components/parallax/ParallaxLayerSpawner.gd"
 class_name FrontLayerSpawner
 
 ## Spawns foreground elements: trees, fruit stalls
@@ -9,12 +9,11 @@ func _ready():
 	pool_size = 6
 	spawn_interval_min = 2.5
 	spawn_interval_max = 5.0
-	y_position = 530.0  # Horizon line
 	y_variance = 5.0
 	base_scale = 0.25
-	scale_variance = 0.05
+	scale_variance = 0.03
 	despawn_x = -250.0
-	spawn_x = 1200.0
+	spawn_x = 1400.0
 	motion_scale = 0.9
 
 	# Load textures from assets/parallax/

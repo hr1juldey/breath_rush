@@ -1,0 +1,189 @@
+{
+	"camera": {
+		"position": {
+			"x": 480,
+			"y": 180.415
+		},
+		"zoom": {
+			"x": 1.0,
+			"y": 1.0
+		},
+		"position_smoothing_enabled": true
+	},
+	"reference_lines": {
+		"ground_y": 420,
+		"horizon_y": 200
+	},
+	"far_layer": {
+		"Laal_kila": {
+			"scale": 1.5865742,
+			"position": {
+				"x": 6062,
+				"y": 5
+			},
+			"z_index": 2
+		},
+		"Hauskhas": {
+			"scale": 0.7457974,
+			"position": {
+				"x": 8243.001,
+				"y": 109.225
+			},
+			"z_index": 2,
+			"rotation": 0.00058449956
+		},
+		"Lotus_park": {
+			"scale": 1.7298611,
+			"position": {
+				"x": 3207.92,
+				"y": -4
+			},
+			"z_index": 2
+		},
+		"Hanuman": {
+			"scale": 0.403,
+			"position": {
+				"x": 9262,
+				"y": 234.485
+			},
+			"z_index": 2
+		}
+	},
+	"mid_layer": {
+		"restaurant": {
+			"scale": 0.29814816,
+			"position": {
+				"x": 1388,
+				"y": 320
+			},
+			"z_index": 5
+		},
+		"pharmacy": {
+			"scale": 0.22175929,
+			"position": {
+				"x": 1853,
+				"y": 318.75
+			},
+			"z_index": 5
+		},
+		"shop": {
+			"scale": 0.24537031,
+			"position": {
+				"x": 317.00003,
+				"y": 311
+			},
+			"z_index": 5
+		},
+		"building_generic": {
+			"scale": 0.7500001,
+			"position": {
+				"x": 2270,
+				"y": 178
+			},
+			"z_index": 3
+		},
+		"two_storey_building": {
+			"scale": 0.43981484,
+			"position": {
+				"x": 1899.9999,
+				"y": 231
+			},
+			"z_index": 4
+		}
+	},
+	"front_layer": {
+		"tree_1": {
+			"scale": 0.18885428,
+			"position": {
+				"x": 668,
+				"y": 337.0354
+			},
+			"z_index": 5,
+			"offset": {
+				"x": 0,
+				"y": 1.84
+			}
+		},
+		"tree_2": {
+			"scale": 0.24833338,
+			"position": {
+				"x": 488.00018,
+				"y": 309.99997
+			},
+			"z_index": 5
+		},
+		"tree_3": {
+			"scale": 0.34281245,
+			"position": {
+				"x": 938.0001,
+				"y": 289.00003
+			},
+			"z_index": 5
+		},
+		"fruit_stall": {
+			"scale": 0.11333334,
+			"position": {
+				"x": 96,
+				"y": 353.00003
+			},
+			"z_index": 5
+		},
+		"billboard": {
+			"scale": 0.088750035,
+			"position": {
+				"x": 566,
+				"y": 378
+			},
+			"z_index": 5
+		}
+	},
+	"reference": {
+		"player_vim_base": {
+			"scale": 0.15416665,
+			"position": {
+				"x": 181,
+				"y": 427.72
+			},
+			"z_index": 7
+		},
+		"road_tile": {
+			"scale": 0.24537037,
+			"position": {
+				"x": 308.11108,
+				"y": 458
+			},
+			"z_index": 6
+		},
+		"ev_charger": {
+			"scale": 0.11002229,
+			"position": {
+				"x": 785.00006,
+				"y": 363
+			},
+			"z_index": 5
+		}
+	},
+	"analysis": {
+		"far_layer_y_range": {
+			"min": -4,
+			"max": 234.485,
+			"note": "Far objects positioned well above ground line (420)"
+		},
+		"mid_layer_y_range": {
+			"min": 178,
+			"max": 320,
+			"note": "Mid objects positioned above ground line (420)"
+		},
+		"front_layer_y_range": {
+			"min": 289.00003,
+			"max": 378,
+			"note": "Front objects positioned closest to but still above ground line (420)"
+		},
+		"ground_reference": {
+			"ground_y": 420,
+			"road_tile_y": 458,
+			"player_y": 427.72,
+			"note": "Player and road slightly below ground reference line"
+		}
+	}
+}

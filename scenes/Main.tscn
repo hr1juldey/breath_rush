@@ -1,26 +1,26 @@
-[gd_scene load_steps=20 format=3 uid="uid://bre1xmdt1w2k6"]
+[gd_scene load_steps=26 format=3 uid="uid://bre1xmdt1w2k6"]
 
 [ext_resource type="Script" uid="uid://m4up31qjvh40" path="res://scripts/Game.gd" id="1_1r2jk"]
 [ext_resource type="Script" uid="uid://dxap4jwikaan7" path="res://scripts/RoadScroll.gd" id="3_6l9m2"]
 [ext_resource type="Script" uid="uid://chbh558ddgqet" path="res://scripts/Spawner.gd" id="4_7n3o5"]
-[ext_resource type="Script" path="res://scripts/SkyController.gd" id="5_sky_ctrl"]
-[ext_resource type="Script" path="res://scripts/SmogController.gd" id="6_smog_ctrl"]
-[ext_resource type="Script" path="res://scripts/components/spawner/ObstacleSpawner.gd" id="5_obstacle"]
-[ext_resource type="Script" path="res://scripts/components/spawner/PickupSpawner.gd" id="6_pickup"]
-[ext_resource type="Script" path="res://scripts/components/spawner/SpawnCoordinator.gd" id="7_coordinator"]
-[ext_resource type="Script" path="res://scripts/components/spawner/ChunkManager.gd" id="8_chunk"]
+[ext_resource type="Script" uid="uid://bc5l2asaa820" path="res://scripts/components/spawner/ObstacleSpawner.gd" id="5_obstacle"]
+[ext_resource type="Script" uid="uid://ba07yn131sy2x" path="res://scripts/SkyController.gd" id="5_sky_ctrl"]
+[ext_resource type="Script" uid="uid://dlblug83sj8yh" path="res://scripts/components/spawner/PickupSpawner.gd" id="6_pickup"]
+[ext_resource type="Script" uid="uid://44p8oy4ajwx0" path="res://scripts/SmogController.gd" id="6_smog_ctrl"]
+[ext_resource type="Script" uid="uid://oewjjvog0b7c" path="res://scripts/components/spawner/SpawnCoordinator.gd" id="7_coordinator"]
+[ext_resource type="Script" uid="uid://lhjac7puv231" path="res://scripts/components/spawner/ChunkManager.gd" id="8_chunk"]
 [ext_resource type="Texture2D" uid="uid://bcw73rt4f1dua" path="res://assets/road/road_tile.webp" id="9_2x7y0"]
 [ext_resource type="PackedScene" uid="uid://cjtmad0wq0gf" path="res://scenes/Player.tscn" id="10_3z8a1"]
 [ext_resource type="PackedScene" uid="uid://d6jl4a6t8i" path="res://scenes/HUD.tscn" id="11_hud_scene"]
-[ext_resource type="Shader" path="res://shaders/sky_shader.gdshader" id="12_sky_shader"]
-[ext_resource type="Shader" path="res://shaders/smog_shader.gdshader" id="13_smog_shader"]
-[ext_resource type="Texture2D" path="res://assets/vfx/smog_overlay.webp" id="14_smog_overlay"]
-[ext_resource type="Texture2D" path="res://assets/skies/sky_bad.webp" id="15_sky_bad"]
-[ext_resource type="Texture2D" path="res://assets/skies/sky_ok.webp" id="16_sky_ok"]
-[ext_resource type="Texture2D" path="res://assets/skies/sky_clear.webp" id="17_sky_clear"]
-[ext_resource type="Script" path="res://scripts/components/parallax/FarLayerSpawner.gd" id="22_far_spawner"]
-[ext_resource type="Script" path="res://scripts/components/parallax/MidLayerSpawner.gd" id="23_mid_spawner"]
-[ext_resource type="Script" path="res://scripts/components/parallax/FrontLayerSpawner.gd" id="24_front_spawner"]
+[ext_resource type="Shader" uid="uid://b1vxbhnwo2imc" path="res://shaders/sky_shader.gdshader" id="12_sky_shader"]
+[ext_resource type="Shader" uid="uid://cmplcdvh0vh0d" path="res://shaders/smog_shader.gdshader" id="13_smog_shader"]
+[ext_resource type="Texture2D" uid="uid://cih7364pkepxh" path="res://assets/vfx/smog_overlay.webp" id="14_smog_overlay"]
+[ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="15_sky_bad"]
+[ext_resource type="Texture2D" uid="uid://bncjyu10b4a2" path="res://assets/skies/sky_ok.webp" id="16_sky_ok"]
+[ext_resource type="Texture2D" uid="uid://cnlch374hthea" path="res://assets/skies/sky_clear.webp" id="17_sky_clear"]
+[ext_resource type="Script" uid="uid://bcu4hirt4wbmb" path="res://scripts/components/parallax/FarLayerSpawner.gd" id="22_far_spawner"]
+[ext_resource type="Script" uid="uid://bo6kockayp1wx" path="res://scripts/components/parallax/MidLayerSpawner.gd" id="23_mid_spawner"]
+[ext_resource type="Script" uid="uid://dk2xnqcqxytoc" path="res://scripts/components/parallax/FrontLayerSpawner.gd" id="24_front_spawner"]
 
 [sub_resource type="ShaderMaterial" id="SkyShaderMaterial"]
 shader = ExtResource("12_sky_shader")
@@ -33,23 +33,23 @@ shader_parameter/sky_clear_texture = ExtResource("17_sky_clear")
 [sub_resource type="ShaderMaterial" id="SmogShaderMaterial_1"]
 shader = ExtResource("13_smog_shader")
 shader_parameter/noise_time = 0.0
-shader_parameter/noise_speed = 2.0
-shader_parameter/noise_scale = 3.0
-shader_parameter/opacity = 0.2
+shader_parameter/noise_speed = 1.5
+shader_parameter/noise_scale = 5.0
+shader_parameter/opacity = 0.15
 
 [sub_resource type="ShaderMaterial" id="SmogShaderMaterial_2"]
 shader = ExtResource("13_smog_shader")
 shader_parameter/noise_time = 0.0
 shader_parameter/noise_speed = 2.0
-shader_parameter/noise_scale = 3.0
-shader_parameter/opacity = 0.3
+shader_parameter/noise_scale = 2.5
+shader_parameter/opacity = 0.2
 
 [sub_resource type="ShaderMaterial" id="SmogShaderMaterial_3"]
 shader = ExtResource("13_smog_shader")
 shader_parameter/noise_time = 0.0
-shader_parameter/noise_speed = 2.0
-shader_parameter/noise_scale = 3.0
-shader_parameter/opacity = 0.4
+shader_parameter/noise_speed = 2.5
+shader_parameter/noise_scale = 1.5
+shader_parameter/opacity = 0.15
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_1r2jk")
@@ -59,23 +59,25 @@ layer = -1
 scroll_ignore_camera_zoom = true
 
 [node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBG"]
+position = Vector2(247.215, -171.885)
+scale = Vector2(0.78, 0.78)
 motion_scale = Vector2(0.1, 0)
 
 [node name="SkyShaderSprite" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
-position = Vector2(480, 240)
-scale = Vector2(10, 10)
-texture = ExtResource("14_smog_overlay")
 material = SubResource("SkyShaderMaterial")
+position = Vector2(480, 240)
+texture = ExtResource("17_sky_clear")
 script = ExtResource("5_sky_ctrl")
 
 [node name="SmogLayer_1" type="ParallaxLayer" parent="ParallaxBG"]
+scale = Vector2(0.375, 0.375)
 motion_scale = Vector2(0.15, 0)
 
 [node name="SmogShaderSprite_1" type="Sprite2D" parent="ParallaxBG/SmogLayer_1"]
+material = SubResource("SmogShaderMaterial_1")
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
 texture = ExtResource("14_smog_overlay")
-material = SubResource("SmogShaderMaterial_1")
 
 [node name="FarLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.3, 0)
@@ -84,13 +86,14 @@ motion_scale = Vector2(0.3, 0)
 script = ExtResource("22_far_spawner")
 
 [node name="SmogLayer_2" type="ParallaxLayer" parent="ParallaxBG"]
+scale = Vector2(22.885, 22.885)
 motion_scale = Vector2(0.45, 0)
 
 [node name="SmogShaderSprite_2" type="Sprite2D" parent="ParallaxBG/SmogLayer_2"]
+material = SubResource("SmogShaderMaterial_2")
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
 texture = ExtResource("14_smog_overlay")
-material = SubResource("SmogShaderMaterial_2")
 
 [node name="MidLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.6, 0)
@@ -99,13 +102,14 @@ motion_scale = Vector2(0.6, 0)
 script = ExtResource("23_mid_spawner")
 
 [node name="SmogLayer_3" type="ParallaxLayer" parent="ParallaxBG"]
+scale = Vector2(42.005, 42.005)
 motion_scale = Vector2(0.75, 0)
 
 [node name="SmogShaderSprite_3" type="Sprite2D" parent="ParallaxBG/SmogLayer_3"]
-position = Vector2(480, 240)
+material = SubResource("SmogShaderMaterial_3")
+position = Vector2(478.68106, 246.99438)
 scale = Vector2(10, 10)
 texture = ExtResource("14_smog_overlay")
-material = SubResource("SmogShaderMaterial_3")
 
 [node name="FrontLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.9, 0)
@@ -118,6 +122,7 @@ script = ExtResource("6_smog_ctrl")
 
 [node name="Road" type="Node2D" parent="."]
 position = Vector2(0, 420)
+scale = Vector2(0.7, 0.7)
 script = ExtResource("3_6l9m2")
 
 [node name="RoadTileA" type="Sprite2D" parent="Road"]
@@ -131,10 +136,12 @@ texture = ExtResource("9_2x7y0")
 [node name="World" type="Node2D" parent="."]
 
 [node name="DynamicObstacles" type="Node2D" parent="World"]
+position = Vector2(0, -1.49)
 
 [node name="DynamicPickups" type="Node2D" parent="World"]
 
 [node name="Trees" type="Node2D" parent="World"]
+position = Vector2(0, -0.79)
 
 [node name="DeliveryZones" type="Node2D" parent="."]
 

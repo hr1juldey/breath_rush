@@ -23,7 +23,7 @@ func _ready():
 			"texture": preload("res://assets/parallax/tree_1.webp"),
 			"region": Rect2(224, 80, 744, 1008),
 			"scale": 0.1889,
-			"y_offset": - 80.0 # Tree1 50% under - move up significantly
+			"y_offset": - 75.0 # Tree1 50% under - move up significantly
 		},
 		{
 			"texture": preload("res://assets/parallax/tree_2.webp"),

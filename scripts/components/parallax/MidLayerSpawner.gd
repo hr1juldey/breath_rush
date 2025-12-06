@@ -40,8 +40,8 @@ func _ready():
 		{
 			"texture": preload("res://assets/parallax/home_1.webp"),
 			"region": null,
-			"scale": 0.3,
-			"y_offset": 0.0 # Blue/white house - REFERENCE (perfect)
+			"scale": 0.24,
+			"y_offset": - 60.0 # Blue/white house - REFERENCE (perfect)
 		},
 		{
 			"texture": preload("res://assets/parallax/building_generic.webp"),
@@ -52,8 +52,8 @@ func _ready():
 		{
 			"texture": preload("res://assets/parallax/two_storey_building.webp"),
 			"region": Rect2(520, 104, 796, 872),
-			"scale": 0.4398,
-			"y_offset": 0.0
+			"scale": 0.3,
+			"y_offset": - 45.0
 		},
 	]
 

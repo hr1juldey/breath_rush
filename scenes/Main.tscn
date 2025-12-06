@@ -55,7 +55,7 @@ shader_parameter/opacity = 0.15
 script = ExtResource("1_1r2jk")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(480, 180.415)
+position = Vector2(480, 179.415)
 offset = Vector2(0, -13.475)
 zoom = Vector2(1.03, 1.03)
 position_smoothing_enabled = true

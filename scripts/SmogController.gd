@@ -14,11 +14,14 @@ var current_aqi: float = 150.0
 var layer_multipliers: Array[float] = [0.4, 0.6, 0.8]
 
 # Scroll speed multipliers per layer (should match Parallax2D motion_scale)
-# SmogLayer_1 (0.15), SmogLayer_2 (0.45), SmogLayer_3 (0.75)
-var scroll_speed_multipliers: Array[float] = [0.15, 0.45, 0.75]
+# ADJUSTED: Closer values reduce beat pattern interference
+# Was [0.15, 0.45, 0.75] which created flickering beat patterns
+var scroll_speed_multipliers: Array[float] = [0.30, 0.35, 0.40]
 
 # Phase offsets to prevent pattern alignment (prevents flickering)
-var phase_offsets: Array[float] = [0.0, 137.5, 283.1] # Prime-ish numbers for variation
+# ADJUSTED: Smaller variation for smoother transition between layers
+# Was [0.0, 137.5, 283.1] which caused pattern misalignment
+var phase_offsets: Array[float] = [0.0, 20.0, 40.0]
 
 func _ready():
 	# Cache shader materials from all 3 smog sprites
@@ -51,8 +54,9 @@ func _physics_process(delta):
 			var speed_mult = scroll_speed_multipliers[i]
 			var current_time = smog_materials[i].get_shader_parameter("noise_time") as float
 
-			# Base scroll speed (300.0) × layer speed × slight variation (1.02)
-			var scroll_increment = delta * 300.0 * speed_mult * 1.02
+			# Base scroll speed REDUCED from 300.0 → 80.0 → 30.0 for very slow, organic flow
+			# Multipliers now tightly grouped [0.30, 0.35, 0.40] for smooth layering
+			var scroll_increment = delta * 30.0 * speed_mult
 			smog_materials[i].set_shader_parameter("noise_time", current_time + scroll_increment)
 
 func set_aqi(aqi: float):

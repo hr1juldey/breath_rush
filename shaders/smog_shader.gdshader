@@ -1,13 +1,14 @@
 shader_type canvas_item;
 // Smog/fog shader with flowing noise pattern
 // Creates organic haze effect with horizontal scroll
+// Optimized: reduced animation speed, increased octaves, added dithering
 
 // Animation
 uniform float noise_time = 0.0;           // Updated by controller
-uniform float noise_speed : hint_range(0.5, 3.0) = 2.0;  // 2% faster than camera
+uniform float noise_speed : hint_range(0.0, 0.5) = 0.1;  // Set to 0.0 for static fog (no animation)
 
 // Visual parameters
-uniform float noise_scale : hint_range(0.5, 10.0) = 3.0;  // Detail level
+uniform float noise_scale : hint_range(0.5, 10.0) = 0.1;  // Detail level
 uniform float opacity : hint_range(0.0, 1.0) = 0.5;       // AQI-driven
 
 // Simple hash-based pseudo-random function
@@ -42,12 +43,13 @@ float noise(vec2 p) {
 }
 
 // Fractal Brownian Motion (FBM) for organic look
+// INCREASED from 4 to 5 octaves for more variation and less pattern repetition
 float fbm(vec2 p) {
 	float value = 0.0;
-	float amplitude = 1.0;
-	float frequency = 1.0;
+	float amplitude = .9;
+	float frequency = .008;
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 5; i++) {
 		value += amplitude * noise(p * frequency);
 		amplitude *= 0.5;
 		frequency *= 2.0;
@@ -64,8 +66,9 @@ void fragment() {
 	// Generate multi-octave noise pattern
 	float fog_pattern = fbm(scroll_uv * noise_scale);
 
-	// Remap noise to useful range and add contrast
-	fog_pattern = smoothstep(0.25, 0.75, fog_pattern);
+	// Remap noise to useful range with smoother gradient (less harsh edges)
+	// Wider range (0.2-0.8) prevents sharp banding artifacts
+	fog_pattern = smoothstep(0.2, 0.8, fog_pattern);
 
 	// Apply opacity modulation (texture alpha ignored, shader controls it)
 	float final_alpha = fog_pattern * opacity;

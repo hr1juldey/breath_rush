@@ -65,8 +65,7 @@ drag_horizontal_enabled = true
 layer = -1
 scroll_ignore_camera_zoom = true
 
-[node name="SkyLayer" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.1, 0)
+[node name="SkyLayer" type="Parallax2D" parent="ParallaxBG"]
 
 [node name="SkyShaderSprite" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
 material = SubResource("SkyShaderMaterial")
@@ -74,8 +73,7 @@ position = Vector2(480, -90)
 texture = ExtResource("17_sky_clear")
 script = ExtResource("5_sky_ctrl")
 
-[node name="SmogLayer_1" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.15, 0)
+[node name="SmogLayer_1" type="Parallax2D" parent="ParallaxBG"]
 
 [node name="SmogShaderSprite_1" type="Sprite2D" parent="ParallaxBG/SmogLayer_1"]
 material = SubResource("SmogShaderMaterial_1")
@@ -83,14 +81,12 @@ position = Vector2(480, 240)
 scale = Vector2(2, 2)
 texture = ExtResource("14_smog_overlay")
 
-[node name="FarLayer" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.3, 0)
+[node name="FarLayer" type="Parallax2D" parent="ParallaxBG"]
 
 [node name="FarLayerSpawner" type="Node" parent="ParallaxBG/FarLayer"]
 script = ExtResource("22_far_spawner")
 
-[node name="SmogLayer_2" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.45, 0)
+[node name="SmogLayer_2" type="Parallax2D" parent="ParallaxBG"]
 
 [node name="SmogShaderSprite_2" type="Sprite2D" parent="ParallaxBG/SmogLayer_2"]
 material = SubResource("SmogShaderMaterial_2")
@@ -98,14 +94,12 @@ position = Vector2(480, 240)
 scale = Vector2(2, 2)
 texture = ExtResource("14_smog_overlay")
 
-[node name="MidLayer" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.6, 0)
+[node name="MidLayer" type="Parallax2D" parent="ParallaxBG"]
 
 [node name="MidLayerSpawner" type="Node" parent="ParallaxBG/MidLayer"]
 script = ExtResource("23_mid_spawner")
 
-[node name="SmogLayer_3" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.75, 0)
+[node name="SmogLayer_3" type="Parallax2D" parent="ParallaxBG"]
 
 [node name="SmogShaderSprite_3" type="Sprite2D" parent="ParallaxBG/SmogLayer_3"]
 material = SubResource("SmogShaderMaterial_3")
@@ -113,8 +107,7 @@ position = Vector2(480, 240)
 scale = Vector2(2, 2)
 texture = ExtResource("14_smog_overlay")
 
-[node name="FrontLayer" type="ParallaxLayer" parent="ParallaxBG"]
-motion_scale = Vector2(0.9, 0)
+[node name="FrontLayer" type="Parallax2D" parent="ParallaxBG"]
 
 [node name="FrontLayerSpawner" type="Node" parent="ParallaxBG/FrontLayer"]
 script = ExtResource("24_front_spawner")

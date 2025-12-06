@@ -114,7 +114,7 @@ func _spawn_object():
 	# Calculate y-position using quadratic formula (gives world CENTER Y)
 	var world_center_y = quad_a + quad_b * scale_val + quad_c * scale_val * scale_val
 
-	# Convert from world space to screen space (ParallaxLayer uses camera-relative coords)
+	# Convert from world space to screen space (Parallax2D uses camera-relative coords)
 	var screen_center_y = world_center_y - camera_y
 
 	# Pivot correction: quadratic formula gives CENTER Y, but we changed pivot to BOTTOM

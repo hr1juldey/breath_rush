@@ -1,4 +1,4 @@
-extends ParallaxLayer
+extends Parallax2D
 
 @onready var sky_bad = $Sprite_SkyBad
 @onready var sky_ok = $Sprite_SkyOk

@@ -104,15 +104,15 @@ func test_smog_aqi_zero_opacity():
 func test_smog_aqi_mid_opacity():
 	"""AQI = 150 should produce opacity ≈ 0.35 (base) for layer 0"""
 	smog_controller.set_aqi(150.0)
-	var base_opacity = 150.0 / 300.0  # ≈ 0.5
-	var expected_layer0 = base_opacity * 0.4  # ≈ 0.2
+	var base_opacity = 150.0 / 300.0 # ≈ 0.5
+	var expected_layer0 = base_opacity * 0.4 # ≈ 0.2
 	var actual = smog_controller.get_layer_opacity(0)
 	assert_almost_eq(actual, expected_layer0, 0.01, "Layer 0 opacity incorrect at AQI 150")
 
 func test_smog_aqi_max_clamping():
 	"""AQI > 300 should clamp opacity to 0.7 * multiplier"""
 	smog_controller.set_aqi(600.0)
-	var expected_layer2 = 0.7 * 0.8  # Max opacity × multiplier
+	var expected_layer2 = 0.7 * 0.8 # Max opacity × multiplier
 	var actual = smog_controller.get_layer_opacity(2)
 	assert_almost_eq(actual, expected_layer2, 0.01, "Layer 2 opacity should be clamped")
 
@@ -147,7 +147,7 @@ func test_smog_noise_time_updates():
 
 func test_sky_shader_can_transition():
 	"""Sky shader transition should work without errors"""
-	sky_controller.set_aqi(250.0)  # Trigger transition
+	sky_controller.set_aqi(250.0) # Trigger transition
 	await get_tree().process_frame
 	assert_true(true, "Sky transition completed without error")
 
@@ -170,7 +170,7 @@ func test_smog_layer_order():
 	var found_order: Array[String] = []
 
 	for child in children:
-		if child is ParallaxLayer:
+		if child is Parallax2D:
 			found_order.append(child.name)
 
 	# Check that smog layers are between other layers

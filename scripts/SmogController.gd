@@ -13,12 +13,12 @@ var current_aqi: float = 150.0
 # Opacity multipliers per layer (far, mid, near)
 var layer_multipliers: Array[float] = [0.4, 0.6, 0.8]
 
-# Scroll speed multipliers per layer (should match ParallaxLayer motion_scale)
+# Scroll speed multipliers per layer (should match Parallax2D motion_scale)
 # SmogLayer_1 (0.15), SmogLayer_2 (0.45), SmogLayer_3 (0.75)
 var scroll_speed_multipliers: Array[float] = [0.15, 0.45, 0.75]
 
 # Phase offsets to prevent pattern alignment (prevents flickering)
-var phase_offsets: Array[float] = [0.0, 137.5, 283.1]  # Prime-ish numbers for variation
+var phase_offsets: Array[float] = [0.0, 137.5, 283.1] # Prime-ish numbers for variation
 
 func _ready():
 	# Cache shader materials from all 3 smog sprites

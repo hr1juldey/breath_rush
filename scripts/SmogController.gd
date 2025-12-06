@@ -13,6 +13,13 @@ var current_aqi: float = 150.0
 # Opacity multipliers per layer (far, mid, near)
 var layer_multipliers: Array[float] = [0.4, 0.6, 0.8]
 
+# Scroll speed multipliers per layer (should match ParallaxLayer motion_scale)
+# SmogLayer_1 (0.15), SmogLayer_2 (0.45), SmogLayer_3 (0.75)
+var scroll_speed_multipliers: Array[float] = [0.15, 0.45, 0.75]
+
+# Phase offsets to prevent pattern alignment (prevents flickering)
+var phase_offsets: Array[float] = [0.0, 137.5, 283.1]  # Prime-ish numbers for variation
+
 func _ready():
 	# Cache shader materials from all 3 smog sprites
 	var smog_paths = [
@@ -21,22 +28,32 @@ func _ready():
 		"../SmogLayer_3/SmogShaderSprite_3"
 	]
 
-	for path in smog_paths:
-		var sprite = get_node_or_null(path) as Sprite2D
+	for i in range(smog_paths.size()):
+		var sprite = get_node_or_null(smog_paths[i]) as Sprite2D
 		if sprite and sprite.material:
-			smog_materials.append(sprite.material as ShaderMaterial)
+			var mat = sprite.material as ShaderMaterial
+			smog_materials.append(mat)
+
+			# Initialize each layer with phase offset to prevent pattern alignment
+			mat.set_shader_parameter("noise_time", phase_offsets[i])
 		else:
-			push_error("SmogController: Cannot find smog sprite at %s" % path)
+			push_error("SmogController: Cannot find smog sprite at %s" % smog_paths[i])
 
 	if smog_materials.is_empty():
 		push_error("SmogController: No smog materials found!")
 
 func _physics_process(delta):
-	"""Update noise animation for all smog layers"""
-	for material in smog_materials:
-		if material:
-			var current_time = material.get_shader_parameter("noise_time") as float
-			material.set_shader_parameter("noise_time", current_time + delta * 300.0 * 1.02)
+	"""Update noise animation for all smog layers with proper parallax scroll speeds"""
+	for i in range(smog_materials.size()):
+		if smog_materials[i]:
+			# Each layer scrolls at speed proportional to its parallax motion_scale
+			# This prevents flickering from pattern interference
+			var speed_mult = scroll_speed_multipliers[i]
+			var current_time = smog_materials[i].get_shader_parameter("noise_time") as float
+
+			# Base scroll speed (300.0) × layer speed × slight variation (1.02)
+			var scroll_increment = delta * 300.0 * speed_mult * 1.02
+			smog_materials[i].set_shader_parameter("noise_time", current_time + scroll_increment)
 
 func set_aqi(aqi: float):
 	"""Update all smog layers opacity based on AQI"""

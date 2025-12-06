@@ -56,7 +56,10 @@ script = ExtResource("1_1r2jk")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(480, 180.415)
+offset = Vector2(0, -18.8)
+zoom = Vector2(1.03, 1.03)
 position_smoothing_enabled = true
+drag_horizontal_enabled = true
 
 [node name="ParallaxBG" type="ParallaxBackground" parent="."]
 layer = -1

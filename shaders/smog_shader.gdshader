@@ -15,9 +15,9 @@ float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-// Interpolation function for smooth noise
-float smoothstep_custom(float t) {
-	return t * t * (3.0 - 2.0 * t);
+// Cubic interpolation (smoother than smoothstep, prevents flickering)
+float cubic(float t) {
+	return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 
 // Simple 2D noise (Perlin-like)
@@ -32,8 +32,8 @@ float noise(vec2 p) {
 	float d = hash(i + vec2(1.0, 1.0));
 
 	// Smooth interpolation
-	float u = smoothstep_custom(f.x);
-	float v = smoothstep_custom(f.y);
+	float u = cubic(f.x);
+	float v = cubic(f.y);
 
 	// Mix corners
 	float ab = mix(a, b, u);

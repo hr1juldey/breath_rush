@@ -8,7 +8,7 @@ signal object_spawned(obj: Node2D)
 signal object_despawned(obj: Node2D)
 
 # Texture configuration - child classes should populate this
-# Each entry: {"texture": Texture2D, "region": Rect2 or null, "scale": float}
+# Each entry: {"texture": Texture2D, "region": Rect2 or null, "scale": float, "y_offset": float (optional)}
 var texture_configs: Array[Dictionary] = []
 
 @export var pool_size: int = 5
@@ -35,7 +35,7 @@ var layer_y_offset: float = 0.0
 
 # Global vertical offset - ADJUST THIS to move all layers up/down together
 # Positive = move DOWN (closer to road), Negative = move UP (away from road)
-@export var global_y_offset: float = 0.0
+@export var global_y_offset: float = 380.0
 
 var object_pool: Array[Sprite2D] = []
 var active_objects: Array[Sprite2D] = []
@@ -102,14 +102,30 @@ func _spawn_object():
 	else:
 		scale_val = base_scale + randf_range(-scale_variance, scale_variance)
 
-	# Calculate y-position using quadratic formula (gives world coordinates)
-	var world_y = quad_a + quad_b * scale_val + quad_c * scale_val * scale_val
+	# Calculate sprite height after scaling (needed for pivot correction)
+	var sprite_height: float
+	if config.has("region") and config["region"] != null:
+		sprite_height = config["region"].size.y * scale_val
+	elif sprite.texture:
+		sprite_height = sprite.texture.get_height() * scale_val
+	else:
+		sprite_height = 0.0
+
+	# Calculate y-position using quadratic formula (gives world CENTER Y)
+	var world_center_y = quad_a + quad_b * scale_val + quad_c * scale_val * scale_val
 
 	# Convert from world space to screen space (ParallaxLayer uses camera-relative coords)
-	var screen_y = world_y - camera_y
+	var screen_center_y = world_center_y - camera_y
 
-	# Apply layer offset, global offset and variance
-	sprite.position.y = screen_y + layer_y_offset + global_y_offset + randf_range(-y_variance, y_variance)
+	# Pivot correction: quadratic formula gives CENTER Y, but we changed pivot to BOTTOM
+	# So we need to move DOWN by half the sprite height to position the bottom correctly
+	var pivot_correction = sprite_height / 2.0
+
+	# Per-asset Y offset for fine-tuning (optional)
+	var asset_y_offset = config.get("y_offset", 0.0)
+
+	# Apply layer offset, global offset, pivot correction, asset offset, and variance
+	sprite.position.y = screen_center_y + pivot_correction + layer_y_offset + global_y_offset + asset_y_offset + randf_range(-y_variance, y_variance)
 
 	sprite.scale = Vector2(scale_val, scale_val)
 	sprite.visible = true

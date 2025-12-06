@@ -12,8 +12,8 @@ func _ready():
 	y_variance = 1.0
 	base_scale = 0.3
 	scale_variance = 0.03
-	despawn_x = -300.0
-	spawn_x = 1400.0
+	despawn_x = -500.0 # Well off-screen left
+	spawn_x = 3000.0 # Well off-screen right
 	motion_scale = 0.6
 	layer_y_offset = 0.0 # Fine-tuning offset for mid layer
 

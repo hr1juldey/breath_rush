@@ -7,14 +7,14 @@ class_name FarLayerSpawner
 func _ready():
 	# Far layer settings - landmarks sit on horizon
 	pool_size = 1 # Only 1 monument at a time
-	spawn_interval_min = 8.0 # Long interval between monuments
-	spawn_interval_max = 12.0
+	spawn_interval_min = 12.0 # Long interval between monuments
+	spawn_interval_max = 20.0
 	y_variance = 1.0
 	base_scale = 0.35
 	scale_variance = 0.05
-	despawn_x = -400.0
-	spawn_x = 1400.0
-	motion_scale = 0.3
+	despawn_x = -1000.0 # Well off-screen left (account for large monument width)
+	spawn_x = 4000.0 # Well off-screen right (account for large monument width)
+	motion_scale = 0.2
 	layer_y_offset = 120.0 # Far layer too high - move down more
 
 	# Load textures with region and scale data from ParallaxScalingEditor

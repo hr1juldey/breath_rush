@@ -11,13 +11,19 @@ Handles ONLY pickup spawning:
 This component is extracted from Spawner.gd to isolate pickup spawning.
 """
 
-# Preloaded scene
+# Preloaded scenes
 var mask_scene = preload("res://scenes/Mask.tscn")
+var ev_charger_scene = preload("res://scenes/EVCharger.tscn")
 
 # Object pool
 var pickup_pool = []
 var pool_size = 6
 var spawn_speed = 400.0
+
+# EV Charger tracking
+var ev_charger_active: Node = null
+var battery_low_threshold = 25.0
+var player_ref: Node = null
 
 # Lane positions for adjustment
 var lane_positions = [240, 300, 360]
@@ -40,6 +46,10 @@ func setup(coordinator: Node) -> void:
 	"""Setup reference to spawn coordinator"""
 	coordinator_ref = coordinator
 	print("[PickupSpawner] Setup complete - coordinator: %s" % (coordinator != null))
+
+func set_player_reference(player: Node) -> void:
+	"""Set player reference for battery checking"""
+	player_ref = player
 
 func spawn_pickup(x: float, y: float, pickup_type: String) -> bool:
 	"""
@@ -140,3 +150,49 @@ func get_available_count() -> int:
 		if is_instance_valid(pickup) and not pickup.visible:
 			count += 1
 	return count
+
+# === EV Charger Logic ===
+
+func should_spawn_ev_charger() -> bool:
+	"""Check if EV charger should spawn (low battery + no active charger)"""
+	if ev_charger_active and is_instance_valid(ev_charger_active):
+		return false  # Already has active charger
+
+	if not player_ref:
+		return false  # No player reference
+
+	var battery_component = player_ref.get_node_or_null("PlayerBattery")
+	if not battery_component:
+		return false
+
+	return battery_component.battery <= battery_low_threshold
+
+func spawn_ev_charger(x: float, y: float = 300.0) -> void:
+	"""Spawn EV charger at position (middle lane by default)"""
+	if ev_charger_active and is_instance_valid(ev_charger_active):
+		return  # Already spawned
+
+	var charger = ev_charger_scene.instantiate()
+	charger.global_position = Vector2(x, y)
+	charger.set_scroll_speed(spawn_speed)
+
+	# Connect signals to pause world
+	charger.charging_started.connect(_on_charger_start)
+	charger.charging_complete.connect(_on_charger_complete)
+
+	add_child(charger)
+	ev_charger_active = charger
+
+	print("[PickupSpawner] EV Charger spawned at (%.0f, %.0f)" % [x, y])
+
+func _on_charger_start():
+	"""EV charger started - notify game to pause world"""
+	if coordinator_ref and coordinator_ref.get_parent().has_method("pause_world_scroll"):
+		coordinator_ref.get_parent().pause_world_scroll()
+
+func _on_charger_complete():
+	"""EV charger complete - notify game to resume world"""
+	if coordinator_ref and coordinator_ref.get_parent().has_method("resume_world_scroll"):
+		coordinator_ref.get_parent().resume_world_scroll()
+
+	ev_charger_active = null

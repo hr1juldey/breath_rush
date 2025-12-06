@@ -28,6 +28,7 @@ var scroll_speed = 400.0
 var base_scroll_speed = 400.0
 var boost_multiplier = 1.35
 var game_over = false
+var world_paused = false
 
 func _ready():
 	# Load configurations
@@ -46,6 +47,19 @@ func _ready():
 	if smog_controller and smog_controller.has_method("set_aqi"):
 		smog_controller.set_aqi(current_aqi)
 
+	# Tween AQI from 250 to 50 over 60 seconds (TEST FEATURE)
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_LINEAR)
+	tween.tween_method(
+		func(aqi: float):
+			current_aqi = aqi
+			if sky_controller and sky_controller.has_method("set_aqi"):
+				sky_controller.set_aqi(current_aqi)
+			if smog_controller and smog_controller.has_method("set_aqi"):
+				smog_controller.set_aqi(current_aqi),
+		250.0, 50.0, 60.0
+	)
+
 	# Initialize first chunk
 	load_chunk_data()
 	if chunks_data.size() > 0:
@@ -55,6 +69,10 @@ func _ready():
 	connect_delivery_zones()
 
 func _process(delta):
+	# Skip updates if world is paused
+	if world_paused:
+		return
+
 	# Update run distance
 	run_distance += scroll_speed * delta
 
@@ -277,3 +295,13 @@ func update_world_scroll_speed() -> void:
 		for pickup in spawner.pickup_pool:
 			if is_instance_valid(pickup) and pickup.has_method("set_scroll_speed"):
 				pickup.set_scroll_speed(scroll_speed)
+
+func pause_world_scroll() -> void:
+	"""Pause world scrolling for EV charger"""
+	world_paused = true
+	print("[Game] World scrolling PAUSED for charging")
+
+func resume_world_scroll() -> void:
+	"""Resume world scrolling after charging"""
+	world_paused = false
+	print("[Game] World scrolling RESUMED after charging")

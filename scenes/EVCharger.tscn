@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://ev_charger_scene"]
+
+[ext_resource type="Script" path="res://scripts/EVCharger.gd" id="1_charger"]
+[ext_resource type="Texture2D" path="res://assets/pickups/ev_charger.webp" id="2_charger_texture"]
+
+[sub_resource type="RectangleShape2D" id="ChargerCollision"]
+size = Vector2(80, 120)
+
+[node name="EVCharger" type="Area2D"]
+collision_layer = 4
+collision_mask = 1
+script = ExtResource("1_charger")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_charger_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("ChargerCollision")

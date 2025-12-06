@@ -1,6 +1,6 @@
 shader_type canvas_item;
 // Sky shader with AQI-based state transitions
-// Renders gradient skies: bad (tan) → ok (light tan) → clear (blue)
+// Renders textured skies: bad → ok → clear
 
 // State: 0=bad, 1=ok, 2=clear
 uniform int sky_state : hint_range(0, 2) = 2;
@@ -8,53 +8,41 @@ uniform int sky_state : hint_range(0, 2) = 2;
 // Smooth transition: 0→1 when changing states
 uniform float transition_progress : hint_range(0.0, 1.0) = 1.0;
 
-// Bad AQI colors (dark, tan/brown)
-uniform vec3 bad_sky_top = vec3(0.75, 0.65, 0.50);
-uniform vec3 bad_sky_bottom = vec3(0.55, 0.45, 0.35);
-
-// OK AQI colors (light tan)
-uniform vec3 ok_sky_top = vec3(0.82, 0.78, 0.70);
-uniform vec3 ok_sky_bottom = vec3(0.68, 0.62, 0.52);
-
-// Clear AQI colors (blue sky)
-uniform vec3 clear_sky_top = vec3(0.45, 0.75, 1.0);
-uniform vec3 clear_sky_bottom = vec3(0.30, 0.55, 0.85);
+// Sky texture samplers
+uniform sampler2D sky_bad_texture;
+uniform sampler2D sky_ok_texture;
+uniform sampler2D sky_clear_texture;
 
 void fragment() {
-	// Get current state colors
-	vec3 curr_top, curr_bottom;
+	// Sample all three sky textures
+	vec4 bad_sample = texture(sky_bad_texture, UV);
+	vec4 ok_sample = texture(sky_ok_texture, UV);
+	vec4 clear_sample = texture(sky_clear_texture, UV);
+
+	// Get current state texture
+	vec4 curr_color;
 
 	if (sky_state == 0) {           // bad
-		curr_top = bad_sky_top;
-		curr_bottom = bad_sky_bottom;
+		curr_color = bad_sample;
 	} else if (sky_state == 1) {    // ok
-		curr_top = ok_sky_top;
-		curr_bottom = ok_sky_bottom;
+		curr_color = ok_sample;
 	} else {                         // clear
-		curr_top = clear_sky_top;
-		curr_bottom = clear_sky_bottom;
+		curr_color = clear_sample;
 	}
 
-	// Get previous state colors (for interpolation)
-	vec3 prev_top, prev_bottom;
+	// Get previous state texture (for smooth transition)
+	vec4 prev_color;
 
 	if (sky_state == 0) {
-		prev_top = ok_sky_top;
-		prev_bottom = ok_sky_bottom;
+		prev_color = ok_sample;
 	} else if (sky_state == 1) {
-		prev_top = clear_sky_top;
-		prev_bottom = clear_sky_bottom;
+		prev_color = clear_sample;
 	} else {
-		prev_top = bad_sky_top;
-		prev_bottom = bad_sky_bottom;
+		prev_color = bad_sample;
 	}
 
 	// Smooth interpolation between states
-	vec3 final_top = mix(prev_top, curr_top, transition_progress);
-	vec3 final_bottom = mix(prev_bottom, curr_bottom, transition_progress);
+	vec4 final_color = mix(prev_color, curr_color, transition_progress);
 
-	// Vertical gradient: bottom → top (UV.y: 0=bottom, 1=top)
-	vec3 sky_color = mix(final_bottom, final_top, UV.y);
-
-	COLOR = vec4(sky_color, 1.0);
+	COLOR = final_color;
 }

@@ -48,18 +48,25 @@ func _ready():
 	print("[Spawner] ========== All Components Initialized ==========")
 
 func _find_player() -> void:
-	"""Find player reference for chunk manager"""
+	"""Find player reference for chunk manager and pickup spawner"""
 	var parent = get_parent()
 	if parent:
 		player_ref = parent.find_child("Player")
 		if player_ref and chunk_manager:
 			chunk_manager.setup(player_ref)
 			print("[Spawner] ✓ ChunkManager ready with player reference")
+		if player_ref and pickup_spawner:
+			pickup_spawner.set_player_reference(player_ref)
+			print("[Spawner] ✓ PickupSpawner has player reference for EV charger")
 
 func _process(_delta: float) -> void:
 	"""Coordinate all spawning components"""
 	if not chunk_manager:
 		return
+
+	# Check if EV charger should spawn (low battery)
+	if pickup_spawner and pickup_spawner.should_spawn_ev_charger():
+		pickup_spawner.spawn_ev_charger(1100.0, 420.0)  # Spawn ahead on road
 
 	# Get next obstacle spawn from chunk manager
 	var obstacle_spawn = chunk_manager.get_next_obstacle_spawn()
@@ -71,14 +78,15 @@ func _process(_delta: float) -> void:
 		if obstacle_spawner:
 			obstacle_spawner.spawn_obstacle(x, y, type)
 
-	# Get next pickup spawn from chunk manager
+	# Get next pickup spawn from chunk manager (exclude EV charger from random spawning)
 	var pickup_spawn = chunk_manager.get_next_pickup_spawn()
 	if not pickup_spawn.is_empty():
 		var x = pickup_spawn.get("x", 960)
 		var y = pickup_spawn.get("y", 300)
 		var type = pickup_spawn.get("type", "mask")
 
-		if pickup_spawner:
+		# Only spawn masks, not chargers
+		if pickup_spawner and type == "mask":
 			pickup_spawner.spawn_pickup(x, y, type)
 
 # === Public API (Delegate to components) ===

@@ -1,9 +1,8 @@
-[gd_scene load_steps=24 format=3 uid="uid://bre1xmdt1w2k6"]
+[gd_scene load_steps=20 format=3 uid="uid://bre1xmdt1w2k6"]
 
 [ext_resource type="Script" uid="uid://m4up31qjvh40" path="res://scripts/Game.gd" id="1_1r2jk"]
 [ext_resource type="Script" uid="uid://dxap4jwikaan7" path="res://scripts/RoadScroll.gd" id="3_6l9m2"]
 [ext_resource type="Script" uid="uid://chbh558ddgqet" path="res://scripts/Spawner.gd" id="4_7n3o5"]
-[ext_resource type="Script" path="res://scripts/ParallaxController.gd" id="4_parallax"]
 [ext_resource type="Script" path="res://scripts/SkyController.gd" id="5_sky_ctrl"]
 [ext_resource type="Script" path="res://scripts/SmogController.gd" id="6_smog_ctrl"]
 [ext_resource type="Script" path="res://scripts/components/spawner/ObstacleSpawner.gd" id="5_obstacle"]
@@ -15,26 +14,21 @@
 [ext_resource type="PackedScene" uid="uid://d6jl4a6t8i" path="res://scenes/HUD.tscn" id="11_hud_scene"]
 [ext_resource type="Shader" path="res://shaders/sky_shader.gdshader" id="12_sky_shader"]
 [ext_resource type="Shader" path="res://shaders/smog_shader.gdshader" id="13_smog_shader"]
-
-[sub_resource type="Image" id="WhiteImage"]
-width = 1
-height = 1
-format = "RGB8"
-data = PackedByteArray(255, 255, 255)
-
-[sub_resource type="ImageTexture" id="WhiteTexture"]
-image = SubResource("WhiteImage")
+[ext_resource type="Texture2D" path="res://assets/vfx/smog_overlay.webp" id="14_smog_overlay"]
+[ext_resource type="Texture2D" path="res://assets/skies/sky_bad.webp" id="15_sky_bad"]
+[ext_resource type="Texture2D" path="res://assets/skies/sky_ok.webp" id="16_sky_ok"]
+[ext_resource type="Texture2D" path="res://assets/skies/sky_clear.webp" id="17_sky_clear"]
+[ext_resource type="Script" path="res://scripts/components/parallax/FarLayerSpawner.gd" id="22_far_spawner"]
+[ext_resource type="Script" path="res://scripts/components/parallax/MidLayerSpawner.gd" id="23_mid_spawner"]
+[ext_resource type="Script" path="res://scripts/components/parallax/FrontLayerSpawner.gd" id="24_front_spawner"]
 
 [sub_resource type="ShaderMaterial" id="SkyShaderMaterial"]
 shader = ExtResource("12_sky_shader")
 shader_parameter/sky_state = 2
 shader_parameter/transition_progress = 1.0
-shader_parameter/bad_sky_top = Color(0.75, 0.65, 0.5, 1)
-shader_parameter/bad_sky_bottom = Color(0.55, 0.45, 0.35, 1)
-shader_parameter/ok_sky_top = Color(0.82, 0.78, 0.7, 1)
-shader_parameter/ok_sky_bottom = Color(0.68, 0.62, 0.52, 1)
-shader_parameter/clear_sky_top = Color(0.45, 0.75, 1, 1)
-shader_parameter/clear_sky_bottom = Color(0.3, 0.55, 0.85, 1)
+shader_parameter/sky_bad_texture = ExtResource("15_sky_bad")
+shader_parameter/sky_ok_texture = ExtResource("16_sky_ok")
+shader_parameter/sky_clear_texture = ExtResource("17_sky_clear")
 
 [sub_resource type="ShaderMaterial" id="SmogShaderMaterial_1"]
 shader = ExtResource("13_smog_shader")
@@ -70,7 +64,7 @@ motion_scale = Vector2(0.1, 0)
 [node name="SkyShaderSprite" type="Sprite2D" parent="ParallaxBG/SkyLayer"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
-texture = SubResource("WhiteTexture")
+texture = ExtResource("14_smog_overlay")
 material = SubResource("SkyShaderMaterial")
 script = ExtResource("5_sky_ctrl")
 
@@ -80,13 +74,14 @@ motion_scale = Vector2(0.15, 0)
 [node name="SmogShaderSprite_1" type="Sprite2D" parent="ParallaxBG/SmogLayer_1"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
-texture = SubResource("WhiteTexture")
+texture = ExtResource("14_smog_overlay")
 material = SubResource("SmogShaderMaterial_1")
 
 [node name="FarLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.3, 0)
 
-[node name="FarNode" type="Node2D" parent="ParallaxBG/FarLayer"]
+[node name="FarLayerSpawner" type="Node" parent="ParallaxBG/FarLayer"]
+script = ExtResource("22_far_spawner")
 
 [node name="SmogLayer_2" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.45, 0)
@@ -94,13 +89,14 @@ motion_scale = Vector2(0.45, 0)
 [node name="SmogShaderSprite_2" type="Sprite2D" parent="ParallaxBG/SmogLayer_2"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
-texture = SubResource("WhiteTexture")
+texture = ExtResource("14_smog_overlay")
 material = SubResource("SmogShaderMaterial_2")
 
 [node name="MidLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.6, 0)
 
-[node name="MidNode" type="Node2D" parent="ParallaxBG/MidLayer"]
+[node name="MidLayerSpawner" type="Node" parent="ParallaxBG/MidLayer"]
+script = ExtResource("23_mid_spawner")
 
 [node name="SmogLayer_3" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.75, 0)
@@ -108,13 +104,14 @@ motion_scale = Vector2(0.75, 0)
 [node name="SmogShaderSprite_3" type="Sprite2D" parent="ParallaxBG/SmogLayer_3"]
 position = Vector2(480, 240)
 scale = Vector2(10, 10)
-texture = SubResource("WhiteTexture")
+texture = ExtResource("14_smog_overlay")
 material = SubResource("SmogShaderMaterial_3")
 
 [node name="FrontLayer" type="ParallaxLayer" parent="ParallaxBG"]
 motion_scale = Vector2(0.9, 0)
 
-[node name="FrontNode" type="Node2D" parent="ParallaxBG/FrontLayer"]
+[node name="FrontLayerSpawner" type="Node" parent="ParallaxBG/FrontLayer"]
+script = ExtResource("24_front_spawner")
 
 [node name="SmogManager" type="Node" parent="ParallaxBG"]
 script = ExtResource("6_smog_ctrl")

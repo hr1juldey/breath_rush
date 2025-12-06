@@ -67,11 +67,12 @@ void fragment() {
 	// Remap noise to useful range and add contrast
 	fog_pattern = smoothstep(0.25, 0.75, fog_pattern);
 
-	// Apply opacity modulation
+	// Apply opacity modulation (texture alpha ignored, shader controls it)
 	float final_alpha = fog_pattern * opacity;
 
 	// Grayish fog color
 	vec3 fog_color = vec3(0.55, 0.55, 0.55);
 
+	// Force output alpha - ignore texture alpha
 	COLOR = vec4(fog_color, final_alpha);
 }

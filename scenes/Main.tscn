@@ -127,11 +127,15 @@ position = Vector2(0, 420)
 script = ExtResource("3_6l9m2")
 
 [node name="RoadTileA" type="Sprite2D" parent="Road"]
-position = Vector2(480, 0)
+position = Vector2(81, 0)
 texture = ExtResource("9_2x7y0")
 
 [node name="RoadTileB" type="Sprite2D" parent="Road"]
-position = Vector2(1440, 0)
+position = Vector2(1041, 0)
+texture = ExtResource("9_2x7y0")
+
+[node name="RoadTileC" type="Sprite2D" parent="Road"]
+position = Vector2(1713, 0)
 texture = ExtResource("9_2x7y0")
 
 [node name="World" type="Node2D" parent="."]

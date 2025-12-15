@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cs8x043lqbuly"]
+[gd_scene load_steps=23 format=3 uid="uid://cs8x043lqbuly"]
 
 [ext_resource type="Script" uid="uid://cg0mog12asmjf" path="res://scripts/ParallaxScalingEditor.gd" id="1_editor"]
 [ext_resource type="Texture2D" uid="uid://ckj6y0cqibm5b" path="res://assets/parallax/tree_1.webp" id="2_wrwkm"]
@@ -21,6 +21,7 @@
 [ext_resource type="Texture2D" uid="uid://bncjyu10b4a2" path="res://assets/skies/sky_ok.webp" id="19_vd0ov"]
 [ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="20_jvtwq"]
 [ext_resource type="Texture2D" uid="uid://cnlch374hthea" path="res://assets/skies/sky_clear.webp" id="21_6lq26"]
+[ext_resource type="Texture2D" uid="uid://c1h3tocbk0vb6" path="res://assets/pickups/filter_1.webp" id="22_sw7y7"]
 
 [node name="ParallaxScalingEditor" type="Node2D"]
 script = ExtResource("1_editor")
@@ -383,3 +384,11 @@ texture = ExtResource("19_vd0ov")
 z_index = 1
 position = Vector2(8825, -108)
 texture = ExtResource("21_6lq26")
+
+[node name="Filter1" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(1120, 359)
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("22_sw7y7")
+region_enabled = true
+region_rect = Rect2(834, 165.38228, 244, 775.37836)

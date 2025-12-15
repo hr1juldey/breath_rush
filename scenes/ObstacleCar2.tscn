@@ -1,0 +1,109 @@
+[gd_scene load_steps=13 format=3 uid="uid://bv66nnosvw54b"]
+
+[ext_resource type="Script" uid="uid://lj6yk45f6wu4" path="res://scripts/Obstacle.gd" id="1_obstacle"]
+[ext_resource type="Texture2D" uid="uid://dlfj6qul8p2ea" path="res://assets/vehicles/cars/car_2.webp" id="2_car2_texture"]
+
+[sub_resource type="RectangleShape2D" id="CarCollision2"]
+size = Vector2(1259.2234, 245.63109)
+
+[sub_resource type="Gradient" id="Gradient_b4jbc"]
+offsets = PackedFloat32Array(0.012295082, 0.2704918, 0.41393444, 0.64959013, 0.8422131, 1)
+colors = PackedColorArray(0.8240598, 0.7585296, 0.64700717, 1, 0.27723244, 0.2351265, 0.16215044, 1, 0.5709907, 0.40853846, 0.32676536, 1, 0.3933, 0.596045, 0.69, 0.90588236, 0.71571213, 0.68854374, 0.4661883, 0.9551439, 0.8793365, 0.7402319, 0.74769974, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pqkl4"]
+gradient = SubResource("Gradient_b4jbc")
+
+[sub_resource type="Curve" id="Curve_pqkl4"]
+_data = [Vector2(0.046692606, 0.6658218), 0.0, -4.599583, 0, 0, Vector2(0.49610892, 0.95763934), 0.0, 0.0, 0, 0, Vector2(1, 0.4446053), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_2w5mw"]
+curve = SubResource("Curve_pqkl4")
+
+[sub_resource type="Curve" id="Curve_73aio"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_xfbaj"]
+curve = SubResource("Curve_73aio")
+
+[sub_resource type="ParticleProcessMaterial" id="SmokeMaterial2"]
+lifetime_randomness = 0.03
+particle_flag_disable_z = true
+direction = Vector3(2.685, 0.645, 0)
+spread = 11.75
+initial_velocity_min = 42.5
+initial_velocity_max = 87.5
+gravity = Vector3(0, -15, 0)
+damping_min = 1.667
+damping_max = 7.916
+scale_min = 0.099999994
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_2w5mw")
+scale_over_velocity_curve = SubResource("CurveTexture_xfbaj")
+color = Color(0.6832292, 0.6518369, 0.5851368, 0.80784315)
+color_ramp = SubResource("GradientTexture1D_pqkl4")
+
+[sub_resource type="Curve" id="Curve_b4jbc"]
+bake_resolution = 166
+_data = [Vector2(0.021786489, 0.5456415), 0.0, 0.0, 0, 0, Vector2(0.24183005, 0.7273849), 2.3244023, 2.3244023, 0, 0, Vector2(0.49019608, 0.97861844), 0.0, 0.0, 0, 0, Vector2(0.751634, 0.6953125), -1.8995122, -1.8995122, 0, 0, Vector2(0.9281046, 0.33182567), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="Gradient" id="Gradient_pqkl4"]
+resource_local_to_scene = true
+interpolation_mode = 2
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.1505618, 0.37078652, 0.61348313, 0.8651685)
+colors = PackedColorArray(0.9936188, 0.9922446, 0.9912288, 1, 0.45595783, 0.3551443, 0.27679822, 1, 0.68328553, 0.73211557, 0.69112223, 1, 0.5116598, 0.619732, 0.7192826, 1, 1, 1, 1, 1)
+
+[node name="ObstacleCar2" type="Area2D"]
+scale = Vector2(1.03, 1.03)
+collision_layer = 2
+script = ExtResource("1_obstacle")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_car2_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-165.53403, -1.456306)
+shape = SubResource("CarCollision2")
+
+[node name="SmokeEmitter" type="Node2D" parent="CollisionShape2D"]
+position = Vector2(501.4564, 65.53398)
+
+[node name="SmokeGPU" type="GPUParticles2D" parent="CollisionShape2D/SmokeEmitter"]
+scale = Vector2(1.5, 1.5)
+amount = 6000
+amount_ratio = 0.8
+lifetime = 8.959999999999999
+preprocess = 1.08
+speed_scale = 1.18
+explosiveness = 0.04
+randomness = 0.06
+visibility_rect = Rect2(-200, -100, 400, 200)
+process_material = SubResource("SmokeMaterial2")
+
+[node name="SmokeCPU" type="CPUParticles2D" parent="CollisionShape2D/SmokeEmitter"]
+emitting = false
+amount = 600
+lifetime = 10.84
+preprocess = 1.04
+speed_scale = 2.07
+explosiveness = 0.05
+randomness = 0.07
+lifetime_randomness = 0.04
+direction = Vector2(2.685, 0.645)
+spread = 11.75
+gravity = Vector2(0, -15)
+initial_velocity_min = 42.5
+initial_velocity_max = 87.5
+damping_min = 1.667
+damping_max = 7.916
+scale_amount_min = 0.4
+scale_amount_max = 10.0
+scale_amount_curve = SubResource("Curve_b4jbc")
+color = Color(0.6832292, 0.6518369, 0.5851368, 0.80784315)
+color_initial_ramp = SubResource("Gradient_pqkl4")
+hue_variation_min = -0.2
+hue_variation_max = 0.13

@@ -5,22 +5,22 @@
   "base_aqi": 250,
   "spawn_points": [
     {
-      "x": 1200,
+      "x": 2600,
       "y": 300,
-      "type": "car",
-      "delay": 3.0
+      "type": "car1",
+      "delay": 8.0
     },
     {
-      "x": 2200,
+      "x": 2600,
       "y": 360,
-      "type": "bike",
-      "delay": 8.5
+      "type": "car2",
+      "delay": 20.0
     },
     {
-      "x": 3200,
+      "x": 3600,
       "y": 240,
-      "type": "car",
-      "delay": 14.0
+      "type": "car1",
+      "delay": 32.0
     }
   ],
   "pickup_points": [

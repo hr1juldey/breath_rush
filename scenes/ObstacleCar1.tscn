@@ -1,0 +1,118 @@
+[gd_scene load_steps=13 format=3 uid="uid://fsrun8o3axco"]
+
+[ext_resource type="Script" uid="uid://lj6yk45f6wu4" path="res://scripts/Obstacle.gd" id="1_obstacle"]
+[ext_resource type="Texture2D" uid="uid://df3kq5x3rh8li" path="res://assets/vehicles/cars/car.webp" id="2_car1_texture"]
+
+[sub_resource type="RectangleShape2D" id="CarCollision1"]
+size = Vector2(2068.1816, 439.39392)
+
+[sub_resource type="Gradient" id="Gradient_b4jbc"]
+offsets = PackedFloat32Array(0.012295082, 0.2704918, 0.41393444, 0.64959013, 0.8422131, 1)
+colors = PackedColorArray(0.8240598, 0.7585296, 0.64700717, 1, 0.27723244, 0.2351265, 0.16215044, 1, 0.5709907, 0.40853846, 0.32676536, 1, 0.3933, 0.596045, 0.69, 0.90588236, 0.71571213, 0.68854374, 0.4661883, 0.9551439, 0.8793365, 0.7402319, 0.74769974, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_pqkl4"]
+gradient = SubResource("Gradient_b4jbc")
+
+[sub_resource type="Curve" id="Curve_6aeyi"]
+_limits = [-1.0, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_coaoj"]
+curve = SubResource("Curve_6aeyi")
+
+[sub_resource type="Curve" id="Curve_fxwhn"]
+bake_resolution = 200
+_data = [Vector2(0.052529182, 0.6375814), 0.0, -5.1540794, 0, 0, Vector2(0.29961088, 0.8070238), 0.0, 0.0, 0, 0, Vector2(0.75486386, 0.6187545), -1.7689226, -1.7689226, 0, 0, Vector2(1, 0.23750901), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_g3ib4"]
+curve = SubResource("Curve_fxwhn")
+
+[sub_resource type="ParticleProcessMaterial" id="SmokeMaterial1"]
+resource_local_to_scene = true
+lifetime_randomness = 0.04
+particle_flag_disable_z = true
+inherit_velocity_ratio = 0.029
+direction = Vector3(2.685, 0.645, 0)
+spread = 11.75
+initial_velocity_min = 42.5
+initial_velocity_max = 87.5
+gravity = Vector3(0, -15, 0)
+damping_min = 1.667
+damping_max = 7.916
+scale_min = 0.19999999
+scale_max = 15.0
+scale_curve = SubResource("CurveTexture_g3ib4")
+scale_over_velocity_max = 353.55
+color = Color(0.6832292, 0.6518369, 0.5851368, 0.80784315)
+color_ramp = SubResource("GradientTexture1D_pqkl4")
+hue_variation_min = -0.030000022
+hue_variation_max = 0.019999977
+hue_variation_curve = SubResource("CurveTexture_coaoj")
+turbulence_enabled = true
+turbulence_noise_speed_random = 0.33
+turbulence_influence_min = 0.0
+turbulence_influence_max = 0.014
+
+[sub_resource type="Curve" id="Curve_b4jbc"]
+bake_resolution = 166
+_data = [Vector2(0.021786489, 0.5456415), 0.0, 0.0, 0, 0, Vector2(0.24183005, 0.7273849), 2.3244023, 2.3244023, 0, 0, Vector2(0.49019608, 0.97861844), 0.0, 0.0, 0, 0, Vector2(0.751634, 0.6953125), -1.8995122, -1.8995122, 0, 0, Vector2(0.9281046, 0.33182567), 0.0, 0.0, 0, 0]
+point_count = 5
+
+[sub_resource type="Gradient" id="Gradient_pqkl4"]
+resource_local_to_scene = true
+interpolation_mode = 2
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.1505618, 0.37078652, 0.61348313, 0.8651685)
+colors = PackedColorArray(0.9936188, 0.9922446, 0.9912288, 1, 0.45595783, 0.3551443, 0.27679822, 1, 0.68328553, 0.73211557, 0.69112223, 1, 0.5116598, 0.619732, 0.7192826, 1, 1, 1, 1, 1)
+
+[node name="ObstacleCar1" type="Area2D"]
+scale = Vector2(0.528, 0.528)
+collision_layer = 2
+script = ExtResource("1_obstacle")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_car1_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-494.31818, -3.7878935)
+shape = SubResource("CarCollision1")
+
+[node name="SmokeEmitter" type="Node2D" parent="CollisionShape2D"]
+position = Vector2(920.4545, 126.89395)
+
+[node name="SmokeGPU" type="GPUParticles2D" parent="CollisionShape2D/SmokeEmitter"]
+scale = Vector2(1.5, 1.5)
+amount = 6000
+lifetime = 26.1
+preprocess = 1.04
+speed_scale = 1.18
+explosiveness = 0.15
+randomness = 0.05
+visibility_rect = Rect2(-200, -100, 400, 200)
+process_material = SubResource("SmokeMaterial1")
+
+[node name="SmokeCPU" type="CPUParticles2D" parent="CollisionShape2D/SmokeEmitter"]
+emitting = false
+amount = 600
+lifetime = 10.84
+preprocess = 1.04
+speed_scale = 2.07
+explosiveness = 0.05
+randomness = 0.07
+lifetime_randomness = 0.04
+direction = Vector2(2.685, 0.645)
+spread = 11.75
+gravity = Vector2(0, -15)
+initial_velocity_min = 42.5
+initial_velocity_max = 87.5
+damping_min = 1.667
+damping_max = 7.916
+scale_amount_min = 0.4
+scale_amount_max = 10.0
+scale_amount_curve = SubResource("Curve_b4jbc")
+color = Color(0.6832292, 0.6518369, 0.5851368, 0.80784315)
+color_initial_ramp = SubResource("Gradient_pqkl4")
+hue_variation_min = -0.2
+hue_variation_max = 0.13

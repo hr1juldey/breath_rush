@@ -46,8 +46,8 @@ func _ready():
 		{
 			"texture": preload("res://assets/parallax/billboard.webp"),
 			"region": Rect2(240, 112, 712, 960),
-			"scale": 0.0888,
-			"y_offset": - 30.0
+			"scale": 0.15,
+			"y_offset": - 110.0
 		},
 	]
 

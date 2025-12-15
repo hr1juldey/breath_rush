@@ -29,12 +29,13 @@ point_count = 2
 curve = SubResource("Curve_73aio")
 
 [sub_resource type="ParticleProcessMaterial" id="SmokeMaterial2"]
+resource_local_to_scene = true
 lifetime_randomness = 0.03
 particle_flag_disable_z = true
-direction = Vector3(2.685, 0.645, 0)
+direction = Vector3(2, 0.25, 0)
 spread = 11.75
-initial_velocity_min = 42.5
-initial_velocity_max = 87.5
+initial_velocity_min = 10.0
+initial_velocity_max = 50.0
 gravity = Vector3(0, -15, 0)
 damping_min = 1.667
 damping_max = 7.916
@@ -66,34 +67,70 @@ script = ExtResource("1_obstacle")
 texture = ExtResource("2_car2_texture")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-4.3689914, -1.456306)
 shape = SubResource("CarCollision2")
 
-[node name="SmokeEmitter" type="Node2D" parent="CollisionShape2D"]
-position = Vector2(344.17484, 54.854362)
+[node name="SmokeEmitter" type="Node2D" parent="."]
+position = Vector2(339.80585, 53.398056)
 
-[node name="SmokeGPU" type="GPUParticles2D" parent="CollisionShape2D/SmokeEmitter"]
+[node name="LocalSmokeGPU" type="GPUParticles2D" parent="SmokeEmitter"]
 scale = Vector2(1.5, 1.5)
-amount = 6000
+amount = 4500
 amount_ratio = 0.8
-lifetime = 8.959999999999999
-preprocess = 1.08
+lifetime = 5.0
+preprocess = 3.0
 speed_scale = 1.18
 explosiveness = 0.04
 randomness = 0.06
-visibility_rect = Rect2(-200, -100, 400, 200)
+visibility_rect = Rect2(-5000, -1000, 10000, 2000)
+local_coords = true
 process_material = SubResource("SmokeMaterial2")
 
-[node name="SmokeCPU" type="CPUParticles2D" parent="CollisionShape2D/SmokeEmitter"]
+[node name="LocalSmokeCPU" type="CPUParticles2D" parent="SmokeEmitter"]
 emitting = false
-amount = 600
-lifetime = 10.84
+amount = 450
+lifetime = 2.0
 preprocess = 1.04
 speed_scale = 2.07
 explosiveness = 0.05
 randomness = 0.07
 lifetime_randomness = 0.04
+local_coords = true
 direction = Vector2(2.685, 0.645)
+spread = 11.75
+gravity = Vector2(0, -15)
+initial_velocity_min = 42.5
+initial_velocity_max = 87.5
+damping_min = 1.667
+damping_max = 7.916
+scale_amount_min = 0.4
+scale_amount_max = 10.0
+scale_amount_curve = SubResource("Curve_b4jbc")
+color = Color(0.6832292, 0.6518369, 0.5851368, 0.80784315)
+color_initial_ramp = SubResource("Gradient_pqkl4")
+hue_variation_min = -0.2
+hue_variation_max = 0.13
+
+[node name="GlobalSmokeGPU" type="GPUParticles2D" parent="SmokeEmitter"]
+scale = Vector2(1.5, 1.5)
+amount = 3000
+amount_ratio = 0.8
+lifetime = 15.0
+speed_scale = 1.18
+explosiveness = 0.04
+randomness = 0.06
+visibility_rect = Rect2(-5000, -1000, 10000, 2000)
+process_material = SubResource("SmokeMaterial2")
+
+[node name="GlobalSmokeCPU" type="CPUParticles2D" parent="SmokeEmitter"]
+emitting = false
+amount = 300
+lifetime = 15.0
+preprocess = 1.05
+speed_scale = 2.07
+explosiveness = 0.05
+randomness = 0.07
+lifetime_randomness = 0.04
+direction = Vector2(0, 0.645)
 spread = 11.75
 gravity = Vector2(0, -15)
 initial_velocity_min = 42.5

@@ -39,12 +39,36 @@ func change_lane(direction: int) -> void:
 	"""
 	Change lane (up = -1, down = +1).
 	Clamps to valid lane range.
+	Blocks if car is in target lane.
 	"""
 	var new_lane = current_lane + direction
 	if new_lane >= 0 and new_lane < lane_positions.size():
+		var target_lane_y = lane_positions[new_lane]
+
+		# Check if lane is blocked by a car
+		if _is_lane_blocked(target_lane_y):
+			return  # Don't change lane
+
 		current_lane = new_lane
-		target_y = lane_positions[current_lane]
+		target_y = target_lane_y
 		print("[PlayerMovement] Lane changed to %d (Y: %.1f)" % [current_lane, target_y])
+
+func _is_lane_blocked(lane_y: float) -> bool:
+	"""Check if moving to lane_y would collide with a car using physics query"""
+	if not player_body:
+		return false
+
+	var space_state = player_body.get_world_2d().direct_space_state
+
+	# Create query at target position
+	var query = PhysicsShapeQueryParameters2D.new()
+	query.shape = player_body.get_node("CollisionShape2D").shape
+	query.transform = Transform2D(0, Vector2(player_body.global_position.x, lane_y))
+	query.collision_mask = 2  # Layer 2 = cars
+	query.exclude = [player_body.get_rid()]
+
+	var result = space_state.intersect_shape(query, 1)
+	return result.size() > 0
 
 func process_movement(delta: float, horizontal_input: float) -> void:
 	"""

@@ -50,9 +50,11 @@ func spawn_obstacle(x: float, y: float, obstacle_type: String) -> bool:
 	Returns true if spawned, false if blocked or no pool available.
 	"""
 	# TRAFFIC JAM PREVENTION: Only allow 1 car on screen at a time
-	if get_visible_obstacles().size() > 0:
-		print("[ObstacleSpawner] BLOCKED spawn - car already on screen (no traffic jam)")
-		return false
+	# Check if any car is still on-screen (not past x = -200, well before stop point at -500)
+	for obstacle in get_visible_obstacles():
+		if obstacle.position.x > -200:  # Car still on-screen (allow new spawn when past -200)
+			print("[ObstacleSpawner] BLOCKED spawn - car still on screen at x=%.0f" % obstacle.position.x)
+			return false
 
 	# Check with coordinator if position is blocked
 	if coordinator_ref and coordinator_ref.is_blocked_by_pickups(x, y):
@@ -130,14 +132,22 @@ func return_to_pool(obstacle: Node) -> void:
 		_stop_smoke_particles(obstacle)
 
 		# Reset obstacle state
-		obstacle.visible = false
+		# DON'T SET visible = false - testing visibility behavior!
+		# obstacle.visible = false
 		obstacle.player_ref = null  # Clear player reference
 		obstacle.is_off_screen = false
 		obstacle.off_screen_time = 0.0
+		obstacle.collision_smoke_timer = 0.0
+		obstacle.collision_smoke_active = false
+		obstacle.stage_5s_done = false
+		obstacle.stage_15s_done = false
+		obstacle.stage_35s_done = false
 
 		# BUGFIX: Disable collision and movement when returning to pool
 		obstacle.monitoring = false
 		obstacle.set_process(false)
+
+		print("[ObstacleSpawner] Returned to pool (VISIBILITY STILL ON for testing)")
 
 func set_scroll_speed(speed: float) -> void:
 	"""Update scroll speed for all obstacles"""
@@ -178,49 +188,53 @@ func get_available_count() -> int:
 
 func _restart_smoke_particles(obstacle: Node) -> void:
 	"""Restart smoke particles when spawning from pool"""
-	var smoke_emitter = obstacle.get_node_or_null("CollisionShape2D/SmokeEmitter")
+	var smoke_emitter = obstacle.get_node_or_null("SmokeEmitter")
 	if not smoke_emitter:
 		return
 
 	var smoke_gpu = smoke_emitter.get_node_or_null("SmokeGPU")
 	var smoke_cpu = smoke_emitter.get_node_or_null("SmokeCPU")
+	var smoke_gpu_trail = smoke_emitter.get_node_or_null("SmokeGPU_Trail")
+	var smoke_cpu_trail = smoke_emitter.get_node_or_null("SmokeCPU_Trail")
 
-	if not smoke_gpu or not smoke_cpu:
-		return
-
-	# Detect GPU availability
 	var rendering_device = RenderingServer.get_rendering_device()
 	if rendering_device:
-		# Use GPU particles with MASSIVE emission
-		smoke_gpu.amount = 24000  # Huge continuous smoke
-		smoke_gpu.explosiveness = 0.3  # Steady heavy stream
-		smoke_gpu.emitting = false  # Stop first
-		smoke_gpu.restart()         # Clear old particles
-		smoke_gpu.emitting = true   # Restart emission
-		smoke_cpu.emitting = false
-		print("[ObstacleSpawner] Restarted GPU smoke (24k particles) for %s" % obstacle.name)
+		# GPU mode - local coords + trail
+		if smoke_gpu:
+			smoke_gpu.amount_ratio = 1.0
+			smoke_gpu.explosiveness = 0.3
+			smoke_gpu.restart()
+			smoke_gpu.emitting = true
+		if smoke_gpu_trail:
+			smoke_gpu_trail.amount_ratio = 1.0
+			smoke_gpu_trail.restart()
+			smoke_gpu_trail.emitting = true
+		if smoke_cpu: smoke_cpu.emitting = false
+		if smoke_cpu_trail: smoke_cpu_trail.emitting = false
 	else:
-		# Use CPU particles with massive emission
-		smoke_cpu.amount = 2400
-		smoke_cpu.explosiveness = 0.3
-		smoke_cpu.emitting = false  # Stop first
-		smoke_cpu.restart()         # Clear old particles
-		smoke_cpu.emitting = true   # Restart emission
-		smoke_gpu.emitting = false
-		print("[ObstacleSpawner] Restarted CPU smoke (2.4k particles) for %s" % obstacle.name)
+		# CPU fallback
+		if smoke_cpu:
+			smoke_cpu.explosiveness = 0.3
+			smoke_cpu.restart()
+			smoke_cpu.emitting = true
+		if smoke_cpu_trail:
+			smoke_cpu_trail.restart()
+			smoke_cpu_trail.emitting = true
+		if smoke_gpu: smoke_gpu.emitting = false
+		if smoke_gpu_trail: smoke_gpu_trail.emitting = false
 
 func _stop_smoke_particles(obstacle: Node) -> void:
-	"""Stop smoke particles when returning to pool"""
-	var smoke_emitter = obstacle.get_node_or_null("CollisionShape2D/SmokeEmitter")
+	"""Stop smoke emission when returning to pool"""
+	var smoke_emitter = obstacle.get_node_or_null("SmokeEmitter")
 	if not smoke_emitter:
 		return
 
 	var smoke_gpu = smoke_emitter.get_node_or_null("SmokeGPU")
 	var smoke_cpu = smoke_emitter.get_node_or_null("SmokeCPU")
+	var smoke_gpu_trail = smoke_emitter.get_node_or_null("SmokeGPU_Trail")
+	var smoke_cpu_trail = smoke_emitter.get_node_or_null("SmokeCPU_Trail")
 
-	if smoke_gpu:
-		smoke_gpu.emitting = false
-	if smoke_cpu:
-		smoke_cpu.emitting = false
-
-	print("[ObstacleSpawner] Stopped smoke for %s" % obstacle.name)
+	if smoke_gpu: smoke_gpu.emitting = false
+	if smoke_gpu_trail: smoke_gpu_trail.emitting = false
+	if smoke_cpu: smoke_cpu.emitting = false
+	if smoke_cpu_trail: smoke_cpu_trail.emitting = false

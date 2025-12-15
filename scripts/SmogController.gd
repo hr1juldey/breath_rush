@@ -72,7 +72,7 @@ func set_aqi(aqi: float):
 			var layer_opacity = base_opacity * layer_multipliers[i]
 			smog_materials[i].set_shader_parameter("opacity", layer_opacity)
 
-	print_debug("Smog AQI: %.1f → base_opacity: %.3f" % [current_aqi, base_opacity])
+	#print_debug("Smog AQI: %.1f → base_opacity: %.3f" % [current_aqi, base_opacity])
 
 func get_current_aqi() -> float:
 	"""Return current AQI value"""

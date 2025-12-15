@@ -15,7 +15,7 @@ script = ExtResource("1_charger")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_charger_texture")
 region_enabled = true
-region_rect = Rect2(536, 88, 824, 880)
+region_rect = Rect2(-30, -36, 824, 880)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("ChargerCollision")

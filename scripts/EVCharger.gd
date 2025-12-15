@@ -56,15 +56,22 @@ var player_ref: Node = null
 
 # ============== TIMING CONTROLS ==============
 @export_group("Timing")
-@export var charge_duration: float = 5.0 ## How long to charge (seconds)
+@export var charge_duration: float = 10.0 ## How long to charge (seconds)
 @export var transition_duration: float = 1.0 ## Slow down / speed up time (seconds)
 
 @onready var sprite = $Sprite2D
 @onready var collision = $CollisionShape2D
 
+# ============== ANIMATION FRAMES ==============
+# Charging animation textures (0% → 25% → 50% → 75% → 100%)
+var charge_frames: Array[Texture2D] = []
+
 func _ready():
 	body_entered.connect(_on_body_entered)
 	area_entered.connect(_on_area_entered)
+
+	# Load charging animation frames
+	_load_animation_frames()
 
 	# Position charger like a building in front layer space
 	global_position = Vector2(spawn_x, spawn_y)
@@ -137,6 +144,9 @@ func _process_slowing_down(delta):
 func _process_charging(delta):
 	"""World is stopped, battery is charging (gradual charge runs in PlayerBattery)"""
 	charge_timer += delta
+
+	# Update charging animation frame based on progress
+	_update_charging_animation()
 
 	if charge_timer >= charge_duration:
 		# Charging complete - start speeding up
@@ -220,3 +230,40 @@ func set_scroll_speed(speed: float):
 	scroll_speed = speed
 	if state == ChargingState.SCROLLING:
 		current_world_speed = speed
+
+# ============== ANIMATION HELPERS ==============
+
+func _load_animation_frames():
+	"""Load the 5 charging animation frames"""
+	charge_frames = [
+		load("res://assets/pickups/ev_charger/prop_ev_charger_0.webp"),    # 0% - empty
+		load("res://assets/pickups/ev_charger/prop_ev_charger_25.webp"),   # 25% - 1 bar
+		load("res://assets/pickups/ev_charger/prop_ev_charger_50.webp"),   # 50% - 2 bars
+		load("res://assets/pickups/ev_charger/prop_ev_charger_75.webp"),   # 75% - 3 bars
+		load("res://assets/pickups/ev_charger/prop_ev_charger_100.webp")   # 100% - full + bolt
+	]
+
+	# Set initial frame (0%)
+	if sprite and charge_frames.size() > 0:
+		sprite.texture = charge_frames[0]
+		print("[EVCharger] Loaded %d animation frames" % charge_frames.size())
+
+func _update_charging_animation():
+	"""Update sprite texture based on charging progress"""
+	if not sprite or charge_frames.size() == 0:
+		return
+
+	# Calculate progress (0.0 to 1.0)
+	var progress = charge_timer / charge_duration
+
+	# Map progress to frame index
+	# 0.0-0.2 → frame 0 (0%)
+	# 0.2-0.4 → frame 1 (25%)
+	# 0.4-0.6 → frame 2 (50%)
+	# 0.6-0.8 → frame 3 (75%)
+	# 0.8-1.0 → frame 4 (100%)
+	var frame_index = int(progress * 5.0)
+	frame_index = clamp(frame_index, 0, charge_frames.size() - 1)
+
+	# Update sprite texture
+	sprite.texture = charge_frames[frame_index]

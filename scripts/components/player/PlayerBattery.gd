@@ -74,6 +74,11 @@ func _process(delta: float) -> void:
 
 func start_boost() -> void:
 	"""Start boost if battery available"""
+	# Prevent boost during EV charging
+	if is_gradual_charging:
+		print("[PlayerBattery] Boost disabled during EV charging")
+		return
+
 	if battery > 0 and not is_boosting:
 		is_boosting = true
 		boost_started.emit()
@@ -129,3 +134,7 @@ func get_boost_multiplier() -> float:
 func is_charging() -> bool:
 	"""Check if currently charging"""
 	return charge_time > 0
+
+func is_ev_charging() -> bool:
+	"""Check if currently charging at EV charger (blocks all player actions)"""
+	return is_gradual_charging

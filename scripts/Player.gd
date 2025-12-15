@@ -109,8 +109,11 @@ func _process(delta: float) -> void:
 		health.process_health_drain(delta, has_mask, leak_damage)
 
 	# Coordinate movement (requires movement and input components)
+	# Block movement during EV charging
 	if movement and input_handler:
 		var h_input = input_handler.get_horizontal_input()
+		if battery and battery.is_ev_charging():
+			h_input = 0.0  # Block horizontal movement during EV charging
 		movement.process_movement(delta, h_input)
 		movement.apply_movement()
 
@@ -157,6 +160,9 @@ func _on_player_died() -> void:
 # === Input Signal Handlers (Delegate to components) ===
 
 func _on_lane_change_requested(direction: int) -> void:
+	# Block lane changes during EV charging
+	if battery and battery.is_ev_charging():
+		return
 	if movement:
 		movement.change_lane(direction)
 

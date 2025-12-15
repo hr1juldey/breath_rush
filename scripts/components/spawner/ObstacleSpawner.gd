@@ -19,7 +19,7 @@ var car_scenes = [
 
 # Object pool
 var obstacle_pool = []
-var pool_size = 8
+var pool_size = 20  # Increased pool for more cars
 var spawn_speed = 400.0
 
 # Reference to coordinator (for collision checking)
@@ -70,9 +70,18 @@ func spawn_obstacle(x: float, y: float, obstacle_type: String) -> bool:
 	obstacle.obstacle_type = obstacle_type
 	obstacle.set_scroll_speed(spawn_speed)
 
+	# Set spawner reference for proper pool return
+	obstacle.spawner_ref = self
+
+	# Reset despawn timer
+	obstacle.off_screen_time = 0.0
+	obstacle.is_off_screen = false
+
 	# BUGFIX: Re-enable collision and movement when spawning
-	obstacle.monitoring = true
 	obstacle.set_process(true)
+
+	# Show car sprite and enable collision
+	obstacle._show_car()
 
 	# Restart smoke particles when respawning from pool
 	_restart_smoke_particles(obstacle)
@@ -120,7 +129,11 @@ func return_to_pool(obstacle: Node) -> void:
 		# Stop smoke particles when returning to pool
 		_stop_smoke_particles(obstacle)
 
+		# Reset obstacle state
 		obstacle.visible = false
+		obstacle.player_ref = null  # Clear player reference
+		obstacle.is_off_screen = false
+		obstacle.off_screen_time = 0.0
 
 		# BUGFIX: Disable collision and movement when returning to pool
 		obstacle.monitoring = false
@@ -178,19 +191,23 @@ func _restart_smoke_particles(obstacle: Node) -> void:
 	# Detect GPU availability
 	var rendering_device = RenderingServer.get_rendering_device()
 	if rendering_device:
-		# Use GPU particles
+		# Use GPU particles with MASSIVE emission
+		smoke_gpu.amount = 24000  # Huge continuous smoke
+		smoke_gpu.explosiveness = 0.3  # Steady heavy stream
 		smoke_gpu.emitting = false  # Stop first
 		smoke_gpu.restart()         # Clear old particles
 		smoke_gpu.emitting = true   # Restart emission
 		smoke_cpu.emitting = false
-		print("[ObstacleSpawner] Restarted GPU smoke for %s" % obstacle.name)
+		print("[ObstacleSpawner] Restarted GPU smoke (24k particles) for %s" % obstacle.name)
 	else:
-		# Use CPU particles
+		# Use CPU particles with massive emission
+		smoke_cpu.amount = 2400
+		smoke_cpu.explosiveness = 0.3
 		smoke_cpu.emitting = false  # Stop first
 		smoke_cpu.restart()         # Clear old particles
 		smoke_cpu.emitting = true   # Restart emission
 		smoke_gpu.emitting = false
-		print("[ObstacleSpawner] Restarted CPU smoke for %s" % obstacle.name)
+		print("[ObstacleSpawner] Restarted CPU smoke (2.4k particles) for %s" % obstacle.name)
 
 func _stop_smoke_particles(obstacle: Node) -> void:
 	"""Stop smoke particles when returning to pool"""

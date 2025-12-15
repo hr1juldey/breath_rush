@@ -5,16 +5,16 @@
   "base_aqi": 250,
   "spawn_points": [
     {
-      "x": 2600,
+      "x": 3600,
       "y": 300,
       "type": "car1",
-      "delay": 8.0
+      "delay": 4.0
     },
     {
       "x": 2600,
       "y": 360,
       "type": "car2",
-      "delay": 20.0
+      "delay": 10.0
     },
     {
       "x": 3600,

@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://dlfj6qul8p2ea" path="res://assets/vehicles/cars/car_2.webp" id="2_car2_texture"]
 
 [sub_resource type="RectangleShape2D" id="CarCollision2"]
-size = Vector2(1259.2234, 245.63109)
+size = Vector2(1581.5535, 245.63109)
 
 [sub_resource type="Gradient" id="Gradient_b4jbc"]
 offsets = PackedFloat32Array(0.012295082, 0.2704918, 0.41393444, 0.64959013, 0.8422131, 1)
@@ -66,11 +66,11 @@ script = ExtResource("1_obstacle")
 texture = ExtResource("2_car2_texture")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-165.53403, -1.456306)
+position = Vector2(-4.3689914, -1.456306)
 shape = SubResource("CarCollision2")
 
 [node name="SmokeEmitter" type="Node2D" parent="CollisionShape2D"]
-position = Vector2(501.4564, 65.53398)
+position = Vector2(344.17484, 54.854362)
 
 [node name="SmokeGPU" type="GPUParticles2D" parent="CollisionShape2D/SmokeEmitter"]
 scale = Vector2(1.5, 1.5)

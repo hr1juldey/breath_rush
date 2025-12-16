@@ -62,13 +62,22 @@ func pickup_sapling() -> bool:
 	print("[PlayerInventory] Picked up sapling - Total: %d" % sapling_count)
 	return true
 
+func drop_item() -> bool:
+	"""
+	Drop the current item (filter).
+	Called when D key is pressed.
+	"""
+	return drop_filter()
+
 func drop_filter() -> bool:
 	"""
 	Drop/deploy a filter at player position.
 	Returns true if filter was dropped, false if none remaining.
 
-	Spawns visual Filter scene and creates AQISmokeSource for AQI reduction.
-	Game should pause when this is called and resume when filter cleanup completes.
+	Spawns visual Filter scene with world slowdown like EV charger.
+	- First 2 seconds: dirty air sucked into filter
+	- Remaining 13 seconds: clean air emitted
+	- AQI reduces during cleanup
 	"""
 	if filter_count <= 0:
 		print("[PlayerInventory] Cannot drop filter - none remaining")
@@ -87,26 +96,40 @@ func drop_filter() -> bool:
 	else:
 		print("[PlayerInventory] Warning: AQIManager not available for filter drop")
 
-	# Spawn visual Filter scene at player position
+	# Spawn visual Filter scene in FrontLayerSpawner (parallax layer) like EV charger
 	var filter_scene = load("res://scenes/Filter.tscn")
-	if filter_scene:
-		var filter_visual = filter_scene.instantiate()
-		filter_visual.global_position = pos
-
-		# Add to world (parent of player)
-		var world = player_ref.get_parent() if player_ref else null
-		if world:
-			world.add_child(filter_visual)
-			print("[PlayerInventory] Filter visual spawned at (%.0f, %.0f)" % [pos.x, pos.y])
-
-			# Connect cleanup completion signal to allow game resume
-			filter_visual.cleanup_complete.connect(func():
-				print("[PlayerInventory] Filter cleanup complete - game can resume")
-			)
-		else:
-			print("[PlayerInventory] Warning: Could not find world parent for filter visual")
-	else:
+	if not filter_scene:
 		print("[PlayerInventory] Warning: Could not load Filter.tscn")
+		return false
+
+	var filter_visual = filter_scene.instantiate()
+
+	# Place in front layer at fixed screen position (like buildings/EV charger)
+	var game = _get_game()
+	if not game:
+		print("[PlayerInventory] Warning: Could not find Game node")
+		return false
+
+	var spawner = game.get_node_or_null("Spawner")
+	if not spawner:
+		print("[PlayerInventory] Warning: Could not find Spawner")
+		return false
+
+	var front_layer = spawner.get_node_or_null("FrontLayerSpawner")
+	if not front_layer:
+		print("[PlayerInventory] Warning: Could not find FrontLayerSpawner")
+		return false
+
+	# Position at right side of screen like EV charger
+	# Screen width ~1152, place at x=1100 (off-screen right)
+	# Vertical position on side like buildings (~Y=280)
+	filter_visual.global_position = Vector2(1100, 280)
+
+	front_layer.add_child(filter_visual)
+	print("[PlayerInventory] Filter visual spawned in FrontLayerSpawner at (1100, 280)")
+
+	# Start world slowdown (like EV charger)
+	_start_filter_slowdown(filter_visual)
 
 	# Update inventory and emit signals
 	filter_count -= 1
@@ -116,6 +139,76 @@ func drop_filter() -> bool:
 
 	print("[PlayerInventory] Deployed filter - Remaining: %d" % filter_count)
 	return true
+
+func _start_filter_slowdown(filter_visual: Node) -> void:
+	"""Start world slowdown sequence for filter cleanup (like EV charger)"""
+	var game = _get_game()
+	if not game:
+		print("[PlayerInventory] Warning: Could not find Game node for slowdown")
+		return
+
+	# Get spawner to stop car spawning
+	var spawner = game.get_node_or_null("Spawner")
+
+	# Phase 1: Slow down world (1 second)
+	print("[PlayerInventory] FILTER: Slowing down world...")
+	var tween = player_ref.create_tween()
+	tween.tween_method(_set_world_speed.bind(game), game.scroll_speed, 0.0, 1.0)
+	await tween.finished
+
+	# Stop car spawning during filter cleanup
+	if spawner:
+		var obstacle_spawner = spawner.get_node_or_null("ObstacleSpawner")
+		if obstacle_spawner:
+			obstacle_spawner.set_process(false)
+			print("[PlayerInventory] FILTER: Car spawning STOPPED")
+
+	# World is now stopped
+	game.world_paused = true
+	print("[PlayerInventory] FILTER: World STOPPED - 15s cleanup starting")
+
+	# Connect to filter cleanup completion
+	filter_visual.cleanup_complete.connect(func():
+		_resume_after_filter(game, spawner)
+	)
+
+func _resume_after_filter(game: Node, spawner: Node) -> void:
+	"""Resume world after filter cleanup completes"""
+	print("[PlayerInventory] FILTER: Cleanup complete - resuming world")
+
+	# Resume car spawning
+	if spawner:
+		var obstacle_spawner = spawner.get_node_or_null("ObstacleSpawner")
+		if obstacle_spawner:
+			obstacle_spawner.set_process(true)
+			print("[PlayerInventory] FILTER: Car spawning RESUMED")
+
+	# Phase 2: Speed up world (1 second)
+	var tween = player_ref.create_tween()
+	tween.tween_method(_set_world_speed.bind(game), 0.0, game.base_scroll_speed, 1.0)
+	await tween.finished
+
+	game.world_paused = false
+	print("[PlayerInventory] FILTER: World RESUMED at full speed")
+
+func _set_world_speed(speed: float, game: Node) -> void:
+	"""Set scroll speed for all world elements"""
+	if "scroll_speed" in game:
+		game.scroll_speed = speed
+
+	# Update Road
+	var road = game.get_node_or_null("Road")
+	if road and road.has_method("set_scroll_speed"):
+		road.set_scroll_speed(speed)
+
+	# Update Spawner
+	var spawner = game.get_node_or_null("Spawner")
+	if spawner and spawner.has_method("set_scroll_speed"):
+		spawner.set_scroll_speed(speed)
+
+func _get_game() -> Node:
+	"""Get Game (Main) node"""
+	return get_tree().root.get_node_or_null("Main")
 
 func drop_sapling() -> bool:
 	"""

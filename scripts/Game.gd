@@ -362,14 +362,5 @@ func _on_game_lost(reason: String) -> void:
 # === Filter Deployment ===
 
 func _on_filter_deployed(x: float, y: float) -> void:
-	"""Filter deployed - pause game for 15 seconds of air cleaning"""
-	print("[Game] Filter deployed at (%.0f, %.0f) - PAUSING for cleanup" % [x, y])
-
-	# Pause world scrolling
-	pause_world_scroll()
-
-	# Wait 15 seconds for filter cleanup
-	await get_tree().create_timer(15.0).timeout
-
-	print("[Game] Filter cleanup complete - RESUMING game")
-	resume_world_scroll()
+	"""Filter deployed - PlayerInventory handles the slowdown and cleanup"""
+	print("[Game] Filter deployed at (%.0f, %.0f)" % [x, y])

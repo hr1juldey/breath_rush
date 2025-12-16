@@ -12,8 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://bcw73rt4f1dua" path="res://assets/road/road_tile.webp" id="9_2x7y0"]
 [ext_resource type="PackedScene" uid="uid://cjtmad0wq0gf" path="res://scenes/Player.tscn" id="10_3z8a1"]
 [ext_resource type="PackedScene" uid="uid://d6jl4a6t8i" path="res://scenes/HUD.tscn" id="11_hud_scene"]
-[ext_resource type="Shader" uid="uid://b1vxbhnwo2imc" path="res://assets/shaders/sky_shader.gdshader" id="12_sky_shader"]
-[ext_resource type="Shader" uid="uid://cmplcdvh0vh0d" path="res://assets/shaders/smog_shader.gdshader" id="13_smog_shader"]
+[ext_resource type="Shader" path="res://assets/shaders/sky_shader.gdshader" id="12_sky_shader"]
+[ext_resource type="Shader" path="res://assets/shaders/smog_shader.gdshader" id="13_smog_shader"]
 [ext_resource type="Texture2D" uid="uid://cih7364pkepxh" path="res://assets/vfx/smog_overlay.webp" id="14_smog_overlay"]
 [ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="15_sky_bad"]
 [ext_resource type="Texture2D" uid="uid://bncjyu10b4a2" path="res://assets/skies/sky_ok.webp" id="16_sky_ok"]
@@ -21,8 +21,8 @@
 [ext_resource type="Script" uid="uid://bcu4hirt4wbmb" path="res://scripts/components/parallax/FarLayerSpawner.gd" id="22_far_spawner"]
 [ext_resource type="Script" uid="uid://bo6kockayp1wx" path="res://scripts/components/parallax/MidLayerSpawner.gd" id="23_mid_spawner"]
 [ext_resource type="Script" uid="uid://dk2xnqcqxytoc" path="res://scripts/components/parallax/FrontLayerSpawner.gd" id="24_front_spawner"]
-[ext_resource type="Script" uid="uid://dxckb6hq48yi" path="res://scripts/aqi/AQIManager.gd" id="25_aqi_manager"]
-[ext_resource type="Script" uid="uid://dkp5x7cx7ghj" path="res://scripts/aqi/TreeSpawnManager.gd" id="26_tree_spawn"]
+[ext_resource type="Script" uid="uid://b0kqnpugv1faw" path="res://scripts/aqi/AQIManager.gd" id="25_aqi_manager"]
+[ext_resource type="Script" uid="uid://bovxcam37v7yn" path="res://scripts/aqi/TreeSpawnManager.gd" id="26_tree_spawn"]
 
 [sub_resource type="ShaderMaterial" id="SkyShaderMaterial"]
 shader = ExtResource("12_sky_shader")

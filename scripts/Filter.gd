@@ -27,8 +27,11 @@ var is_active: bool = true
 enum Phase { INTAKE, EMISSION }
 var current_phase: Phase = Phase.INTAKE
 
-# AQI reduction per second during emission phase
+# AQI reduction during emission phase
 var aqi_reduction_rate: float = 20.0  # Reduces AQI by 20 per second during emission
+var emission_duration: float = 13.0  # 13 seconds of emission (after 2s intake)
+var total_aqi_reduction: float = 260.0  # Total AQI to reduce (20 * 13)
+var aqi_reduction_tween: Tween = null
 
 @onready var filter_object = $Filter_object
 @onready var filter_sprite = $Filter_object/Filter_sprite
@@ -54,10 +57,6 @@ func _process(delta):
 	if current_phase == Phase.INTAKE and cleanup_time >= intake_duration:
 		_start_emission_phase()
 
-	# During emission phase, reduce AQI
-	if current_phase == Phase.EMISSION:
-		_reduce_aqi(delta)
-
 	# Check if cleanup complete
 	if cleanup_time >= cleanup_duration:
 		_finish_cleanup()
@@ -77,7 +76,7 @@ func _start_intake_phase() -> void:
 		emission_particles.emitting = false
 
 func _start_emission_phase() -> void:
-	"""Phase 2: Clean air emitted (remaining 13 seconds)"""
+	"""Phase 2: Clean air emitted (remaining 13 seconds) with eased AQI reduction"""
 	current_phase = Phase.EMISSION
 
 	# Stop intake particles
@@ -91,22 +90,37 @@ func _start_emission_phase() -> void:
 		emission_particles.amount_ratio = 1.0
 		print("[Filter] ➡ EMISSION PHASE: Clean air being released + AQI reducing")
 
-func _reduce_aqi(delta: float) -> void:
-	"""Reduce AQI during emission phase"""
+	# Start AQI reduction tween (slow → fast → slow easing)
+	_start_aqi_reduction_tween()
+
+func _start_aqi_reduction_tween() -> void:
+	"""Start tween to reduce AQI over 13 seconds with ease-in-out (slow → fast → slow)"""
 	var aqi_manager = _get_aqi_manager()
 	if not aqi_manager:
 		return
 
-	# Calculate reduction for this frame
-	var reduction = aqi_reduction_rate * delta
+	# Kill any existing tween
+	if aqi_reduction_tween:
+		aqi_reduction_tween.kill()
 
-	# Apply reduction (don't go below minimum)
-	var old_aqi = aqi_manager.current_aqi
-	aqi_manager.current_aqi = max(aqi_manager.min_aqi, aqi_manager.current_aqi - reduction)
+	# Get starting AQI
+	var start_aqi = aqi_manager.current_aqi
+	var target_aqi = max(aqi_manager.min_aqi, start_aqi - total_aqi_reduction)
 
-	# Emit signal if changed
-	if abs(old_aqi - aqi_manager.current_aqi) > 0.01:
-		aqi_manager.aqi_changed.emit(aqi_manager.current_aqi, -reduction)
+	# Create tween with ease-in-out (slow → fast → slow)
+	aqi_reduction_tween = create_tween()
+	aqi_reduction_tween.set_trans(Tween.TRANS_QUAD)  # Quadratic easing
+	aqi_reduction_tween.set_ease(Tween.EASE_IN_OUT)  # In-Out = slow → fast → slow
+	aqi_reduction_tween.tween_method(
+		func(aqi_value: float):
+			aqi_manager.current_aqi = aqi_value
+			aqi_manager.aqi_changed.emit(aqi_manager.current_aqi, -aqi_reduction_rate * (1.0 / emission_duration)),
+		start_aqi,
+		target_aqi,
+		emission_duration
+	)
+
+	print("[Filter] ✓ AQI reduction tween started: %.0f → %.0f over %.0fs (ease-in-out)" % [start_aqi, target_aqi, emission_duration])
 
 func _get_aqi_manager() -> Node:
 	"""Get AQIManager reference"""

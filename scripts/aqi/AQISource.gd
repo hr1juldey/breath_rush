@@ -46,8 +46,8 @@ func calculate_effect(player_distance: float, delta: float) -> float:
 	var range_multiplier = _get_range_multiplier(distance_from_source)
 	var effect = base_effect * range_multiplier * delta
 
-	# Return positive for decrease, negative for increase
-	return effect if source_type == SourceType.DECREASES_AQI else -effect
+	# Return negative to decrease AQI, positive to increase AQI
+	return -effect if source_type == SourceType.DECREASES_AQI else effect
 
 func _get_range_multiplier(distance: float) -> float:
 	match range_type:

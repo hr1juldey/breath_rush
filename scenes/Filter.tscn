@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://c1h3tocbk0vb6" path="res://assets/pickups/filter_1.webp" id="2_filter_texture"]
 
 [sub_resource type="Curve" id="Curve_i24mf"]
-_data = [Vector2(0, 0.84789383), 0.0, 0.9064447, 0, 0, Vector2(1, 0.21411854), 0.0, 0.0, 0, 0]
-point_count = 2
+_data = [Vector2(0.12455516, 0.10410559), 0.0, 1.5719589, 0, 0, Vector2(0.48398578, 0.83797646), 0.68510884, 0.68510884, 0, 0, Vector2(0.9786477, 0.1517595), 0.0, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="CurveTexture" id="CurveTexture_7mtvh"]
 curve = SubResource("Curve_i24mf")
@@ -97,8 +97,12 @@ height = 596.0
 [node name="Filter" type="Node2D"]
 script = ExtResource("1_filter_script")
 
-[node name="IntakeSmokeParticles" type="GPUParticles2D" parent="."]
-position = Vector2(-506, -45)
+[node name="Filter_Offeset" type="Node2D" parent="."]
+position = Vector2(-250, -90)
+scale = Vector2(0.4, 0.4)
+
+[node name="IntakeSmokeParticles" type="GPUParticles2D" parent="Filter_Offeset"]
+position = Vector2(-506, -45.000004)
 amount = 30
 lifetime = 3.0
 preprocess = 1.07
@@ -113,8 +117,8 @@ trail_sections = 126
 trail_section_subdivisions = 32
 process_material = SubResource("IntakeSmokeParticles")
 
-[node name="CleanAirEmission" type="GPUParticles2D" parent="."]
-position = Vector2(24, -56)
+[node name="CleanAirEmission" type="GPUParticles2D" parent="Filter_Offeset"]
+position = Vector2(24, -56.000004)
 amount = 300
 lifetime = 3.0
 preprocess = 0.5
@@ -122,16 +126,16 @@ randomness = 0.1
 visibility_rect = Rect2(-0.8497391, -563.9107, 744.2969, 1144.1536)
 process_material = SubResource("CleanAirEmission")
 
-[node name="Filter_object" type="Area2D" parent="."]
+[node name="Filter_object" type="Area2D" parent="Filter_Offeset"]
 
-[node name="Filter_sprite" type="Sprite2D" parent="Filter_object"]
+[node name="Filter_sprite" type="Sprite2D" parent="Filter_Offeset/Filter_object"]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_filter_texture")
 region_enabled = true
 region_rect = Rect2(832, 160, 232, 777.57263)
 region_filter_clip_enabled = true
 
-[node name="Filter collision" type="CollisionShape2D" parent="Filter_object"]
+[node name="Filter collision" type="CollisionShape2D" parent="Filter_Offeset/Filter_object"]
 z_index = -1
 position = Vector2(3, -61)
 scale = Vector2(0.5, 0.5)

@@ -12,9 +12,10 @@ signal spawn_probability_changed(probs: Dictionary)
 var saplings_collected: int = 0
 
 # Base probabilities (per spawn attempt in FrontLayerSpawner)
-@export var base_tree1_chance: float = 0.15  # 15% tree_1
-@export var base_tree2_chance: float = 0.08  # 8% tree_2
-@export var base_tree3_chance: float = 0.04  # 4% tree_3
+# Set to 0 - trees only spawn when saplings are collected
+@export var base_tree1_chance: float = 0.0   # 0% tree_1 (disabled by default)
+@export var base_tree2_chance: float = 0.0   # 0% tree_2 (disabled by default)
+@export var base_tree3_chance: float = 0.0   # 0% tree_3 (disabled by default)
 
 # Boost per sapling collected
 @export var sapling_boost: float = 0.03  # +3% per sapling

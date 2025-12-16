@@ -180,7 +180,7 @@ func _on_mask_use_requested() -> void:
 
 func _on_item_drop_requested() -> void:
 	if inventory:
-		inventory.drop_item()
+		await inventory.drop_item()
 
 # === Public API (Delegate to components) ===
 

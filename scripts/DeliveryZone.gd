@@ -26,11 +26,11 @@ func check_delivery() -> void:
 
 	# Check if player has a filter
 	if player_ref.carried_item == "filter":
-		complete_delivery()
+		await complete_delivery()
 
 func complete_delivery() -> void:
 	if player_ref:
-		player_ref.drop_item()
+		await player_ref.drop_item()
 		delivery_successful.emit(reward_coins, global_position)
 
 func set_reward(coins: int) -> void:

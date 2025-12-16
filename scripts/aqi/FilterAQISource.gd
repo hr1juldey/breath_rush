@@ -15,7 +15,7 @@ var time_alive: float = 0.0
 func _init():
 	source_type = SourceType.DECREASES_AQI
 	range_type = RangeType.INVERSE_SQUARE
-	base_effect = 50.0  # Strong effect
+	base_effect = 0.0  # AQI reduction handled by Filter.gd _reduce_aqi() during cleanup
 	effective_range = 3000.0
 
 func _process(delta: float):

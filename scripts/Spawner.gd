@@ -24,6 +24,9 @@ After refactoring: ~100 lines coordination only
 # Player reference (for mask condition tracking)
 var player_ref: Node = null
 
+# Clean air period reference
+var clean_air_manager: CleanAirPeriodManager = null
+
 func _ready():
 	print("[Spawner] ========== Spawner Coordinator Initializing ==========")
 
@@ -44,6 +47,11 @@ func _ready():
 
 	# Find player reference
 	call_deferred("_find_player")
+
+	# Find clean air period manager
+	clean_air_manager = get_tree().get_first_node_in_group("clean_air_period_manager")
+	if clean_air_manager:
+		print("[Spawner] ✓ CleanAirPeriodManager found")
 
 	print("[Spawner] ========== All Components Initialized ==========")
 
@@ -69,14 +77,20 @@ func _process(_delta: float) -> void:
 		pickup_spawner.spawn_ev_charger()  # EVCharger uses front layer positioning
 
 	# Get next obstacle spawn from chunk manager
-	var obstacle_spawn = chunk_manager.get_next_obstacle_spawn()
-	if not obstacle_spawn.is_empty():
-		var x = obstacle_spawn.get("x", 960)
-		var y = obstacle_spawn.get("y", 300)
-		var type = obstacle_spawn.get("type", "car")
+	# Skip spawning if clean air period is active
+	var is_clean_air = clean_air_manager and clean_air_manager.is_clean_air_active()
+	if not is_clean_air:
+		var obstacle_spawn = chunk_manager.get_next_obstacle_spawn()
+		if not obstacle_spawn.is_empty():
+			var x = obstacle_spawn.get("x", 960)
+			var y = obstacle_spawn.get("y", 300)
+			var type = obstacle_spawn.get("type", "car")
 
-		if obstacle_spawner:
-			obstacle_spawner.spawn_obstacle(x, y, type)
+			if obstacle_spawner:
+				obstacle_spawner.spawn_obstacle(x, y, type)
+	else:
+		# During clean air period, consume but don't spawn obstacle slots
+		chunk_manager.get_next_obstacle_spawn()
 
 	# Get next pickup spawn from chunk manager (exclude EV charger from random spawning)
 	var pickup_spawn = chunk_manager.get_next_pickup_spawn()

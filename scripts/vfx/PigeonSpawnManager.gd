@@ -23,10 +23,13 @@ var pigeons_spawned_flag: bool = false
 var active_pigeons: Array[Node] = []
 
 # Building spawn positions (Y values for different parallax layers)
-# Top of buildings are typically at Y ~100-150 in world coords
-var building_spawn_y_positions: Array[float] = [80.0, 100.0, 120.0, 140.0, 160.0]
+# Top of buildings are above the obstacle lanes (240, 300, 360)
+# Visual building tops should be at Y ~150-200 to be visible above lanes
+var building_spawn_y_positions: Array[float] = [150.0, 170.0, 190.0, 210.0]
 
 # Viewport width for X positioning
+# Buildings scroll from right (off-screen) to left
+# Spawn at positions where buildings would be visible
 var viewport_width: float = 960.0
 var viewport_right_edge: float = 1000.0  # Just off-screen to the right
 
@@ -37,7 +40,8 @@ func _ready():
 	aqi_manager = get_tree().get_first_node_in_group("aqi_manager")
 	if aqi_manager:
 		aqi_manager.aqi_changed.connect(_on_aqi_changed)
-		print("[PigeonSpawnManager] Connected to AQIManager")
+		current_aqi = aqi_manager.current_aqi  # Initialize with current AQI
+		print("[PigeonSpawnManager] Connected to AQIManager - Current AQI: %.1f" % current_aqi)
 	else:
 		print("[PigeonSpawnManager] WARNING: AQIManager not found!")
 
@@ -84,6 +88,7 @@ func _create_pigeon() -> Node2D:
 	var pigeon = Node2D.new()
 	pigeon.name = "Pigeon_%d" % active_pigeons.size()
 	pigeon.add_script(load("res://scripts/vfx/Pigeon.gd"))
+	pigeon.scale = Vector2(0.5, 0.5)  # Smaller scale to fit on buildings
 
 	# Random building position
 	var y = building_spawn_y_positions[randi() % building_spawn_y_positions.size()]

@@ -23,6 +23,7 @@
 [ext_resource type="Script" uid="uid://dk2xnqcqxytoc" path="res://scripts/components/parallax/FrontLayerSpawner.gd" id="24_front_spawner"]
 [ext_resource type="Script" uid="uid://b0kqnpugv1faw" path="res://scripts/aqi/AQIManager.gd" id="25_aqi_manager"]
 [ext_resource type="Script" uid="uid://bovxcam37v7yn" path="res://scripts/aqi/TreeSpawnManager.gd" id="26_tree_spawn"]
+[ext_resource type="Script" path="res://scripts/vfx/PigeonSpawnManager.gd" id="27_pigeon_spawn"]
 
 [sub_resource type="ShaderMaterial" id="SkyShaderMaterial"]
 shader = ExtResource("12_sky_shader")
@@ -175,5 +176,8 @@ script = ExtResource("25_aqi_manager")
 
 [node name="TreeSpawnManager" type="Node" parent="."]
 script = ExtResource("26_tree_spawn")
+
+[node name="PigeonSpawnManager" type="Node" parent="."]
+script = ExtResource("27_pigeon_spawn")
 
 [node name="HUD" parent="." instance=ExtResource("11_hud_scene")]

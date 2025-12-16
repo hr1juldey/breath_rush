@@ -1,0 +1,118 @@
+{
+  "id": "chunk_002",
+  "width": 1200,
+  "sky_type": "clear",
+  "base_aqi": 50,
+  "spawn_points": [
+    {
+      "x": 3600,
+      "y": 300,
+      "type": "car1",
+      "delay": 8.0
+    },
+    {
+      "x": 3600,
+      "y": 240,
+      "type": "car2",
+      "delay": 25.0
+    },
+    {
+      "x": 3600,
+      "y": 360,
+      "type": "car1",
+      "delay": 40.0
+    }
+  ],
+  "pickup_points": [
+    {
+      "x": 1400,
+      "y": 240,
+      "type": "mask",
+      "probability": 0.95,
+      "delay": 3.0
+    },
+    {
+      "x": 1800,
+      "y": 300,
+      "type": "mask",
+      "probability": 0.95,
+      "delay": 8.0
+    },
+    {
+      "x": 2200,
+      "y": 360,
+      "type": "mask",
+      "probability": 0.95,
+      "delay": 15.0
+    },
+    {
+      "x": 2600,
+      "y": 240,
+      "type": "mask",
+      "probability": 0.95,
+      "delay": 22.0
+    },
+    {
+      "x": 3000,
+      "y": 300,
+      "type": "mask",
+      "probability": 0.95,
+      "delay": 32.0
+    },
+    {
+      "x": 3400,
+      "y": 360,
+      "type": "mask",
+      "probability": 0.95,
+      "delay": 42.0
+    }
+  ],
+  "delivery_zones": [
+    {
+      "x": 450,
+      "y": 300,
+      "radius": 80,
+      "reward_coins": 75
+    },
+    {
+      "x": 950,
+      "y": 300,
+      "radius": 80,
+      "reward_coins": 75
+    }
+  ],
+  "mid_buildings": [
+    {
+      "sprite": "home_1.webp",
+      "x": 200,
+      "scale": 1.0
+    },
+    {
+      "sprite": "park.webp",
+      "x": 500,
+      "scale": 1.2
+    },
+    {
+      "sprite": "garden.webp",
+      "x": 800,
+      "scale": 1.0
+    }
+  ],
+  "decorations": [
+    {
+      "sprite": "bird.webp",
+      "x": 350,
+      "y": 150
+    },
+    {
+      "sprite": "bird.webp",
+      "x": 750,
+      "y": 180
+    },
+    {
+      "sprite": "flower.webp",
+      "x": 1100,
+      "y": 200
+    }
+  ]
+}

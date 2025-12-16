@@ -123,14 +123,18 @@ func load_configs() -> void:
 		current_aqi = base_aqi
 
 func load_chunk_data() -> void:
-	# In a full implementation, this would load multiple chunks
-	# For now, we load the sample chunk
-	if ResourceLoader.exists("res://data/chunks/chunk_001.json"):
-		var chunk_file = FileAccess.open("res://data/chunks/chunk_001.json", FileAccess.READ)
-		if chunk_file:
-			var json = JSON.new()
-			json.parse(chunk_file.get_as_text())
-			chunks_data.append(json.data)
+	# Load all available chunks
+	var chunk_files = ["chunk_001.json", "chunk_002.json"]
+
+	for chunk_file_name in chunk_files:
+		var chunk_path = "res://data/chunks/" + chunk_file_name
+		if ResourceLoader.exists(chunk_path):
+			var chunk_file = FileAccess.open(chunk_path, FileAccess.READ)
+			if chunk_file:
+				var json = JSON.new()
+				json.parse(chunk_file.get_as_text())
+				chunks_data.append(json.data)
+				print("[Game] Loaded chunk: %s" % chunk_file_name)
 
 func spawn_chunk(chunk_index: int) -> void:
 	if chunk_index >= chunks_data.size():
@@ -202,8 +206,11 @@ func update_coins(delta: float) -> void:
 			hud.add_coins(int(run_coins) - int(run_coins - coins_per_second * delta))
 
 func check_chunk_transition() -> void:
-	# Simplified chunk transition - in full game would check world position
-	pass
+	# Transition to next chunk after 60 seconds (arbitrary for now)
+	if run_distance >= 60.0 and current_chunk_index < chunks_data.size() - 1:
+		current_chunk_index += 1
+		spawn_chunk(current_chunk_index)
+		print("[Game] Transitioned to chunk: %d" % current_chunk_index)
 
 func load_persisted_trees() -> void:
 	# Load trees from persistence and create them in the world

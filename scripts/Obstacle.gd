@@ -181,6 +181,10 @@ func _setup_smoke_particles() -> void:
 
 func _attach_smoke_damage_zone(smoke_emitter: Node) -> void:
 	"""Attach SmokeDamageZone to detect player proximity and apply smoke AQI damage"""
+	if not smoke_emitter or not is_instance_valid(smoke_emitter):
+		print("[Obstacle] ERROR: Cannot attach smoke damage zone - invalid emitter")
+		return
+
 	if smoke_emitter.get_child_count() > 0:
 		# Check if already has smoke damage zone
 		for child in smoke_emitter.get_children():
@@ -188,6 +192,7 @@ func _attach_smoke_damage_zone(smoke_emitter: Node) -> void:
 				return  # Already attached
 
 	# Create and attach new SmokeDamageZone
+	# NOTE: AQIManager check happens later when smoke damage is actually applied
 	var smoke_zone = SmokeDamageZone.new()
 	smoke_zone.name = "SmokeDamageZone"
 	smoke_emitter.add_child(smoke_zone)

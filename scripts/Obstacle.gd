@@ -176,6 +176,22 @@ func _setup_smoke_particles() -> void:
 		if local_smoke_cpu: local_smoke_cpu.emitting = true
 		if global_smoke_cpu: global_smoke_cpu.emitting = true
 
+	# Attach smoke damage zone for AQI proximity detection
+	_attach_smoke_damage_zone(smoke_emitter)
+
+func _attach_smoke_damage_zone(smoke_emitter: Node) -> void:
+	"""Attach SmokeDamageZone to detect player proximity and apply smoke AQI damage"""
+	if smoke_emitter.get_child_count() > 0:
+		# Check if already has smoke damage zone
+		for child in smoke_emitter.get_children():
+			if child is SmokeDamageZone:
+				return  # Already attached
+
+	# Create and attach new SmokeDamageZone
+	var smoke_zone = SmokeDamageZone.new()
+	smoke_zone.name = "SmokeDamageZone"
+	smoke_emitter.add_child(smoke_zone)
+
 func _hide_car_only() -> void:
 	"""Disable collision only - KEEP CAR AND SMOKE VISIBLE for testing"""
 	# Don't hide sprite - let's see what happens!

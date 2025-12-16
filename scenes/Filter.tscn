@@ -1,0 +1,105 @@
+[gd_scene load_steps=9 format=3 uid="uid://c3e7v1wy2ykt"]
+
+[ext_resource type="Script" uid="uid://goe7s4w7e1mq" path="res://scripts/Filter.gd" id="1_filter_script"]
+[ext_resource type="Texture2D" uid="uid://c1h3tocbk0vb6" path="res://assets/pickups/filter_1.webp" id="2_filter_texture"]
+
+[sub_resource type="Curve" id="Curve_jaf58"]
+_data = [Vector2(0.006085191, 0.52655536), 0.0, -1.2669028, 0, 0, Vector2(1, 0.018588781), -0.51107657, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_i24mf"]
+curve = SubResource("Curve_jaf58")
+
+[sub_resource type="ParticleProcessMaterial" id="IntakeSmokeParticles"]
+lifetime_randomness = 0.04
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(24, 120, 0)
+direction = Vector3(2, 0, 0)
+spread = 180.0
+initial_velocity_min = 69.83
+initial_velocity_max = 195.37999
+gravity = Vector3(300, 5, 0)
+damping_min = 15.0
+damping_max = 25.0
+scale_min = 0.3
+scale_max = 2.5
+color = Color(0.2, 0.2, 0.2, 0.7)
+turbulence_enabled = true
+turbulence_noise_strength = 2.0
+turbulence_noise_scale = 8.9
+turbulence_noise_speed = Vector3(0.01, 0.75, 0)
+turbulence_noise_speed_random = 0.06
+turbulence_influence_min = 0.091000006
+turbulence_influence_max = 0.095000006
+turbulence_influence_over_life = SubResource("CurveTexture_i24mf")
+
+[sub_resource type="ParticleProcessMaterial" id="CleanAirEmission"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 80.0
+initial_velocity_max = 180.0
+gravity = Vector3(0, 0, 0)
+damping_min = 1.0
+damping_max = 3.0
+scale_min = 0.4
+scale_max = 2.0
+color = Color(0.3, 0.8, 1, 0.9)
+
+[sub_resource type="Curve2D" id="Curve2D_jaf58"]
+_data = {
+"points": PackedVector2Array(-121.1453, 57.542778, 121.1453, -57.542778, -279, -169, -159.09044, 70.4979, 159.09044, -70.4979, -33.666668, -80.39831)
+}
+point_count = 2
+
+[sub_resource type="Curve2D" id="Curve2D_i24mf"]
+_data = {
+"points": PackedVector2Array(-156.47333, 98.646194, 156.47333, -98.646194, -334, 95, -158.1046, 119.47501, 158.1046, -119.47501, -31, -1)
+}
+point_count = 2
+
+[node name="Filter" type="Node2D"]
+script = ExtResource("1_filter_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_filter_texture")
+region_enabled = true
+region_rect = Rect2(832, 160, 232, 777.57263)
+region_filter_clip_enabled = true
+
+[node name="IntakeSmokeParticles" type="GPUParticles2D" parent="."]
+position = Vector2(-604, -44)
+amount = 50
+lifetime = 3.0
+preprocess = 1.07
+speed_scale = 0.8
+randomness = 0.02
+visibility_rect = Rect2(-600, -300, 1200, 600)
+local_coords = true
+trail_enabled = true
+trail_lifetime = 3.0
+trail_sections = 120
+trail_section_subdivisions = 8
+process_material = SubResource("IntakeSmokeParticles")
+
+[node name="CleanAirEmission" type="GPUParticles2D" parent="."]
+position = Vector2(100, 0)
+emitting = false
+amount = 300
+lifetime = 3.0
+preprocess = 0.5
+randomness = 0.1
+visibility_rect = Rect2(-500, -500, 1000, 1000)
+process_material = SubResource("CleanAirEmission")
+
+[node name="Intake_1" type="Path2D" parent="."]
+position = Vector2(9, 34)
+scale = Vector2(1.5, 1.5688187)
+curve = SubResource("Curve2D_jaf58")
+
+[node name="Intake_2" type="Path2D" parent="."]
+position = Vector2(-7.4390163, -21.364582)
+scale = Vector2(1.3729372, 1.6354169)
+curve = SubResource("Curve2D_i24mf")

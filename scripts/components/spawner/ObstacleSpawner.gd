@@ -88,6 +88,9 @@ func spawn_obstacle(x: float, y: float, obstacle_type: String) -> bool:
 	# Restart smoke particles when respawning from pool
 	_restart_smoke_particles(obstacle)
 
+	# Attach CarAQISource if not already attached
+	_attach_aqi_source(obstacle)
+
 	obstacle.visible = true
 
 	# Notify coordinator of spawn
@@ -238,3 +241,18 @@ func _stop_smoke_particles(obstacle: Node) -> void:
 	if smoke_gpu_trail: smoke_gpu_trail.emitting = false
 	if smoke_cpu: smoke_cpu.emitting = false
 	if smoke_cpu_trail: smoke_cpu_trail.emitting = false
+
+# === AQI Source Management ===
+
+func _attach_aqi_source(obstacle: Node) -> void:
+	"""Attach CarAQISource to obstacle if not already present"""
+	# Check if already has an AQI source
+	if obstacle.get_child_count() > 0:
+		for child in obstacle.get_children():
+			if child is CarAQISource:
+				return  # Already has AQI source
+
+	# Create and attach new CarAQISource
+	var car_aqi = CarAQISource.new()
+	car_aqi.name = "CarAQISource"
+	obstacle.add_child(car_aqi)

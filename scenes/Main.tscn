@@ -21,6 +21,8 @@
 [ext_resource type="Script" uid="uid://bcu4hirt4wbmb" path="res://scripts/components/parallax/FarLayerSpawner.gd" id="22_far_spawner"]
 [ext_resource type="Script" uid="uid://bo6kockayp1wx" path="res://scripts/components/parallax/MidLayerSpawner.gd" id="23_mid_spawner"]
 [ext_resource type="Script" uid="uid://dk2xnqcqxytoc" path="res://scripts/components/parallax/FrontLayerSpawner.gd" id="24_front_spawner"]
+[ext_resource type="Script" uid="uid://dxckb6hq48yi" path="res://scripts/aqi/AQIManager.gd" id="25_aqi_manager"]
+[ext_resource type="Script" uid="uid://dkp5x7cx7ghj" path="res://scripts/aqi/TreeSpawnManager.gd" id="26_tree_spawn"]
 
 [sub_resource type="ShaderMaterial" id="SkyShaderMaterial"]
 shader = ExtResource("12_sky_shader")
@@ -167,5 +169,11 @@ script = ExtResource("7_coordinator")
 
 [node name="ChunkManager" type="Node" parent="Spawner"]
 script = ExtResource("8_chunk")
+
+[node name="AQIManager" type="Node" parent="."]
+script = ExtResource("25_aqi_manager")
+
+[node name="TreeSpawnManager" type="Node" parent="."]
+script = ExtResource("26_tree_spawn")
 
 [node name="HUD" parent="." instance=ExtResource("11_hud_scene")]

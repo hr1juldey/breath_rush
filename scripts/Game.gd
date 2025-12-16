@@ -10,6 +10,8 @@ extends Node2D
 @onready var delivery_zones_node = $DeliveryZones
 @onready var sky_controller = $ParallaxBG/SkyLayer/SkyShaderSprite
 @onready var smog_controller = $ParallaxBG/SmogManager
+@onready var aqi_manager = $AQIManager
+@onready var tree_spawn_manager = $TreeSpawnManager
 
 var persistence_manager: Node
 var current_chunk_index = 0
@@ -41,24 +43,24 @@ func _ready():
 		player.boost_started.connect(_on_boost_started)
 		player.boost_stopped.connect(_on_boost_stopped)
 
+		# Connect to inventory signals for filter drops
+		var inventory = player.get_node_or_null("PlayerInventory")
+		if inventory:
+			inventory.purifier_deployed.connect(_on_filter_deployed)
+
 	# Initialize parallax controllers
 	if sky_controller and sky_controller.has_method("set_aqi"):
 		sky_controller.set_aqi(current_aqi)
 	if smog_controller and smog_controller.has_method("set_aqi"):
 		smog_controller.set_aqi(current_aqi)
 
-	# Tween AQI from 250 to 50 over 60 seconds (TEST FEATURE)
-	var tween = create_tween()
-	tween.set_trans(Tween.TRANS_LINEAR)
-	tween.tween_method(
-		func(aqi: float):
-			current_aqi = aqi
-			if sky_controller and sky_controller.has_method("set_aqi"):
-				sky_controller.set_aqi(current_aqi)
-			if smog_controller and smog_controller.has_method("set_aqi"):
-				smog_controller.set_aqi(current_aqi),
-		250.0, 50.0, 60.0
-	)
+	# Connect to AQIManager signals
+	if aqi_manager:
+		aqi_manager.aqi_changed.connect(_on_aqi_changed)
+		aqi_manager.game_won.connect(_on_game_won)
+		aqi_manager.game_lost.connect(_on_game_lost)
+		# Sync initial AQI with AQIManager
+		current_aqi = aqi_manager.current_aqi
 
 	# Initialize first chunk
 	load_chunk_data()
@@ -76,8 +78,9 @@ func _process(delta):
 	# Update run distance
 	run_distance += scroll_speed * delta
 
-	# Update AQI (simplified - in full game would be more complex)
-	update_aqi(delta)
+	# Update AQIManager with distance delta
+	if aqi_manager:
+		aqi_manager.update_distance(scroll_speed * delta)
 
 	# Update player AQI awareness
 	if player:
@@ -305,3 +308,68 @@ func resume_world_scroll() -> void:
 	"""Resume world scrolling after charging"""
 	world_paused = false
 	print("[Game] World scrolling RESUMED after charging")
+
+# === AQI System Callbacks ===
+
+func _on_aqi_changed(new_aqi: float, delta_aqi: float) -> void:
+	"""AQI changed - update current_aqi and visuals"""
+	current_aqi = new_aqi
+
+	# Update player awareness
+	if player and player.has_method("set_aqi"):
+		player.set_aqi(current_aqi)
+
+	# Update sky and smog visuals
+	if sky_controller and sky_controller.has_method("set_aqi"):
+		sky_controller.set_aqi(current_aqi)
+	if smog_controller and smog_controller.has_method("set_aqi"):
+		smog_controller.set_aqi(current_aqi)
+
+func _on_game_won() -> void:
+	"""Player won - reached distance with all filters active and low AQI"""
+	print("[Game] GAME WON!")
+	print("Distance traveled: %.1f meters" % run_distance)
+	print("Final AQI: %.1f" % current_aqi)
+	print("Coins earned: %d" % int(run_coins))
+
+	# Pause game
+	set_process(false)
+	if player:
+		player.set_process(false)
+		player.set_physics_process(false)
+
+	# Show win UI (TODO: implement end screen)
+	await get_tree().create_timer(2.0).timeout
+	get_tree().quit()
+
+func _on_game_lost(reason: String) -> void:
+	"""Player lost - failed a win condition"""
+	print("[Game] GAME LOST: %s" % reason)
+	print("Distance traveled: %.1f meters" % run_distance)
+	print("Final AQI: %.1f" % current_aqi)
+	print("Coins earned: %d" % int(run_coins))
+
+	# Pause game
+	set_process(false)
+	if player:
+		player.set_process(false)
+		player.set_physics_process(false)
+
+	# Show lose UI (TODO: implement end screen)
+	await get_tree().create_timer(2.0).timeout
+	get_tree().quit()
+
+# === Filter Deployment ===
+
+func _on_filter_deployed(x: float, y: float) -> void:
+	"""Filter deployed - pause game for 15 seconds of air cleaning"""
+	print("[Game] Filter deployed at (%.0f, %.0f) - PAUSING for cleanup" % [x, y])
+
+	# Pause world scrolling
+	pause_world_scroll()
+
+	# Wait 15 seconds for filter cleanup
+	await get_tree().create_timer(15.0).timeout
+
+	print("[Game] Filter cleanup complete - RESUMING game")
+	resume_world_scroll()

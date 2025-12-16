@@ -154,7 +154,7 @@ func get_available_count() -> int:
 # === EV Charger Logic ===
 
 func should_spawn_ev_charger() -> bool:
-	"""Check if EV charger should spawn (low battery + no active charger)"""
+	"""Check if EV charger should spawn (low battery + no active charger + limit not reached)"""
 	if ev_charger_active and is_instance_valid(ev_charger_active):
 		return false  # Already has active charger
 
@@ -165,6 +165,11 @@ func should_spawn_ev_charger() -> bool:
 	if not battery_component:
 		return false
 
+	# Check AQIManager limit
+	var aqi_manager = _get_aqi_manager()
+	if aqi_manager and not aqi_manager.can_spawn_ev_charger():
+		return false  # EV charger limit reached
+
 	return battery_component.battery <= battery_low_threshold
 
 func spawn_ev_charger() -> void:
@@ -172,12 +177,22 @@ func spawn_ev_charger() -> void:
 	if ev_charger_active and is_instance_valid(ev_charger_active):
 		return  # Already spawned
 
+	# Check if we can spawn (final check)
+	var aqi_manager = _get_aqi_manager()
+	if aqi_manager and not aqi_manager.can_spawn_ev_charger():
+		print("[PickupSpawner] Cannot spawn EV charger - limit reached")
+		return
+
 	var charger = ev_charger_scene.instantiate()
 	charger.set_scroll_speed(spawn_speed)
 
 	# Connect signals to pause world
 	charger.charging_started.connect(_on_charger_start)
 	charger.charging_complete.connect(_on_charger_complete)
+
+	# Notify AQIManager of spawn
+	if aqi_manager:
+		aqi_manager.record_ev_charger_spawn()
 
 	add_child(charger)
 	ev_charger_active = charger
@@ -205,3 +220,15 @@ func _on_charger_complete():
 		push_error("[PickupSpawner] Could not find Game.resume_world_scroll!")
 
 	ev_charger_active = null
+
+# === Helper Methods ===
+
+func _get_aqi_manager() -> Node:
+	"""Get AQIManager from main scene"""
+	var main = get_tree().root.get_node_or_null("Main")
+	if main:
+		return main.get_node_or_null("AQIManager")
+
+	# Fallback to group
+	var managers = get_tree().get_nodes_in_group("aqi_manager")
+	return managers[0] if managers.size() > 0 else null

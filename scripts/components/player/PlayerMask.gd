@@ -172,6 +172,11 @@ func is_leaking() -> bool:
 	"""Check if mask is in leak phase (last 5 seconds)"""
 	return is_wearing_mask() and mask_time < mask_leak_time
 
+func provides_smoke_protection() -> bool:
+	"""Check if mask is active and provides full smoke protection (not leaking)"""
+	# Must be wearing mask AND not in leak period
+	return is_wearing_mask() and not is_leaking()
+
 # === Public API for inspection ===
 
 func get_mask_time() -> float:

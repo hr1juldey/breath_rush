@@ -108,7 +108,13 @@ func drop_filter() -> bool:
 		return false
 
 	# Step 1: FULLY STOP the world and player immediately (no tween)
+	# Also disable all player input during filter cleanup
 	print("[PlayerInventory] FILTER: Stopping game...")
+	var input_handler = player_ref.get_node_or_null("PlayerInput") if player_ref else null
+	if input_handler and input_handler.has_method("set_input_enabled"):
+		input_handler.set_input_enabled(false)
+		print("[PlayerInventory] FILTER: Input disabled")
+
 	game.world_paused = true
 	game.scroll_speed = 0.0
 
@@ -153,6 +159,11 @@ func drop_filter() -> bool:
 
 	# Step 5: Resume world after cleanup
 	print("[PlayerInventory] FILTER: Cleanup complete - resuming world")
+
+	# Re-enable player input
+	if input_handler and input_handler.has_method("set_input_enabled"):
+		input_handler.set_input_enabled(true)
+		print("[PlayerInventory] FILTER: Input re-enabled")
 
 	# Resume car spawning
 	if spawner:

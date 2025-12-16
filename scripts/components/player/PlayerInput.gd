@@ -20,12 +20,16 @@ signal item_drop_requested()
 
 # Horizontal input state
 var horizontal_input = 0.0
+var input_enabled: bool = true
 
 func _ready():
 	print("[PlayerInput] Component initialized")
 
 func _input(event: InputEvent) -> void:
 	"""Process input events"""
+	if not input_enabled:
+		return
+
 	if event is InputEventKey:
 		_handle_keyboard(event)
 	elif event is InputEventScreenTouch:
@@ -34,6 +38,9 @@ func _input(event: InputEvent) -> void:
 func _process(_delta: float) -> void:
 	"""Update continuous input state"""
 	horizontal_input = 0.0
+
+	if not input_enabled:
+		return
 
 	# Check horizontal input
 	if Input.is_action_pressed("ui_right") or Input.is_key_pressed(KEY_RIGHT) or Input.is_key_pressed(KEY_L):
@@ -93,3 +100,12 @@ func _handle_touch(event: InputEventScreenTouch) -> void:
 func get_horizontal_input() -> float:
 	"""Get current horizontal input (-1.0 to 1.0)"""
 	return horizontal_input
+
+func set_input_enabled(enabled: bool) -> void:
+	"""Enable/disable all input processing"""
+	input_enabled = enabled
+	if not enabled:
+		horizontal_input = 0.0
+		print("[PlayerInput] Input DISABLED")
+	else:
+		print("[PlayerInput] Input ENABLED")

@@ -99,7 +99,7 @@ script = ExtResource("1_filter_script")
 
 [node name="Filter_Offeset" type="Node2D" parent="."]
 position = Vector2(-250, -90)
-scale = Vector2(0.4, 0.4)
+scale = Vector2(0.45, 0.45)
 
 [node name="IntakeSmokeParticles" type="GPUParticles2D" parent="Filter_Offeset"]
 position = Vector2(-506, -45.000004)

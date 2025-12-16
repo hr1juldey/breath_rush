@@ -146,6 +146,10 @@ func return_to_pool(obstacle: Node) -> void:
 		obstacle.stage_15s_done = false
 		obstacle.stage_35s_done = false
 
+		# Re-enable AQI source for next use
+		if obstacle.aqi_source and is_instance_valid(obstacle.aqi_source):
+			obstacle.aqi_source.is_active = true
+
 		# BUGFIX: Disable collision and movement when returning to pool
 		obstacle.monitoring = false
 		obstacle.set_process(false)
@@ -256,3 +260,6 @@ func _attach_aqi_source(obstacle: Node) -> void:
 	var car_aqi = CarAQISource.new()
 	car_aqi.name = "CarAQISource"
 	obstacle.add_child(car_aqi)
+
+	# Store reference in obstacle for disabling when off-screen
+	obstacle.aqi_source = car_aqi

@@ -19,6 +19,13 @@ config/icon="res://icon.svg"
 
 Logger="*res://scripts/Logger.gd"
 
+[editor]
+
+movie_writer/ogv/encoding_speed=1
+movie_writer/ogv/keyframe_interval=32
+movie_writer/movie_file="/home/riju279/Videos/games/game_br_1.avi"
+movie_writer/disable_vsync=true
+
 [rendering]
 
 textures/vram_compression/import_etc2_astc=true

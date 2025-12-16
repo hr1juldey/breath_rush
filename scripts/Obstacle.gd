@@ -22,6 +22,9 @@ var stage_35s_done = false
 var local_smoke_gpu: GPUParticles2D = null
 var local_smoke_cpu: CPUParticles2D = null
 
+# AQI source reference
+var aqi_source: AQISource = null
+
 func _ready():
 	if has_node("CollisionShape2D"):
 		pass # Collision shape will be set up in scene
@@ -63,6 +66,11 @@ func _process(delta):
 			# Stop movement, hide car sprite and collision, but keep smoke visible
 			_hide_car_only()
 			print("[Obstacle] Car off-screen at x=%.0f, STOPPED to keep smoke visible" % position.x)
+
+			# Disable AQI source when car goes off-screen (so AQI stops increasing)
+			if aqi_source and is_instance_valid(aqi_source):
+				aqi_source.is_active = false
+				print("[Obstacle] AQI source disabled - smoke stays but AQI locked")
 
 		off_screen_time += delta
 
@@ -141,10 +149,10 @@ func _set_lane_based_z_index() -> void:
 	# Higher Y = closer to camera = should render in FRONT
 	# Player z-index = 5
 	if car_y > player_y + 20: # Car is closer to camera (lower lane)
-		z_index = randi_range(6, 7) # Car in front of player
+		z_index = 6 # Car in front of player (deterministic, not random)
 		print("[Obstacle] Car in front (Y=%.0f > Player Y=%.0f) z=%d" % [car_y, player_y, z_index])
 	elif car_y < player_y - 20: # Car is farther from camera (upper lane)
-		z_index = randi_range(0, 4) # Car behind player
+		z_index = 3 # Car behind player (deterministic, not random)
 		print("[Obstacle] Car behind (Y=%.0f < Player Y=%.0f) z=%d" % [car_y, player_y, z_index])
 	else: # Same lane
 		# When same lane, car should be behind player for better visibility

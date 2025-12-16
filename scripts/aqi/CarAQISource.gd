@@ -9,5 +9,5 @@ Linear falloff with distance
 func _init():
 	source_type = SourceType.INCREASES_AQI
 	range_type = RangeType.LINEAR
-	base_effect = 0.08  # 5 AQI per minute (0.0833 per second) when in range
-	effective_range = 800.0  # Effect radius
+	base_effect = .25 # Gradually increase AQI to ~300 while car is visible (10s on screen)
+	effective_range = 800.0 # Effect radius

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="BreathRush"
-run/main_scene="res://scenes/Main.tscn"
+run/main_scene="res://scenes/StartScreen.tscn"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -25,6 +25,15 @@ movie_writer/ogv/encoding_speed=1
 movie_writer/ogv/keyframe_interval=32
 movie_writer/movie_file="/home/riju279/Videos/games/game_br_1.avi"
 movie_writer/disable_vsync=true
+
+[display]
+
+window/size/viewport_width=1152
+window/size/viewport_height=648
+window/size/window_width_override=1152
+window/size/window_height_override=648
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
 
 [rendering]
 

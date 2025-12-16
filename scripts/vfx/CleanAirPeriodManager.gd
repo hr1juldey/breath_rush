@@ -16,7 +16,7 @@ signal clean_air_period_started
 signal clean_air_period_ended
 
 # Configuration
-@export var aqi_threshold_for_clean_air: float = 80.0  # Must deploy filters AND get AQI low
+@export var aqi_threshold_for_clean_air: float = 150.0  # AQI must be "Moderate" or better after 3 filters
 @export var clean_air_duration: float = 180.0  # 3 minutes
 
 # References
@@ -57,11 +57,20 @@ func _process(delta: float):
 
 func _on_filter_dropped(filter: AQISource, drop_progress: float) -> void:
 	"""Called when a filter is deployed"""
+	if not aqi_manager:
+		return
+
+	print("[CleanAirPeriodManager] Filter dropped! (Total: %d, AQI: %.1f)" % [aqi_manager.filters_dropped, aqi_manager.current_aqi])
+
 	# Check if all 3 filters have now been deployed
-	if aqi_manager and aqi_manager.filters_dropped >= 3:
+	if aqi_manager.filters_dropped >= 3:
+		print("[CleanAirPeriodManager] ✓ All 3 filters deployed!")
 		# Check if AQI is low enough
 		if aqi_manager.current_aqi <= aqi_threshold_for_clean_air:
+			print("[CleanAirPeriodManager] ✓ AQI low enough (%.1f <= %.1f)" % [aqi_manager.current_aqi, aqi_threshold_for_clean_air])
 			_start_clean_air_period()
+		else:
+			print("[CleanAirPeriodManager] ✗ AQI too high (%.1f > %.1f) - Clean air period NOT triggered" % [aqi_manager.current_aqi, aqi_threshold_for_clean_air])
 
 func _start_clean_air_period() -> void:
 	"""Begin a clean air bonus period"""
@@ -72,9 +81,25 @@ func _start_clean_air_period() -> void:
 	clean_air_timer = clean_air_duration
 	filters_deployed_at_start = aqi_manager.filters_dropped
 
-	# Reload filters for the player (reset to 3 more)
+	# Reload filters for the player (give 3 more to deploy)
+	# Keep filters_dropped as-is (it's the total count for win condition)
+	# Reset BOTH AQIManager and PlayerInventory filter counts
 	aqi_manager.filters_remaining = 3
-	aqi_manager.filters_dropped = 0
+
+	# Also update PlayerInventory filter count
+	var main = get_tree().root.get_node_or_null("Main")
+	if main:
+		var player = main.get_node_or_null("Player")
+		if player:
+			var inventory = player.get_node_or_null("PlayerInventory")
+			if inventory:
+				inventory.filter_count = 3
+				inventory.filter_count_changed.emit(3)
+				print("[CleanAirPeriodManager] ✓ PlayerInventory filter count reset to 3")
+			else:
+				print("[CleanAirPeriodManager] ⚠️ PlayerInventory not found!")
+		else:
+			print("[CleanAirPeriodManager] ⚠️ Player node not found!")
 
 	print("[CleanAirPeriodManager] ✨ CLEAN AIR PERIOD STARTED!")
 	print("[CleanAirPeriodManager] - No cars for %.0f seconds" % clean_air_duration)

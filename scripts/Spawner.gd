@@ -51,7 +51,9 @@ func _ready():
 	# Find clean air period manager
 	clean_air_manager = get_tree().get_first_node_in_group("clean_air_period_manager")
 	if clean_air_manager:
-		print("[Spawner] ✓ CleanAirPeriodManager found")
+		print("[Spawner] ✓ CleanAirPeriodManager found and connected")
+	else:
+		print("[Spawner] ⚠️ WARNING: CleanAirPeriodManager NOT FOUND - cars will spawn during clean air periods!")
 
 	print("[Spawner] ========== All Components Initialized ==========")
 
@@ -79,18 +81,20 @@ func _process(_delta: float) -> void:
 	# Get next obstacle spawn from chunk manager
 	# Skip spawning if clean air period is active
 	var is_clean_air = clean_air_manager and clean_air_manager.is_clean_air_active()
-	if not is_clean_air:
-		var obstacle_spawn = chunk_manager.get_next_obstacle_spawn()
-		if not obstacle_spawn.is_empty():
+
+	var obstacle_spawn = chunk_manager.get_next_obstacle_spawn()
+	if not obstacle_spawn.is_empty():
+		if is_clean_air:
+			# During clean air period, DON'T spawn cars
+			print("[Spawner] 🚫 Clean Air Period ACTIVE - blocking car spawn at time %.1fs" % [chunk_manager.get_game_time()])
+		else:
+			# Normal spawning
 			var x = obstacle_spawn.get("x", 960)
 			var y = obstacle_spawn.get("y", 300)
 			var type = obstacle_spawn.get("type", "car")
 
 			if obstacle_spawner:
 				obstacle_spawner.spawn_obstacle(x, y, type)
-	else:
-		# During clean air period, consume but don't spawn obstacle slots
-		chunk_manager.get_next_obstacle_spawn()
 
 	# Get next pickup spawn from chunk manager (exclude EV charger from random spawning)
 	var pickup_spawn = chunk_manager.get_next_pickup_spawn()

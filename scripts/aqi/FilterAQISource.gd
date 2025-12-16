@@ -14,9 +14,9 @@ var time_alive: float = 0.0
 
 func _init():
 	source_type = SourceType.DECREASES_AQI
-	range_type = RangeType.INVERSE_SQUARE
-	base_effect = 0.0  # AQI reduction handled by Filter.gd _reduce_aqi() during cleanup
-	effective_range = 3000.0
+	range_type = RangeType.LINEAR
+	base_effect = 8.0  # Actively reduce AQI (stronger than car's 5.8 increase)
+	effective_range = 5000.0  # Global effect - filters work from anywhere
 
 func _process(delta: float):
 	if not is_active:

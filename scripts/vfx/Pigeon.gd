@@ -37,13 +37,23 @@ func _ready():
 		load("res://assets/vfx/pigeons/pigeon_fly_02.webp"),
 	]
 
-	# Set initial sprite
-	if sprite and idle_frames.size() > 0:
-		sprite.texture = idle_frames[0]
+	if not sprite:
+		push_error("Pigeon has no Sprite2D child!")
+		return
+	if not animation_timer:
+		push_error("Pigeon has no AnimationTimer child!")
+		return
 
-	# Connect animation timer
-	if animation_timer:
-		animation_timer.timeout.connect(_on_animation_frame)
+	# Set initial sprite
+	sprite.texture = idle_frames[0]
+	sprite.centered = true  # Center the sprite on the position
+	sprite.offset = Vector2.ZERO
+
+	# Connect animation timer and start it
+	animation_timer.timeout.connect(_on_animation_frame)
+	if not animation_timer.is_stopped():
+		animation_timer.stop()
+	animation_timer.start()
 
 func _process(delta: float):
 	if is_flying:

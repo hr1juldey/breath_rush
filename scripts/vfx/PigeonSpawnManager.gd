@@ -22,10 +22,10 @@ var time_below_threshold: float = 0.0
 var pigeons_spawned_flag: bool = false
 var active_pigeons: Array[Node] = []
 
-# Building spawn positions (Y values for different parallax layers)
-# Top of buildings are above the obstacle lanes (240, 300, 360)
-# Visual building tops should be at Y ~150-200 to be visible above lanes
-var building_spawn_y_positions: Array[float] = [150.0, 170.0, 190.0, 210.0]
+# Building spawn positions (Y values aligned with parallax buildings)
+# Buildings in mid/far layers appear at screen Y ~120-180
+# Pigeons should spawn at the very top of visible buildings
+var building_spawn_y_positions: Array[float] = [110.0, 125.0, 140.0, 155.0]
 
 # Viewport width for X positioning
 # Buildings scroll from right (off-screen) to left
@@ -72,7 +72,8 @@ func _on_aqi_changed(new_aqi: float, _delta_aqi: float) -> void:
 	current_aqi = new_aqi
 
 func _spawn_pigeons() -> void:
-	var spawn_count = min(max_pigeons, randi_range(3, max_pigeons))
+	# Spawn 1-2 pigeons per building position (2-4 buildings visible at once, so 2-8 pigeons)
+	var spawn_count = randi_range(2, 4)  # 2-4 pigeons for good coverage
 
 	# Spawn pigeons at random building positions
 	for i in range(spawn_count):
@@ -82,17 +83,22 @@ func _spawn_pigeons() -> void:
 			get_parent().add_child(pigeon)
 
 	pigeons_spawned.emit(spawn_count)
-	print("[PigeonSpawnManager] Spawned %d pigeons" % spawn_count)
+	print("[PigeonSpawnManager] ✨ Spawned %d pigeons on buildings" % spawn_count)
 
 func _create_pigeon() -> Node2D:
 	var pigeon = Node2D.new()
 	pigeon.name = "Pigeon_%d" % active_pigeons.size()
-					 	pigeon.set_script(load("res://scripts/vfx/Pigeon.gd"))
+	pigeon.set_script(load("res://scripts/vfx/Pigeon.gd"))
 	pigeon.scale = Vector2(0.5, 0.5)  # Smaller scale to fit on buildings
 
 	# Random building position
+	# Y: random from visible building heights
 	var y = building_spawn_y_positions[randi() % building_spawn_y_positions.size()]
-	var x = viewport_right_edge - randf_range(200.0, 400.0)  # Coming from right side of screen
+
+	# X: distributed across visible building positions (buildings at ~250-750 on screen)
+	# Add some variation so pigeons perch at different X positions
+	var x = randf_range(250.0, 750.0)  # Visible building range
+
 	pigeon.position = Vector2(x, y)
 
 	# Add sprite

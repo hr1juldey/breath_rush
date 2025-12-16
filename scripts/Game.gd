@@ -257,19 +257,13 @@ func player_died() -> void:
 	print("Distance traveled: %.1f meters" % run_distance)
 	print("Coins earned: %d" % int(run_coins))
 
-	# Wait 2 seconds then quit
+	# Wait 2 seconds then go to end screen
 	await get_tree().create_timer(2.0).timeout
-	get_tree().quit()
+	_go_to_end_screen(false, "Player died from pollution!")
 
 func end_run() -> void:
-	# Save run data
-	# TODO: Implement persistence system
-	if persistence_manager == null:
-		return
-	# persistence_manager.update_coins(int(run_coins))
-
-	# Return to menu or show summary
-	get_tree().quit()
+	# Return to start screen
+	get_tree().change_scene_to_file("res://scenes/StartScreen.tscn")
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -345,9 +339,9 @@ func _on_game_won() -> void:
 		player.set_process(false)
 		player.set_physics_process(false)
 
-	# Show win UI (TODO: implement end screen)
+	# Go to end screen
 	await get_tree().create_timer(2.0).timeout
-	get_tree().quit()
+	_go_to_end_screen(true, "")
 
 func _on_game_lost(reason: String) -> void:
 	"""Player lost - failed a win condition"""
@@ -362,9 +356,21 @@ func _on_game_lost(reason: String) -> void:
 		player.set_process(false)
 		player.set_physics_process(false)
 
-	# Show lose UI (TODO: implement end screen)
+	# Go to end screen
 	await get_tree().create_timer(2.0).timeout
-	get_tree().quit()
+	_go_to_end_screen(false, reason)
+
+func _go_to_end_screen(won: bool, reason: String) -> void:
+	"""Transition to end screen with game results"""
+	# Load EndScreen script to set static variables
+	var end_screen_script = load("res://scripts/EndScreen.gd")
+	end_screen_script.game_won = won
+	end_screen_script.final_distance = run_distance
+	end_screen_script.final_coins = int(run_coins)
+	end_screen_script.final_aqi = current_aqi
+	end_screen_script.loss_reason = reason
+
+	get_tree().change_scene_to_file("res://scenes/EndScreen.tscn")
 
 # === Filter Deployment ===
 

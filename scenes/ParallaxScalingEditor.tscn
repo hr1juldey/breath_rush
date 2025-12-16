@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cs8x043lqbuly"]
+[gd_scene load_steps=24 format=3 uid="uid://cs8x043lqbuly"]
 
 [ext_resource type="Script" uid="uid://cg0mog12asmjf" path="res://scripts/ParallaxScalingEditor.gd" id="1_editor"]
 [ext_resource type="Texture2D" uid="uid://ckj6y0cqibm5b" path="res://assets/parallax/tree_1.webp" id="2_wrwkm"]
@@ -22,6 +22,7 @@
 [ext_resource type="Texture2D" uid="uid://c74pkc06jg1k5" path="res://assets/skies/sky_bad.webp" id="20_jvtwq"]
 [ext_resource type="Texture2D" uid="uid://cnlch374hthea" path="res://assets/skies/sky_clear.webp" id="21_6lq26"]
 [ext_resource type="Texture2D" uid="uid://c1h3tocbk0vb6" path="res://assets/pickups/filter_1.webp" id="22_sw7y7"]
+[ext_resource type="Texture2D" uid="uid://dtpelc604xrtf" path="res://assets/pickups/sapling.png" id="23_q11bs"]
 
 [node name="ParallaxScalingEditor" type="Node2D"]
 script = ExtResource("1_editor")
@@ -189,11 +190,12 @@ texture = ExtResource("17_6pt1t")
 
 [node name="RoadTile" type="Sprite2D" parent="."]
 z_index = 6
-position = Vector2(237.311, 458)
+position = Vector2(241, 458.00003)
 scale = Vector2(0.24537037, 0.24537037)
 texture = ExtResource("18_nago0")
 region_enabled = true
 region_rect = Rect2(0, 328, 1920, 440)
+metadata/_edit_lock_ = true
 
 [node name="RoadTile2" type="Sprite2D" parent="."]
 z_index = 6
@@ -387,8 +389,17 @@ texture = ExtResource("21_6lq26")
 
 [node name="Filter1" type="Sprite2D" parent="."]
 z_index = 5
-position = Vector2(1120, 359)
+position = Vector2(1119, 359)
 scale = Vector2(0.15, 0.15)
 texture = ExtResource("22_sw7y7")
 region_enabled = true
 region_rect = Rect2(834, 165.38228, 244, 775.37836)
+
+[node name="Sapling" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(1055, 372)
+scale = Vector2(0.195, 0.195)
+texture = ExtResource("23_q11bs")
+region_enabled = true
+region_rect = Rect2(176, 80, 256, 496)
+region_filter_clip_enabled = true

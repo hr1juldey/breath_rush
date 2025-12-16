@@ -14,7 +14,7 @@ var player_in_smoke: bool = false
 var player_ref: Node = null
 var damage_already_applied: bool = false
 
-@export var base_aqi_effect: float = 700.0  # Sudden spike amount when entering smoke
+@export var base_aqi_effect: float = 50.0  # Sudden spike amount when entering smoke
 
 func _ready():
 	# Setup physics - detect player (CharacterBody2D on layer 1)

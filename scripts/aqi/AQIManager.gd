@@ -39,6 +39,9 @@ var filters_dropped: int = 0
 var ev_chargers_spawned: int = 0
 var ev_chargers_max: int = 3
 
+# === Game End Guard ===
+var game_ended: bool = false
+
 func _ready():
 	add_to_group("aqi_manager")
 	current_aqi = starting_aqi
@@ -65,8 +68,9 @@ func _process(delta: float):
 	if abs(current_aqi - old_aqi) > 0.01:
 		aqi_changed.emit(current_aqi, current_aqi - old_aqi)
 
-	# Check lose condition (AQI too high)
-	if current_aqi >= max_aqi:
+	# Check lose condition (AQI too high) - only fire once
+	if current_aqi >= max_aqi and not game_ended:
+		game_ended = true
 		game_lost.emit("AQI reached critical level!")
 
 func register_source(source: AQISource):
@@ -88,8 +92,12 @@ func update_distance(delta_distance: float):
 		_check_win_condition()
 
 func _check_win_condition():
+	if game_ended:
+		return  # Already ended, don't check again
+
 	# Must have dropped all 3 filters
 	if filters_dropped < 3:
+		game_ended = true
 		game_lost.emit("Did not deploy all 3 filters!")
 		return
 
@@ -100,14 +108,17 @@ func _check_win_condition():
 			active_filters += 1
 
 	if active_filters < 3:
+		game_ended = true
 		game_lost.emit("Filters expired before reaching goal!")
 		return
 
 	# AQI must be below threshold
 	if current_aqi > win_aqi_threshold:
+		game_ended = true
 		game_lost.emit("AQI too high at finish!")
 		return
 
+	game_ended = true
 	game_won.emit()
 
 # === Filter Management ===

@@ -75,12 +75,12 @@ func _process(delta):
 	if world_paused:
 		return
 
-	# Update run distance
-	run_distance += scroll_speed * delta
+	# Update run distance (1 meter = 1 second)
+	run_distance += delta
 
 	# Update AQIManager with distance delta
 	if aqi_manager:
-		aqi_manager.update_distance(scroll_speed * delta)
+		aqi_manager.update_distance(delta)
 
 	# Update player AQI awareness
 	if player:

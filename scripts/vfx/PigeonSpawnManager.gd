@@ -87,7 +87,7 @@ func _spawn_pigeons() -> void:
 func _create_pigeon() -> Node2D:
 	var pigeon = Node2D.new()
 	pigeon.name = "Pigeon_%d" % active_pigeons.size()
-	pigeon.add_script(load("res://scripts/vfx/Pigeon.gd"))
+					 	pigeon.set_script(load("res://scripts/vfx/Pigeon.gd"))
 	pigeon.scale = Vector2(0.5, 0.5)  # Smaller scale to fit on buildings
 
 	# Random building position
